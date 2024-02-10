@@ -3,7 +3,9 @@ from typing import Union
 import numpy as np
 from moojoco.mjcf.morphology import MJCFMorphology, MJCFMorphologyPart
 
-from biorobot.toy_example.mjcf.morphology.parts.arm_segment import MJCFToyExampleArmSegment
+from biorobot.toy_example.mjcf.morphology.parts.arm_segment import (
+    MJCFToyExampleArmSegment,
+)
 from biorobot.toy_example.mjcf.morphology.specification.specification import (
     ToyExampleMorphologySpecification,
 )
