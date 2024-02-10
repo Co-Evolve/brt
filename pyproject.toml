@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "biorobot"
+version = "1.0.0"
+authors = [
+    { name = "Dries Marzougui", email = "dries.marzougui@gmail.com" },
+]
+description = "The Bio-inspired Robotics Testbed (BRT)."
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { text = "MIT" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "chex",
+    "dm-control",
+    "fprs",
+    "gymnasium",
+    "mujoco",
+    "mujoco-mjx",
+    "moojoco",
+    "numpy",
+    "opencv-python",
+    "pillow",
+    "transforms3d"
+]
+
+[project.urls]
+Homepage = "https://github.com/Co-Evolve/brt"
+Repository = "https://github.com/Co-Evolve/brt"
