@@ -50,7 +50,7 @@ the field of bio-inspired robotics.
 
 ## Current environments
 
-* [Brittle star](https://github.com/Co-Evolve/brt/blob/main/biorobot/toy_example)
+* [Toy Example](https://github.com/Co-Evolve/brt/blob/main/biorobot/toy_example)
 * [Brittle star](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star)
 
 ## Installation
