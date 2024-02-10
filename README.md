@@ -53,6 +53,10 @@ the field of bio-inspired robotics.
 * [Toy Example](https://github.com/Co-Evolve/brt/blob/main/biorobot/toy_example)
 * [Brittle star](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star)
 
+## Examples
+
+Preliminary Jupyter Notebook examples can be found [here](https://github.com/Co-Evolve/SEL3-2024).
+
 ## Installation
 
 ```pip install biorobot```
