@@ -1,5 +1,5 @@
 <h1>
-  <a href="#"><img alt="moojoco-banner" src="https://github.com/Co-Evolve/brt/blob/main/assets/banner.png?raw=true" width="100%"/></a>
+  <a href="#"><img alt="moojoco-banner" src=https://github.com/Co-Evolve/brt/blob/main/assets/banner.png?raw=true" width="100%"/></a>
 </h1>
 
 The **Bio-Inspired Robotics Testbed (BRT)** represents a significant stride in the convergence of robotics and
