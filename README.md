@@ -53,6 +53,10 @@ the field of bio-inspired robotics.
 * [Toy Example](https://github.com/Co-Evolve/brt/blob/main/biorobot/toy_example)
 * [Brittle star](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star)
 
+## Contributions
+
+Interested in having a model developed? Please fill in this [form](https://forms.gle/h1xgnZA39h2qhX8k9).
+
 ## Examples
 
 Preliminary Jupyter Notebook examples can be found [here](https://github.com/Co-Evolve/SEL3-2024).
