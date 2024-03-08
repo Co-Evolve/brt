@@ -36,6 +36,7 @@ def create_env(backend: str, render_mode: str) -> BrittleStarLightEscapeEnvironm
         simulation_time=5,
         time_scale=1,
         camera_ids=[0, 1],
+        color_contacts=True,
     )
     env = BrittleStarLightEscapeEnvironment.from_morphology_and_arena(
         morphology=morphology, arena=arena, configuration=env_config, backend=backend
@@ -44,7 +45,7 @@ def create_env(backend: str, render_mode: str) -> BrittleStarLightEscapeEnvironm
 
 
 if __name__ == "__main__":
-    BACKEND = "MJC"
+    BACKEND = "MJX"
     RENDER_MODE = "human"
 
     env = create_env(backend=BACKEND, render_mode=RENDER_MODE)

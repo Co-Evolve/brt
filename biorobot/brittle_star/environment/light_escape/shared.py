@@ -4,18 +4,24 @@ from typing import List, Union
 import chex
 import mujoco
 import numpy as np
-from moojoco.environment.base import BaseEnvState, MuJoCoEnvironmentConfiguration
+from moojoco.environment.base import BaseEnvState
 from moojoco.environment.renderer import MujocoRenderer
 
-from biorobot.brittle_star.environment.shared.base import BrittleStarEnvironmentBase
+from biorobot.brittle_star.environment.shared.base import (
+    BrittleStarEnvironmentBase,
+    BrittleStarEnvironmentBaseConfiguration,
+)
 from biorobot.utils import colors
 
 
-class BrittleStarLightEscapeEnvironmentConfiguration(MuJoCoEnvironmentConfiguration):
+class BrittleStarLightEscapeEnvironmentConfiguration(
+    BrittleStarEnvironmentBaseConfiguration
+):
     def __init__(
         self,
         light_perlin_noise_scale: int = 0,
         joint_randomization_noise_scale: float = 0.0,
+        color_contacts: bool = False,
         *args,
         **kwargs,
     ) -> None:
@@ -24,14 +30,12 @@ class BrittleStarLightEscapeEnvironmentConfiguration(MuJoCoEnvironmentConfigurat
             "'light_perlin_noise_scale' parameter."
         )
         super().__init__(
-            disable_eulerdamp=True,
-            solver_iterations=1,
-            solver_ls_iterations=1,
+            joint_randomization_noise_scale=joint_randomization_noise_scale,
+            color_contacts=color_contacts,
             *args,
             **kwargs,
         )
         self.light_perlin_noise_scale = int(light_perlin_noise_scale)
-        self.joint_randomization_noise_scale = joint_randomization_noise_scale
 
 
 class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):

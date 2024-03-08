@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
+import mujoco
 import numpy as np
 from moojoco.environment.mjc_env import MJCEnv, MJCEnvState, MJCObservable
 
@@ -34,6 +35,7 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
             mjcf_assets=mjcf_assets,
             configuration=configuration,
         )
+        self._cache_references(mj_model=self.frozen_mj_model)
 
     @property
     def environment_configuration(
@@ -111,17 +113,30 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
     def _get_time(state: MJCEnvState) -> float:
         return state.mj_data.time
 
+    def _get_mj_models_and_datas_to_render(
+        self, state: MJCEnvState
+    ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
+        mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
+        if self.environment_configuration.color_contacts:
+            self._color_segment_capsule_contacts(
+                mj_models=mj_models, contact_bools=state.observations["segment_contact"]
+            )
+        return mj_models, mj_datas
+
+    def _get_target_position(self, rng: np.random.RandomState) -> np.ndarray:
+        if self.environment_configuration.target_position is not None:
+            position = np.array(self.environment_configuration.target_position)
+        else:
+            angle = rng.uniform(0, 2 * np.pi)
+            radius = self.environment_configuration.target_distance
+            position = np.array([radius * np.cos(angle), radius * np.sin(angle), 0.05])
+        return position
+
     def reset(self, rng: np.random.RandomState) -> MJCEnvState:
         mj_model, mj_data = self._prepare_reset()
 
         # Set random target position
-        angle = rng.uniform(0, 2 * np.pi)
-        radius = self.environment_configuration.target_distance
-        mj_model.body("target").pos = [
-            radius * np.cos(angle),
-            radius * np.sin(angle),
-            0.05,
-        ]
+        mj_model.body("target").pos = self._get_target_position(rng=rng)
 
         # Set morphology position
         mj_model.body("BrittleStarMorphology/central_disk").pos[2] = 0.11

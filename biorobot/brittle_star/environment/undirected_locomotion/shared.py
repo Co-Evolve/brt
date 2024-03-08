@@ -1,24 +1,29 @@
 import abc
 
-from moojoco.environment.base import BaseEnvState, MuJoCoEnvironmentConfiguration
+from moojoco.environment.base import BaseEnvState
 
-from biorobot.brittle_star.environment.shared.base import BrittleStarEnvironmentBase
+from biorobot.brittle_star.environment.shared.base import (
+    BrittleStarEnvironmentBase,
+    BrittleStarEnvironmentBaseConfiguration,
+)
 
 
 class BrittleStarUndirectedLocomotionEnvironmentConfiguration(
-    MuJoCoEnvironmentConfiguration
+    BrittleStarEnvironmentBaseConfiguration
 ):
     def __init__(
-        self, joint_randomization_noise_scale: float = 0.0, *args, **kwargs
+        self,
+        joint_randomization_noise_scale: float = 0.0,
+        color_contacts: bool = False,
+        *args,
+        **kwargs,
     ) -> None:
         super().__init__(
-            disable_eulerdamp=True,
-            solver_iterations=1,
-            solver_ls_iterations=1,
+            joint_randomization_noise_scale=joint_randomization_noise_scale,
+            color_contacts=color_contacts,
             *args,
             **kwargs,
         )
-        self.joint_randomization_noise_scale = joint_randomization_noise_scale
 
 
 class BrittleStarUndirectedLocomotionEnvironmentBase(BrittleStarEnvironmentBase):
