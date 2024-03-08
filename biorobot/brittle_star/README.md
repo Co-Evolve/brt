@@ -194,6 +194,7 @@ difficulty:
     - Reward per timestep: $distance\\_current\\_timestep - distance\\_previous\\_timestep$. The reward will thus be
       positive if the distance from its starting position has increased in the current timestep, and negative if this
       distance has decreased.
+
 2. Directed locomotion (intermediate): Move the brittle star towards target.
     - Reward per timestep: $distance\\_previous\\_timestep - distance\\_current\\_timestep$. The reward will thus be
       positive if the distance to the target has decreased in the current timestep, and negative if this distance has
