@@ -191,11 +191,11 @@ The brittle star environment comes with three locomotion-orientated tasks that p
 difficulty:
 
 1. Undirected locomotion (simple): Move the brittle star away as far as possible from its starting position.
-    - Reward per timestep: $distance\_current\_timestep - distance\_previous\_timestep$. The reward will thus be
+    - Reward per timestep: $distance\\_current\\_timestep - distance\\_previous\\_timestep$. The reward will thus be
       positive if the distance from its starting position has increased in the current timestep, and negative if this
       distance has decreased.
 2. Directed locomotion (intermediate): Move the brittle star towards target.
-    - Reward per timestep: $distance\_previous\_timestep - distance\_current\_timestep$. The reward will thus be
+    - Reward per timestep: $distance\\_previous\\_timestep - distance\\_current\\_timestep$. The reward will thus be
       positive if the distance to the target has decreased in the current timestep, and negative if this distance has
       increased.
     - Requires an aquarium with `attach_target=True`.
@@ -206,7 +206,7 @@ difficulty:
         - Unit direction on the horizontal XY plane from the central disk to the target.
         - The distance in XY plane from the central disk to the target.
 3. Light escape (hard): Move the brittle star towards darker spots in the environment.
-    - Reward per timestep: $light\_income\_previous\_timestep - light\_income\_current\_timestep$. The reward will thus
+    - Reward per timestep: $light\\_income\\_previous\\_timestep - light\\_income\\_current\\_timestep$. The reward will thus
       be positive if the measured light income has decreased in the current timestep, and negative if the light income
       has increased.
     - Requires an aquarium with `sand_ground_color=True`.
