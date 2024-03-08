@@ -114,11 +114,16 @@ class BrittleStarDirectedLocomotionMJXEnvironment(
     def _get_time(state: MJXEnvState) -> float:
         return state.mjx_data.time
 
-    def _get_random_target_position(self, rng: jnp.ndarray) -> jnp.ndarray:
-        angle = jax.random.uniform(key=rng, shape=(), minval=0, maxval=jnp.pi * 2)
-        radius = self.environment_configuration.target_distance
-        target_pos = jnp.array([radius * jnp.cos(angle), radius * jnp.sin(angle), 0.05])
-        return target_pos
+    def _get_target_position(self, rng: jnp.ndarray) -> jnp.ndarray:
+        if self.environment_configuration.target_position is not None:
+            position = jnp.array(self.environment_configuration.target_position)
+        else:
+            angle = jax.random.uniform(key=rng, shape=(), minval=0, maxval=jnp.pi * 2)
+            radius = self.environment_configuration.target_distance
+            position = jnp.array(
+                [radius * jnp.cos(angle), radius * jnp.sin(angle), 0.05]
+            )
+        return position
 
     def reset(self, rng: chex.PRNGKey) -> MJXEnvState:
         (mj_model, mj_data), (mjx_model, mjx_data) = self._prepare_reset()
@@ -129,7 +134,7 @@ class BrittleStarDirectedLocomotionMJXEnvironment(
         disk_body_id = mj_model.body("BrittleStarMorphology/central_disk").id
 
         # Set random target position
-        target_pos = self._get_random_target_position(rng=target_pos_rng)
+        target_pos = self._get_target_position(rng=target_pos_rng)
         mjx_model = mjx_model.replace(
             body_pos=mjx_model.body_pos.at[target_body_id].set(target_pos)
         )

@@ -1,4 +1,5 @@
 import abc
+from typing import Sequence
 
 import chex
 from moojoco.environment.base import BaseEnvState, MuJoCoEnvironmentConfiguration
@@ -13,6 +14,7 @@ class BrittleStarDirectedLocomotionEnvironmentConfiguration(
         self,
         target_distance: float = 3,
         joint_randomization_noise_scale: float = 0.0,
+        target_position: Sequence[float] | None = None,
         *args,
         **kwargs,
     ) -> None:
@@ -24,6 +26,7 @@ class BrittleStarDirectedLocomotionEnvironmentConfiguration(
             **kwargs,
         )
         self.target_distance = target_distance
+        self.target_position = target_position
         self.joint_randomization_noise_scale = joint_randomization_noise_scale
 
 
