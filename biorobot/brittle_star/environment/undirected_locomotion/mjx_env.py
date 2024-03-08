@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 import chex
 import jax.random
+import mujoco
 from jax import numpy as jnp
 from moojoco.environment.mjx_env import MJXEnv, MJXEnvState, MJXObservable
 
@@ -72,6 +73,16 @@ class BrittleStarUndirectedLocomotionMJXEnvironment(
         disk_body_id = state.mj_model.body("BrittleStarMorphology/central_disk").id
         xy_disk_position = state.mjx_data.xpos[disk_body_id][:2]
         return jnp.linalg.norm(xy_disk_position)
+
+    def _get_mj_models_and_datas_to_render(
+        self, state: MJXEnvState
+    ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
+        mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
+        if self.environment_configuration.color_contacts:
+            self._color_segment_capsule_contacts(
+                mj_models=mj_models, contact_bools=state.observations["segment_contact"]
+            )
+        return mj_models, mj_datas
 
     def reset(self, rng: chex.PRNGKey) -> MJXEnvState:
         (mj_model, mj_data), (mjx_model, mjx_data) = self._prepare_reset()

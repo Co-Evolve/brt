@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
+import mujoco
 import numpy as np
 from moojoco.environment.mjc_env import MJCEnv, MJCEnvState, MJCObservable
 
@@ -34,6 +35,7 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
             mjcf_assets=mjcf_assets,
             configuration=configuration,
         )
+        self._cache_references(mj_model=self.frozen_mj_model)
 
     @property
     def environment_configuration(
@@ -110,6 +112,16 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
     @staticmethod
     def _get_time(state: MJCEnvState) -> float:
         return state.mj_data.time
+
+    def _get_mj_models_and_datas_to_render(
+        self, state: MJCEnvState
+    ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
+        mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
+        if self.environment_configuration.color_contacts:
+            self._color_segment_capsule_contacts(
+                mj_models=mj_models, contact_bools=state.observations["segment_contact"]
+            )
+        return mj_models, mj_datas
 
     def _get_target_position(self, rng: np.random.RandomState) -> np.ndarray:
         if self.environment_configuration.target_position is not None:

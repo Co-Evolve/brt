@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 import chex
 import jax.random
+import mujoco
 from jax import numpy as jnp
 from moojoco.environment.mjx_env import MJXEnv, MJXEnvState, MJXObservable
 
@@ -113,6 +114,16 @@ class BrittleStarDirectedLocomotionMJXEnvironment(
     @staticmethod
     def _get_time(state: MJXEnvState) -> float:
         return state.mjx_data.time
+
+    def _get_mj_models_and_datas_to_render(
+        self, state: MJXEnvState
+    ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
+        mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
+        if self.environment_configuration.color_contacts:
+            self._color_segment_capsule_contacts(
+                mj_models=mj_models, contact_bools=state.observations["segment_contact"]
+            )
+        return mj_models, mj_datas
 
     def _get_target_position(self, rng: jnp.ndarray) -> jnp.ndarray:
         if self.environment_configuration.target_position is not None:

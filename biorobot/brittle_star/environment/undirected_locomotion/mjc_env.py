@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
+import mujoco
 import numpy as np
 from moojoco.environment.mjc_env import MJCEnv, MJCEnvState, MJCObservable
 
@@ -34,6 +35,7 @@ class BrittleStarUndirectedLocomotionMJCEnvironment(
             mjcf_assets=mjcf_assets,
             configuration=configuration,
         )
+        self._cache_references(mj_model=self.frozen_mj_model)
 
     @property
     def environment_configuration(
@@ -67,6 +69,16 @@ class BrittleStarUndirectedLocomotionMJCEnvironment(
         disk_body_id = state.mj_model.body("BrittleStarMorphology/central_disk").id
         xy_disk_position = state.mj_data.body(disk_body_id).xpos[:2]
         return np.linalg.norm(xy_disk_position)
+
+    def _get_mj_models_and_datas_to_render(
+        self, state: MJCEnvState
+    ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
+        mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
+        if self.environment_configuration.color_contacts:
+            self._color_segment_capsule_contacts(
+                mj_models=mj_models, contact_bools=state.observations["segment_contact"]
+            )
+        return mj_models, mj_datas
 
     def reset(self, rng: np.random.RandomState) -> MJCEnvState:
         mj_model, mj_data = self._prepare_reset()

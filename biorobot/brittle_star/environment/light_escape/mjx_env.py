@@ -8,9 +8,9 @@ import mujoco
 import numpy as np
 from gymnasium.core import RenderFrame
 from jax import numpy as jnp
-from mujoco import mjx
 from moojoco.environment.mjx_env import MJXEnv, MJXEnvState, MJXObservable
 from moojoco.environment.renderer import MujocoRenderer
+from mujoco import mjx
 
 from biorobot.brittle_star.environment.light_escape.shared import (
     BrittleStarLightEscapeEnvironmentBase,
@@ -129,6 +129,10 @@ class BrittleStarLightEscapeMJXEnvironment(
     ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
         mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
         self._update_mj_models_tex_rgb(mj_models=mj_models, state=state)
+        if self.environment_configuration.color_contacts:
+            self._color_segment_capsule_contacts(
+                mj_models=mj_models, contact_bools=state.observations["segment_contact"]
+            )
         return mj_models, mj_datas
 
     def get_renderer(

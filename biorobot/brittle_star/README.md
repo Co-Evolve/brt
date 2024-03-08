@@ -194,11 +194,14 @@ difficulty:
     - Reward per timestep: $distance\_current\_timestep - distance\_previous\_timestep$. The reward will thus be
       positive if the distance from its starting position has increased in the current timestep, and negative if this
       distance has decreased.
-2. Directed locomotion (intermediate): Move the brittle star towards a randomly spawned target.
+2. Directed locomotion (intermediate): Move the brittle star towards target.
     - Reward per timestep: $distance\_previous\_timestep - distance\_current\_timestep$. The reward will thus be
       positive if the distance to the target has decreased in the current timestep, and negative if this distance has
       increased.
-    - Requires an aquarium with a `attach_target=True`.
+    - Requires an aquarium with `attach_target=True`.
+    - Target position can be specified using the `target_position` argument of
+      the [BrittleStarDirectedLocomotionEnvironmentConfiguration](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/environment/directed_locomotion/shared.py).
+      If no target position is given, a target will be spawned randomly on a circle with a radius given by the `target_distance` argument.
     - Additional observations:
         - Unit direction on the horizontal XY plane from the central disk to the target.
         - The distance in XY plane from the central disk to the target.
@@ -206,9 +209,12 @@ difficulty:
     - Reward per timestep: $light\_income\_previous\_timestep - light\_income\_current\_timestep$. The reward will thus
       be positive if the measured light income has decreased in the current timestep, and negative if the light income
       has increased.
-   - Requires an aquarium with a `sand_ground_color=True`.
-   - Additional observations:
-       - The amount of light each segment takes in.
+    - Requires an aquarium with `sand_ground_color=True`.
+    - Additional observations:
+        - The amount of light each segment takes in.
+
+All brittle star environments support visualising segment contacts (i.e., coloring a segment's capsule red upon contact)
+via the `color_contacts` argument of the environment configuration.
 
 ![](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/assets/brittle_star_environments.png?raw=true)
 From left to right: the undirected locomotion, the targeted locomotion (target is the red sphere), and the light

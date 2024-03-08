@@ -11,9 +11,6 @@ from biorobot.brittle_star.environment.directed_locomotion.dual import (
 from biorobot.brittle_star.environment.directed_locomotion.shared import (
     BrittleStarDirectedLocomotionEnvironmentConfiguration,
 )
-from biorobot.brittle_star.environment.light_escape.dual import (
-    BrittleStarLightEscapeEnvironment,
-)
 from biorobot.brittle_star.mjcf.arena.aquarium import (
     AquariumArenaConfiguration,
     MJCFAquariumArena,
@@ -24,7 +21,9 @@ from biorobot.brittle_star.mjcf.morphology.specification.default import (
 )
 
 
-def create_env(backend: str, render_mode: str) -> BrittleStarLightEscapeEnvironment:
+def create_env(
+    backend: str, render_mode: str
+) -> BrittleStarDirectedLocomotionEnvironment:
     morphology_spec = default_brittle_star_morphology_specification(
         num_arms=5, num_segments_per_arm=5, use_p_control=True
     )
@@ -39,6 +38,7 @@ def create_env(backend: str, render_mode: str) -> BrittleStarLightEscapeEnvironm
         time_scale=1,
         camera_ids=[0, 1],
         target_position=[1.0, -1.0, 0.05],
+        color_contacts=True,
     )
     env = BrittleStarDirectedLocomotionEnvironment.from_morphology_and_arena(
         morphology=morphology, arena=arena, configuration=env_config, backend=backend

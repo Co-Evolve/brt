@@ -2,32 +2,34 @@ import abc
 from typing import Sequence
 
 import chex
-from moojoco.environment.base import BaseEnvState, MuJoCoEnvironmentConfiguration
+from moojoco.environment.base import BaseEnvState
 
-from biorobot.brittle_star.environment.shared.base import BrittleStarEnvironmentBase
+from biorobot.brittle_star.environment.shared.base import (
+    BrittleStarEnvironmentBase,
+    BrittleStarEnvironmentBaseConfiguration,
+)
 
 
 class BrittleStarDirectedLocomotionEnvironmentConfiguration(
-    MuJoCoEnvironmentConfiguration
+    BrittleStarEnvironmentBaseConfiguration
 ):
     def __init__(
         self,
         target_distance: float = 3,
-        joint_randomization_noise_scale: float = 0.0,
         target_position: Sequence[float] | None = None,
+        joint_randomization_noise_scale: float = 0.0,
+        color_contacts: bool = False,
         *args,
         **kwargs,
     ) -> None:
         super().__init__(
-            disable_eulerdamp=True,
-            solver_iterations=1,
-            solver_ls_iterations=1,
+            joint_randomization_noise_scale=joint_randomization_noise_scale,
+            color_contacts=color_contacts,
             *args,
             **kwargs,
         )
         self.target_distance = target_distance
         self.target_position = target_position
-        self.joint_randomization_noise_scale = joint_randomization_noise_scale
 
 
 class BrittleStarDirectedLocomotionEnvironmentBase(BrittleStarEnvironmentBase):

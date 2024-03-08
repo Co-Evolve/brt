@@ -1,5 +1,30 @@
+from typing import List
+
+import chex
 import jax.numpy as jnp
 import mujoco
+from moojoco.environment.base import MuJoCoEnvironmentConfiguration
+
+from biorobot.utils import colors
+
+
+class BrittleStarEnvironmentBaseConfiguration(MuJoCoEnvironmentConfiguration):
+    def __init__(
+        self,
+        joint_randomization_noise_scale: float = 0.0,
+        color_contacts: bool = False,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(
+            disable_eulerdamp=True,
+            solver_iterations=1,
+            solver_ls_iterations=1,
+            *args,
+            **kwargs,
+        )
+        self.joint_randomization_noise_scale = joint_randomization_noise_scale
+        self.color_contacts = color_contacts
 
 
 class BrittleStarEnvironmentBase:
@@ -46,3 +71,20 @@ class BrittleStarEnvironmentBase:
                 ]
             )
         return self._segment_capsule_geom_ids
+
+    def _color_segment_capsule_contacts(
+        self, mj_models: List[mujoco.MjModel], contact_bools: chex.Array
+    ) -> None:
+        for i, mj_model in enumerate(mj_models):
+            if len(mj_models) > 1:
+                contacts = contact_bools[i]
+            else:
+                contacts = contact_bools
+
+            for capsule_geom_id, contact in zip(
+                self._segment_capsule_geom_ids, contacts
+            ):
+                if contact:
+                    mj_model.geom(capsule_geom_id).rgba = colors.rgba_red
+                else:
+                    mj_model.geom(capsule_geom_id).rgba = colors.rgba_green

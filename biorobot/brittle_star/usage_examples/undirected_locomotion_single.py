@@ -5,11 +5,11 @@ import jax.numpy as jnp
 import jax.random
 import numpy as np
 
-from biorobot.brittle_star.environment.light_escape.dual import (
-    BrittleStarLightEscapeEnvironment,
+from biorobot.brittle_star.environment.undirected_locomotion.dual import (
+    BrittleStarUndirectedLocomotionEnvironment,
 )
-from biorobot.brittle_star.environment.light_escape.shared import (
-    BrittleStarLightEscapeEnvironmentConfiguration,
+from biorobot.brittle_star.environment.undirected_locomotion.shared import (
+    BrittleStarUndirectedLocomotionEnvironmentConfiguration,
 )
 from biorobot.brittle_star.mjcf.arena.aquarium import (
     AquariumArenaConfiguration,
@@ -21,31 +21,32 @@ from biorobot.brittle_star.mjcf.morphology.specification.default import (
 )
 
 
-def create_env(backend: str, render_mode: str) -> BrittleStarLightEscapeEnvironment:
+def create_env(
+    backend: str, render_mode: str
+) -> BrittleStarUndirectedLocomotionEnvironment:
     morphology_spec = default_brittle_star_morphology_specification(
         num_arms=5, num_segments_per_arm=5, use_p_control=True
     )
     morphology = MJCFBrittleStarMorphology(morphology_spec)
-    arena_config = AquariumArenaConfiguration(sand_ground_color=True)
+    arena_config = AquariumArenaConfiguration()
     arena = MJCFAquariumArena(configuration=arena_config)
 
-    env_config = BrittleStarLightEscapeEnvironmentConfiguration(
+    env_config = BrittleStarUndirectedLocomotionEnvironmentConfiguration(
         render_mode=render_mode,
-        light_perlin_noise_scale=10,
         num_physics_steps_per_control_step=10,
         simulation_time=5,
         time_scale=1,
         camera_ids=[0, 1],
         color_contacts=True,
     )
-    env = BrittleStarLightEscapeEnvironment.from_morphology_and_arena(
+    env = BrittleStarUndirectedLocomotionEnvironment.from_morphology_and_arena(
         morphology=morphology, arena=arena, configuration=env_config, backend=backend
     )
     return env
 
 
 if __name__ == "__main__":
-    BACKEND = "MJX"
+    BACKEND = "MJC"
     RENDER_MODE = "human"
 
     env = create_env(backend=BACKEND, render_mode=RENDER_MODE)

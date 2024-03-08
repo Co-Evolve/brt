@@ -7,13 +7,13 @@ import jax.random
 import numpy as np
 from moojoco.environment.mjc_env import ThreadedVectorMJCEnvWrapper
 
-from biorobot.brittle_star.usage_examples.example_usage_single import create_env
+from biorobot.brittle_star.usage_examples.light_escape_single import create_env
 from biorobot.toy_example.usage_examples.mjc.example_usage_single import post_render
 
 if __name__ == "__main__":
     BACKEND = "MJX"
     RENDER_MODE = "rgb_array"
-    NUM_ENVS = 5
+    NUM_ENVS = 2
 
     if BACKEND == "MJC":
         env_rng, action_rng = [np.random.RandomState(i) for i in range(NUM_ENVS)], None
