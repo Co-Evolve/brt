@@ -321,7 +321,7 @@ class ToyExampleMJCEnvironment(MJCEnv):
 
         return state.replace(truncated=truncated)
 
-    def reset(self, rng: np.random.RandomState) -> MJCEnvState:
+    def reset(self, rng: np.random.RandomState, *args, **kwargs) -> MJCEnvState:
         mj_model, mj_data = self._prepare_reset()
 
         # Set random target position

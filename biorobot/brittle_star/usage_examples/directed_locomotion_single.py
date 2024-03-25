@@ -19,6 +19,7 @@ from biorobot.brittle_star.mjcf.morphology.morphology import MJCFBrittleStarMorp
 from biorobot.brittle_star.mjcf.morphology.specification.default import (
     default_brittle_star_morphology_specification,
 )
+from biorobot.toy_example.usage_examples.mjc.example_usage_single import post_render
 
 
 def create_env(
@@ -37,7 +38,6 @@ def create_env(
         simulation_time=5,
         time_scale=1,
         camera_ids=[0, 1],
-        target_position=[1.0, -1.0, 0.05],
         color_contacts=True,
     )
     env = BrittleStarDirectedLocomotionEnvironment.from_morphology_and_arena(
@@ -47,7 +47,7 @@ def create_env(
 
 
 if __name__ == "__main__":
-    BACKEND = "MJC"
+    BACKEND = "MJX"
     RENDER_MODE = "human"
 
     env = create_env(backend=BACKEND, render_mode=RENDER_MODE)
@@ -70,7 +70,7 @@ if __name__ == "__main__":
             rng, sub_rng = jax.random.split(rng, 2)
             return env.action_space.sample(rng=sub_rng), rng
 
-    state = reset_fn(env_rng)
+    state = reset_fn(env_rng, [-1.0, 0.0, 0.05])
     while True:
         action, action_rng = action_sample_fn(action_rng)
         state = step_fn(state=state, action=action)
@@ -78,5 +78,5 @@ if __name__ == "__main__":
         print(state.observations["joint_velocity"])
         print(state.observations["joint_actuator_force"])
         print()
-        env.render(state=state)
+        post_render(env.render(state=state), env.environment_configuration)
     env.close()

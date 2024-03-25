@@ -201,8 +201,8 @@ difficulty:
       increased.
     - Requires an aquarium with `attach_target=True`.
     - Target position can be specified using the `target_position` argument of
-      the [BrittleStarDirectedLocomotionEnvironmentConfiguration](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/environment/directed_locomotion/shared.py).
-      If no target position is given, a target will be spawned randomly on a circle with a radius given by the `target_distance` argument.
+      the `reset` function.
+      If no target position is given, a target will be spawned randomly on a circle with a radius given by the `target_distance` argument of the [BrittleStarDirectedLocomotionEnvironmentConfiguration](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/environment/directed_locomotion/shared.py).
     - Additional observations:
         - Unit direction on the horizontal XY plane from the central disk to the target.
         - The distance in XY plane from the central disk to the target.

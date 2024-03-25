@@ -252,7 +252,7 @@ class ToyExampleMJXEnvironment(MJXEnv):
         target_pos = jnp.array([radius * jnp.cos(angle), radius * jnp.sin(angle), 0.05])
         return target_pos
 
-    def reset(self, rng: chex.PRNGKey) -> MJXEnvState:
+    def reset(self, rng: chex.PRNGKey, *args, **kwargs) -> MJXEnvState:
         rng, target_pos_rng, qpos_rng, qvel_rng = jax.random.split(key=rng, num=4)
 
         (mj_model, mj_data), (mjx_model, mjx_data) = self._prepare_reset()

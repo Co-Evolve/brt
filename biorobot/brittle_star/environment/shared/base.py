@@ -76,7 +76,7 @@ class BrittleStarEnvironmentBase:
         self, mj_models: List[mujoco.MjModel], contact_bools: chex.Array
     ) -> None:
         for i, mj_model in enumerate(mj_models):
-            if len(mj_models) > 1:
+            if len(contact_bools.shape) > 1:
                 contacts = contact_bools[i]
             else:
                 contacts = contact_bools

@@ -123,20 +123,30 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
             )
         return mj_models, mj_datas
 
-    def _get_target_position(self, rng: np.random.RandomState) -> np.ndarray:
-        if self.environment_configuration.target_position is not None:
-            position = np.array(self.environment_configuration.target_position)
+    def _get_target_position(
+        self, rng: np.random.RandomState, target_position: np.ndarray | None = None
+    ) -> np.ndarray:
+        if target_position is not None:
+            position = np.array(target_position)
         else:
             angle = rng.uniform(0, 2 * np.pi)
             radius = self.environment_configuration.target_distance
             position = np.array([radius * np.cos(angle), radius * np.sin(angle), 0.05])
         return position
 
-    def reset(self, rng: np.random.RandomState) -> MJCEnvState:
+    def reset(
+        self,
+        rng: np.random.RandomState,
+        target_position: np.ndarray | None = None,
+        *args,
+        **kwargs,
+    ) -> MJCEnvState:
         mj_model, mj_data = self._prepare_reset()
 
         # Set random target position
-        mj_model.body("target").pos = self._get_target_position(rng=rng)
+        mj_model.body("target").pos = self._get_target_position(
+            rng=rng, target_position=target_position
+        )
 
         # Set morphology position
         mj_model.body("BrittleStarMorphology/central_disk").pos[2] = 0.11
