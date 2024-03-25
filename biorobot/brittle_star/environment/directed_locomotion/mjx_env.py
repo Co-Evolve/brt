@@ -125,18 +125,33 @@ class BrittleStarDirectedLocomotionMJXEnvironment(
             )
         return mj_models, mj_datas
 
-    def _get_target_position(self, rng: jnp.ndarray) -> jnp.ndarray:
-        if self.environment_configuration.target_position is not None:
-            position = jnp.array(self.environment_configuration.target_position)
-        else:
+    def _get_target_position(
+        self, rng: jnp.ndarray, target_position: jnp.ndarray
+    ) -> jnp.ndarray:
+        def return_given_target_position() -> jnp.ndarray:
+            return target_position
+
+        def return_random_target_position() -> jnp.ndarray:
             angle = jax.random.uniform(key=rng, shape=(), minval=0, maxval=jnp.pi * 2)
             radius = self.environment_configuration.target_distance
-            position = jnp.array(
+            random_position = jnp.array(
                 [radius * jnp.cos(angle), radius * jnp.sin(angle), 0.05]
             )
-        return position
+            return random_position
 
-    def reset(self, rng: chex.PRNGKey) -> MJXEnvState:
+        return jax.lax.cond(
+            jnp.any(jnp.isnan(target_position)),
+            return_random_target_position,
+            return_given_target_position,
+        )
+
+    def reset(
+        self,
+        rng: chex.PRNGKey,
+        target_position: jnp.ndarray = jnp.array([jnp.nan, jnp.nan, jnp.nan]),
+        *args,
+        **kwargs,
+    ) -> MJXEnvState:
         (mj_model, mj_data), (mjx_model, mjx_data) = self._prepare_reset()
 
         rng, target_pos_rng, qpos_rng, qvel_rng = jax.random.split(key=rng, num=4)
@@ -145,7 +160,9 @@ class BrittleStarDirectedLocomotionMJXEnvironment(
         disk_body_id = mj_model.body("BrittleStarMorphology/central_disk").id
 
         # Set random target position
-        target_pos = self._get_target_position(rng=target_pos_rng)
+        target_pos = self._get_target_position(
+            rng=target_pos_rng, target_position=jnp.array(target_position)
+        )
         mjx_model = mjx_model.replace(
             body_pos=mjx_model.body_pos.at[target_body_id].set(target_pos)
         )

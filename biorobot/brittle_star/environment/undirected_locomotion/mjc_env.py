@@ -80,7 +80,7 @@ class BrittleStarUndirectedLocomotionMJCEnvironment(
             )
         return mj_models, mj_datas
 
-    def reset(self, rng: np.random.RandomState) -> MJCEnvState:
+    def reset(self, rng: np.random.RandomState, *args, **kwargs) -> MJCEnvState:
         mj_model, mj_data = self._prepare_reset()
 
         # Set morphology position

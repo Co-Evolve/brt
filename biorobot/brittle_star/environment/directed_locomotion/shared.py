@@ -16,7 +16,6 @@ class BrittleStarDirectedLocomotionEnvironmentConfiguration(
     def __init__(
         self,
         target_distance: float = 3,
-        target_position: Sequence[float] | None = None,
         joint_randomization_noise_scale: float = 0.0,
         color_contacts: bool = False,
         *args,
@@ -29,7 +28,6 @@ class BrittleStarDirectedLocomotionEnvironmentConfiguration(
             **kwargs,
         )
         self.target_distance = target_distance
-        self.target_position = target_position
 
 
 class BrittleStarDirectedLocomotionEnvironmentBase(BrittleStarEnvironmentBase):
