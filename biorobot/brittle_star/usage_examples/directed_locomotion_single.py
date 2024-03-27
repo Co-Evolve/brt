@@ -81,4 +81,6 @@ if __name__ == "__main__":
         print(state.observations["joint_actuator_force"])
         print()
         post_render(env.render(state=state), env.environment_configuration)
+        if state.terminated | state.truncated:
+            state = reset_fn(env_rng)
     env.close()
