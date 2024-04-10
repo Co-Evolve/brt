@@ -180,10 +180,8 @@ brittle star environment returns as observations (further discussed below).
     - Touch (per segment, boolean)
 
 In terms of actuation, the following actuators are implemented (two per segment, one for the in-plane DoF and one for
-the out-of-plane DoF). The brittle star's morphology specification defines which one of the two is to be used:
-
-- Position control
-- Torque control
+the out-of-plane DoF). The brittle star's morphology specification defines which if either position-based or torque-based control is used.
+The actuator force limits are scaled by the segment radii. Consequently, the maximum force applied by an actuator decreases along the arm. 
 
 ## Environment variants
 
