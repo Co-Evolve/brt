@@ -18,8 +18,8 @@ class BrittleStarEnvironmentBaseConfiguration(MuJoCoEnvironmentConfiguration):
     ):
         super().__init__(
             disable_eulerdamp=True,
-            solver_iterations=1,
-            solver_ls_iterations=1,
+            solver_iterations=10,
+            solver_ls_iterations=10,
             *args,
             **kwargs,
         )

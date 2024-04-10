@@ -25,7 +25,7 @@ def linear_interpolation(alpha: float, start: float, stop: float) -> float:
 
 def default_joint_specification(range: float) -> BrittleStarJointSpecification:
     joint_specification = BrittleStarJointSpecification(
-        range=range, stiffness=1.1084, damping=5.5084, armature=0.45
+        range=range, stiffness=0.1, damping=0.5, armature=0.02
     )
 
     return joint_specification
