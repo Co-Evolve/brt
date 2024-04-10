@@ -4,7 +4,6 @@ import chex
 import jax.numpy as jnp
 import jax.random
 import numpy as np
-from moojoco.environment.mjx_env import MJXEnvState
 
 from biorobot.brittle_star.environment.undirected_locomotion.dual import (
     BrittleStarUndirectedLocomotionEnvironment,
@@ -23,7 +22,7 @@ from biorobot.brittle_star.mjcf.morphology.specification.default import (
 
 
 def create_env(
-    backend: str, render_mode: str
+        backend: str, render_mode: str
 ) -> BrittleStarUndirectedLocomotionEnvironment:
     morphology_spec = default_brittle_star_morphology_specification(
         num_arms=5, num_segments_per_arm=5, use_p_control=True, use_torque_control=False
@@ -57,7 +56,8 @@ if __name__ == "__main__":
         step_fn = env.step
         reset_fn = env.reset
 
-        def action_sample_fn(_: None, __) -> Tuple[np.ndarray, None]:
+
+        def action_sample_fn(_: None) -> Tuple[np.ndarray, None]:
             return env.action_space.sample(), None
 
     else:
@@ -66,24 +66,15 @@ if __name__ == "__main__":
         step_fn = jax.jit(env.step)
         reset_fn = jax.jit(env.reset)
 
-        # def action_sample_fn(rng: chex.PRNGKey) -> Tuple[jnp.ndarray, chex.PRNGKey]:
-        #     rng, sub_rng = jax.random.split(rng, 2)
-        #     return env.action_space.sample(rng=sub_rng), rng
-        def action_sample_fn(rng: chex.PRNGKey, state: MJXEnvState) -> Tuple[jnp.ndarray, chex.PRNGKey]:
-            time = state.info["time"]
-            actions = jnp.zeros(env.action_space.shape).reshape(5, -1)
-            actions = actions.at[0, 1::2].set(1)
-            actions = actions.at[1:5, 1::2].set(0.5 * jnp.sin(10 * time))
-            actions = actions.at[1:5, ::2].set(0.5 * jnp.cos(10 * time))
-            actions = actions.at[1:3, ::2].set(-1 * actions[1:3, ::2])
-            return actions.flatten(), rng
+
+        def action_sample_fn(rng: chex.PRNGKey) -> Tuple[jnp.ndarray, chex.PRNGKey]:
+            rng, sub_rng = jax.random.split(rng, 2)
+            return env.action_space.sample(rng=sub_rng), rng
 
     state = reset_fn(env_rng)
     while True:
-        action, action_rng = action_sample_fn(action_rng, state)
+        action, action_rng = action_sample_fn(action_rng)
         state = step_fn(state=state, action=action)
-        # print(state.observations["joint_position"])
-        # print(state.observations["joint_velocity"])
-        # print(state.observations["joint_actuator_force"])
+        print(state.observations["joint_position"])
         env.render(state=state)
     env.close()
