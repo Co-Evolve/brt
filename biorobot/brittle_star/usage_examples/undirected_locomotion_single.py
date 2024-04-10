@@ -22,7 +22,7 @@ from biorobot.brittle_star.mjcf.morphology.specification.default import (
 
 
 def create_env(
-        backend: str, render_mode: str
+    backend: str, render_mode: str
 ) -> BrittleStarUndirectedLocomotionEnvironment:
     morphology_spec = default_brittle_star_morphology_specification(
         num_arms=5, num_segments_per_arm=5, use_p_control=True, use_torque_control=False
@@ -56,7 +56,6 @@ if __name__ == "__main__":
         step_fn = env.step
         reset_fn = env.reset
 
-
         def action_sample_fn(_: None) -> Tuple[np.ndarray, None]:
             return env.action_space.sample(), None
 
@@ -65,7 +64,6 @@ if __name__ == "__main__":
 
         step_fn = jax.jit(env.step)
         reset_fn = jax.jit(env.reset)
-
 
         def action_sample_fn(rng: chex.PRNGKey) -> Tuple[jnp.ndarray, chex.PRNGKey]:
             rng, sub_rng = jax.random.split(rng, 2)
