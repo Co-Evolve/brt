@@ -116,28 +116,20 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
         number_of_segments = len(self._arm_specification.segment_specifications)
         return self._segment_index == number_of_segments - 1
 
-    @property
-    def volume(self) -> float:
-        radius = self._segment_specification.radius.value
-        length = self._segment_specification.length.value
-
-        sphere_volume = 4 / 3 * np.pi * radius**3
-        cylinder_volume = np.pi * radius**2 * length
-
-        return sphere_volume + cylinder_volume
-
-    def _get_p_control_kp(self, joint: _ElementImpl) -> float:
-        kp = self.volume * 500_000
-        return kp
+    def _get_strength(self, joint: _ElementImpl) -> float:
+        strength = self._segment_specification.radius.value * 200
+        return strength
 
     def _configure_p_control_actuator(self, joint: _ElementImpl) -> None:
         self.mjcf_model.actuator.add(
             "position",
             name=f"{joint.name}_p_control",
             joint=joint,
-            kp=self._get_p_control_kp(joint),
+            kp=50,
             ctrllimited=True,
             ctrlrange=joint.range,
+            forcelimited=True,
+            forcerange=[-self._get_strength(joint), self._get_strength(joint)],
         )
 
     def _configure_p_control_actuators(self) -> None:
@@ -145,18 +137,15 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
             self._configure_p_control_actuator(self._in_plane_joint)
             self._configure_p_control_actuator(self._out_of_plane_joint)
 
-    def _get_torque_control_gear(self, joint: _ElementImpl) -> float:
-        gear = self.volume * 200_000
-        return gear
-
     def _configure_torque_control_actuator(self, joint: _ElementImpl) -> None:
         self.mjcf_model.actuator.add(
             "motor",
             name=f"{joint.name}_torque_control",
             joint=joint,
-            gear=[self._get_torque_control_gear(joint)],
             ctrllimited=True,
-            ctrlrange=[-1, 1],
+            ctrlrange=[-self._get_strength(joint), self._get_strength(joint)],
+            forcelimited=True,
+            forcerange=[-self._get_strength(joint), self._get_strength(joint)],
         )
 
     def _configure_torque_control_actuators(self) -> None:
