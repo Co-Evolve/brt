@@ -76,6 +76,7 @@ def default_brittle_star_morphology_specification(
     num_segments_per_arm: Union[int, List[int]] = 5,
     use_p_control: bool = False,
     use_torque_control: bool = False,
+    radius_to_strength_factor: float = 200,
 ) -> BrittleStarMorphologySpecification:
     disk_specification = BrittleStarDiskSpecification(
         diameter=DISK_DIAMETER, height=DISK_HEIGHT
@@ -95,7 +96,9 @@ def default_brittle_star_morphology_specification(
         arm_specifications.append(arm_specification)
 
     actuation_specification = BrittleStarActuationSpecification(
-        use_p_control=use_p_control, use_torque_control=use_torque_control
+        use_p_control=use_p_control,
+        use_torque_control=use_torque_control,
+        radius_to_strength_factor=radius_to_strength_factor,
     )
     specification = BrittleStarMorphologySpecification(
         disk_specification=disk_specification,

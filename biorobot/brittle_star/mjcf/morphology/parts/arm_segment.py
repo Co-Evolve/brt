@@ -117,7 +117,10 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
         return self._segment_index == number_of_segments - 1
 
     def _get_strength(self, joint: _ElementImpl) -> float:
-        strength = self._segment_specification.radius.value * 200
+        strength = (
+            self._segment_specification.radius.value
+            * self.morphology_specification.actuation_specification.radius_to_strength_factor.value
+        )
         return strength
 
     def _configure_p_control_actuator(self, joint: _ElementImpl) -> None:

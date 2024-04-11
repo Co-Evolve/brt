@@ -13,13 +13,15 @@ class BrittleStarEnvironmentBaseConfiguration(MuJoCoEnvironmentConfiguration):
         self,
         joint_randomization_noise_scale: float = 0.0,
         color_contacts: bool = False,
+        solver_iterations: int = 1,
+        solver_ls_iterations: int = 5,
         *args,
         **kwargs,
     ):
         super().__init__(
             disable_eulerdamp=True,
-            solver_iterations=10,
-            solver_ls_iterations=10,
+            solver_iterations=solver_iterations,
+            solver_ls_iterations=solver_ls_iterations,
             *args,
             **kwargs,
         )
