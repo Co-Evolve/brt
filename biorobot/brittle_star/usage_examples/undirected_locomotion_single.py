@@ -27,7 +27,11 @@ def create_env(
     backend: str, render_mode: str
 ) -> BrittleStarUndirectedLocomotionEnvironment:
     morphology_spec = default_brittle_star_morphology_specification(
-        num_arms=5, num_segments_per_arm=6, use_p_control=True, use_torque_control=False, radius_to_strength_factor=200
+        num_arms=5,
+        num_segments_per_arm=6,
+        use_p_control=True,
+        use_torque_control=False,
+        radius_to_strength_factor=200,
     )
     morphology = MJCFBrittleStarMorphology(morphology_spec)
     arena_config = AquariumArenaConfiguration()
@@ -41,7 +45,7 @@ def create_env(
         camera_ids=[0, 1],
         color_contacts=True,
         solver_iterations=1,
-        solver_ls_iterations=5
+        solver_ls_iterations=5,
     )
     env = BrittleStarUndirectedLocomotionEnvironment.from_morphology_and_arena(
         morphology=morphology, arena=arena, configuration=env_config, backend=backend
@@ -69,7 +73,9 @@ if __name__ == "__main__":
         step_fn = jax.jit(env.step)
         reset_fn = jax.jit(env.reset)
 
-        def action_sample_fn(rng: chex.PRNGKey, state: MJXEnvState) -> Tuple[jnp.ndarray, chex.PRNGKey]:
+        def action_sample_fn(
+            rng: chex.PRNGKey, state: MJXEnvState
+        ) -> Tuple[jnp.ndarray, chex.PRNGKey]:
             time = state.info["time"]
             actions = jnp.zeros(env.action_space.shape).reshape(5, -1)
             actions = actions.at[0, 1::2].set(1)

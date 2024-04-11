@@ -13,13 +13,13 @@ from biorobot.utils import colors
 
 class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
     def __init__(
-            self,
-            parent: Union[MJCFMorphology, MJCFMorphologyPart],
-            name: str,
-            pos: np.array,
-            euler: np.array,
-            *args,
-            **kwargs,
+        self,
+        parent: Union[MJCFMorphology, MJCFMorphologyPart],
+        name: str,
+        pos: np.array,
+        euler: np.array,
+        *args,
+        **kwargs,
     ) -> None:
         super().__init__(parent, name, pos, euler, *args, **kwargs)
 
@@ -79,10 +79,10 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
         return np.array([x_offset, 0, 0])
 
     def _configure_joint(
-            self,
-            name: str,
-            axis: np.ndarray,
-            joint_specification: BrittleStarJointSpecification,
+        self,
+        name: str,
+        axis: np.ndarray,
+        joint_specification: BrittleStarJointSpecification,
     ) -> _ElementImpl:
         joint = self.mjcf_body.add(
             "joint",
@@ -117,8 +117,10 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
         return self._segment_index == number_of_segments - 1
 
     def _get_strength(self, joint: _ElementImpl) -> float:
-        strength = (self._segment_specification.radius.value *
-                    self.morphology_specification.actuation_specification.radius_to_strength_factor.value)
+        strength = (
+            self._segment_specification.radius.value
+            * self.morphology_specification.actuation_specification.radius_to_strength_factor.value
+        )
         return strength
 
     def _configure_p_control_actuator(self, joint: _ElementImpl) -> None:
@@ -151,7 +153,7 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
 
     def _configure_torque_control_actuators(self) -> None:
         if (
-                self.morphology_specification.actuation_specification.use_torque_control.value
+            self.morphology_specification.actuation_specification.use_torque_control.value
         ):
             self._configure_torque_control_actuator(self._in_plane_joint)
             self._configure_torque_control_actuator(self._out_of_plane_joint)

@@ -59,7 +59,12 @@ class BrittleStarDiskSpecification(Specification):
 
 
 class BrittleStarActuationSpecification(Specification):
-    def __init__(self, use_p_control: bool, use_torque_control: bool, radius_to_strength_factor: float) -> None:
+    def __init__(
+        self,
+        use_p_control: bool,
+        use_torque_control: bool,
+        radius_to_strength_factor: float,
+    ) -> None:
         super().__init__()
         assert (
             use_p_control + use_torque_control == 1
