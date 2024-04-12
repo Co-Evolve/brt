@@ -123,8 +123,8 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
         )
         return strength
 
-    def _configure_p_control_actuator(self, joint: _ElementImpl) -> None:
-        self.mjcf_model.actuator.add(
+    def _configure_p_control_actuator(self, joint: _ElementImpl) -> _ElementImpl:
+        return self.mjcf_model.actuator.add(
             "position",
             name=f"{joint.name}_p_control",
             joint=joint,
@@ -137,11 +137,15 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
 
     def _configure_p_control_actuators(self) -> None:
         if self.morphology_specification.actuation_specification.use_p_control.value:
-            self._configure_p_control_actuator(self._in_plane_joint)
-            self._configure_p_control_actuator(self._out_of_plane_joint)
+            self._in_plane_actuator = self._configure_p_control_actuator(
+                self._in_plane_joint
+            )
+            self._out_of_plane_actuator = self._configure_p_control_actuator(
+                self._out_of_plane_joint
+            )
 
-    def _configure_torque_control_actuator(self, joint: _ElementImpl) -> None:
-        self.mjcf_model.actuator.add(
+    def _configure_torque_control_actuator(self, joint: _ElementImpl) -> _ElementImpl:
+        return self.mjcf_model.actuator.add(
             "motor",
             name=f"{joint.name}_torque_control",
             joint=joint,
@@ -155,8 +159,12 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
         if (
             self.morphology_specification.actuation_specification.use_torque_control.value
         ):
-            self._configure_torque_control_actuator(self._in_plane_joint)
-            self._configure_torque_control_actuator(self._out_of_plane_joint)
+            self._in_plane_actuator = self._configure_torque_control_actuator(
+                self._in_plane_joint
+            )
+            self._out_of_plane_actuator = self._configure_torque_control_actuator(
+                self._out_of_plane_joint
+            )
 
     def _configure_actuators(self) -> None:
         self._configure_p_control_actuators()
@@ -185,6 +193,19 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
         self._configure_joint_sensors(joint=self._in_plane_joint)
         self._configure_joint_sensors(joint=self._out_of_plane_joint)
 
+    def _configure_actuator_sensors(self) -> None:
+        self.mjcf_model.sensor.add(
+            "actuatorfrc",
+            actuator=self._in_plane_actuator,
+            name=f"{self._in_plane_actuator.name}_actuatorfrc_sensor",
+        )
+        self.mjcf_model.sensor.add(
+            "actuatorfrc",
+            actuator=self._out_of_plane_actuator,
+            name=f"{self._out_of_plane_actuator.name}_actuatorfrc_sensor",
+        )
+
     def _configure_sensors(self) -> None:
         self._configure_position_sensor()
         self._configure_joints_sensors()
+        self._configure_actuator_sensors()

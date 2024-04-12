@@ -37,11 +37,40 @@ def get_shared_brittle_star_mjx_observables(
         retriever=lambda state: state.mjx_data.qvel[joint_dof_adr],
     )
 
-    actuator_force_observable = MJXObservable(
+    joint_actuator_force_observable = MJXObservable(
         name="joint_actuator_force",
         low=-jnp.inf * jnp.ones(len(joint_dof_adr)),
         high=jnp.inf * jnp.ones(len(joint_dof_adr)),
         retriever=lambda state: state.mjx_data.qfrc_actuator[joint_dof_adr].flatten(),
+    )
+
+    low_actuator_force_limit = jnp.array(
+        [limits[0] for limits in mj_model.actuator_forcerange]
+    )
+    high_actuator_force_limit = jnp.array(
+        [limits[1] for limits in mj_model.actuator_forcerange]
+    )
+
+    def calculate_actuator_force(state: MJXEnvState) -> jnp.ndarray:
+        l = state.mjx_data.actuator_length
+        v = state.mjx_data.actuator_velocity
+        gain = state.mjx_model.actuator_gainprm[:, 0]
+        b0 = state.mjx_model.actuator_biasprm[:, 0]
+        b1 = state.mjx_model.actuator_biasprm[:, 1]
+        b2 = state.mjx_model.actuator_biasprm[:, 2]
+        ctrl = state.mjx_data.ctrl
+
+        return jnp.clip(
+            gain * ctrl + b0 + b1 * l + b2 * v,
+            low_actuator_force_limit,
+            high_actuator_force_limit,
+        )
+
+    actuator_force_observable = MJXObservable(
+        name="actuator_force",
+        low=low_actuator_force_limit,
+        high=high_actuator_force_limit,
+        retriever=calculate_actuator_force,
     )
 
     segment_capsule_geom_ids = jnp.array(
@@ -125,6 +154,7 @@ def get_shared_brittle_star_mjx_observables(
     return [
         joint_position_observable,
         joint_velocity_observable,
+        joint_actuator_force_observable,
         actuator_force_observable,
         touch_observable,
         disk_position_observable,

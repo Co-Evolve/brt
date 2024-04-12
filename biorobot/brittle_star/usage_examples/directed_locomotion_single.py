@@ -74,9 +74,8 @@ if __name__ == "__main__":
     while True:
         action, action_rng = action_sample_fn(action_rng)
         state = step_fn(state=state, action=action)
-        print(state.observations["joint_position"])
-        print(state.observations["joint_velocity"])
         print(state.observations["joint_actuator_force"])
+        print(state.observations["actuator_force"])
         print()
         post_render(env.render(state=state), env.environment_configuration)
         if state.terminated | state.truncated:
