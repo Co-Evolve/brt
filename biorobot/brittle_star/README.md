@@ -171,7 +171,8 @@ brittle star environment returns as observations (further discussed below).
 - Proprioception
     - Joint positions (two per segment, in-plane and out-of-plane, in radians)
     - Joint velocities (two per segment, in-plane and out-of-plane, in radians / second)
-    - Joint actuator force (i.e. the total actuator force acting on a joint) (two per segment)
+    - Joint actuator force (i.e. the total actuator force acting on a joint, in Newton meters) (two per segment)
+    - Actuator force (the scalar actuator force, in Newtons) (two per segment)
     - Central disk's position (w.r.t. world frame)
     - Central disk's rotation (w.r.t. world frame, in radians)
     - Central disk's velocity (w.r.t. world frame, in m/s)

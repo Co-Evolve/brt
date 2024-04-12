@@ -50,16 +50,34 @@ def get_shared_brittle_star_mjc_observables(
         ).flatten(),
     )
 
-    # All actuator torques
-    actuator_frc_sensors = [
+    # All joint actuator torques
+    joint_actuator_frc_sensors = [
         sensor
         for sensor in sensors
         if sensor.type[0] == mujoco.mjtSensor.mjSENS_JOINTACTFRC
     ]
-    actuator_force_observable = MJCObservable(
+    joint_actuator_force_observable = MJCObservable(
         name="joint_actuator_force",
-        low=-np.inf * np.ones(len(actuator_frc_sensors)),
-        high=np.inf * np.ones(len(actuator_frc_sensors)),
+        low=-np.inf * np.ones(len(joint_actuator_frc_sensors)),
+        high=np.inf * np.ones(len(joint_actuator_frc_sensors)),
+        retriever=lambda state: np.array(
+            [
+                state.mj_data.sensordata[sensor.adr[0] : sensor.adr[0] + sensor.dim[0]]
+                for sensor in joint_actuator_frc_sensors
+            ]
+        ).flatten(),
+    )
+
+    # All actuator forces
+    actuator_frc_sensors = [
+        sensor
+        for sensor in sensors
+        if sensor.type[0] == mujoco.mjtSensor.mjSENS_ACTUATORFRC
+    ]
+    actuator_force_observable = MJCObservable(
+        name="actuator_force",
+        low=np.array([limits[0] for limits in mj_model.actuator_forcerange]),
+        high=np.array([limits[1] for limits in mj_model.actuator_forcerange]),
         retriever=lambda state: np.array(
             [
                 state.mj_data.sensordata[sensor.adr[0] : sensor.adr[0] + sensor.dim[0]]
@@ -191,6 +209,7 @@ def get_shared_brittle_star_mjc_observables(
     return [
         joint_position_observable,
         joint_velocity_observable,
+        joint_actuator_force_observable,
         actuator_force_observable,
         touch_observable,
         disk_position_observable,
