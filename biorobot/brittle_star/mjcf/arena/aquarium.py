@@ -3,7 +3,7 @@ from typing import Tuple
 import numpy as np
 from moojoco.mjcf.arena import ArenaConfiguration, MJCFArena
 
-from biorobot.toy_example.mjcf.arena.target import MJCFTarget
+from biorobot.brittle_star.mjcf.arena.target import MJCFTarget
 from biorobot.utils import colors
 
 
@@ -121,7 +121,7 @@ class MJCFAquariumArena(MJCFArena):
             material=ground_material,
             rgba=rgba,
             size=list(self.arena_configuration.size) + [0.25],
-            condim=3,
+            condim=6,
             friction=[1, 0.5, 0.5],
             contype=0,
             conaffinity=1,
