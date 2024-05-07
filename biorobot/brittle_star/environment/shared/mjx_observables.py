@@ -95,11 +95,10 @@ def get_shared_brittle_star_mjx_observables(
     def get_segment_contacts(state: MJXEnvState) -> jnp.ndarray:
         contact_data = state.mjx_data.contact
         contacts = contact_data.dist <= 0
-        valid_geom1s = jnp.isin(contact_data.geom1, external_contact_geom_ids)
 
         def solve_contact(geom_id: int) -> jnp.ndarray:
             return (
-                jnp.sum(contacts * valid_geom1s * (contact_data.geom2 == geom_id)) > 0
+                jnp.sum(contacts * jnp.any(geom_id == contact_data.geom, axis=-1)) > 0
             ).astype(int)
 
         return jax.vmap(solve_contact)(segment_capsule_geom_ids)

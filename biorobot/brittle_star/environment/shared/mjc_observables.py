@@ -95,36 +95,18 @@ def get_shared_brittle_star_mjc_observables(
         if "segment" in geom_name and "capsule" in geom_name:
             segment_capsule_geom_id_to_contact_idx[geom_id] = next(indexer)
 
-    #   Get non-morphology geom ids to check contacts with
-    external_contact_geom_ids = {
-        mj_model.geom("groundplane").id,
-        mj_model.geom("north_wall").id,
-        mj_model.geom("east_wall").id,
-        mj_model.geom("south_wall").id,
-        mj_model.geom("west_wall").id,
-    }
-
     def get_segment_contacts(state: MJCEnvState) -> np.ndarray:
-        contacts = np.zeros(len(segment_capsule_geom_id_to_contact_idx))
+        contacts = np.zeros(len(segment_capsule_geom_id_to_contact_idx), dtype=int)
         # based on https://gist.github.com/WuXinyang2012/b6649817101dfcb061eff901e9942057
         for contact_id in range(state.mj_data.ncon):
             contact = state.mj_data.contact[contact_id]
-            if contact.geom1 in external_contact_geom_ids:
+            if contact.dist < 0:
+                if contact.geom1 in segment_capsule_geom_id_to_contact_idx:
+                    contacts[segment_capsule_geom_id_to_contact_idx[contact.geom1]] = 1
                 if contact.geom2 in segment_capsule_geom_id_to_contact_idx:
-                    c_array = np.zeros(6, dtype=np.float64)
-                    mujoco.mj_contactForce(
-                        m=state.mj_model, d=state.mj_data, id=contact_id, result=c_array
-                    )
+                    contacts[segment_capsule_geom_id_to_contact_idx[contact.geom2]] = 1
 
-                    # Convert the contact force from contact frame to world frame
-                    ref = np.reshape(contact.frame, (3, 3))
-                    c_force = np.dot(np.linalg.inv(ref), c_array[0:3])
-
-                    index = segment_capsule_geom_id_to_contact_idx[contact.geom2]
-                    contacts[index] = max(np.linalg.norm(c_force), contacts[index])
-
-        ground_contacts = (contacts > 0).astype(int)
-        return ground_contacts
+        return contacts
 
     touch_observable = MJCObservable(
         name="segment_contact",
