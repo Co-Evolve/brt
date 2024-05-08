@@ -22,6 +22,7 @@ class MJCFJumpingSpiderAbdomen(MJCFMorphologyPart):
         self._build_ellipsoid()
         self._configure_joints()
         self._configure_actuators()
+        self._configure_dragline_body_site()
 
     def _build_ellipsoid(self) -> None:
         size_x = self._abdomen_specification.size_x.value
@@ -29,14 +30,14 @@ class MJCFJumpingSpiderAbdomen(MJCFMorphologyPart):
         size_z = self._abdomen_specification.size_z.value
         inset_factor = 1 - self._abdomen_specification.inset_factor.value
 
-        self._disc = self.mjcf_body.add("geom",
-                                        name=f"{self.base_name}_ellipsoid",
-                                        type=f"ellipsoid",
-                                        pos=np.array([-size_x * inset_factor, 0, 0]),
-                                        euler=np.zeros(3),
-                                        size=[size_x, size_y, size_z],
-                                        rgba=colors.rgba_green,
-                                        )
+        self._ellipsoid = self.mjcf_body.add("geom",
+                                             name=f"{self.base_name}_ellipsoid",
+                                             type=f"ellipsoid",
+                                             pos=np.array([-size_x * inset_factor, 0, 0]),
+                                             euler=np.zeros(3),
+                                             size=[size_x, size_y, size_z],
+                                             rgba=colors.rgba_green,
+                                             )
 
     def _configure_joint(
             self,
@@ -90,3 +91,18 @@ class MJCFJumpingSpiderAbdomen(MJCFMorphologyPart):
     ) -> None:
         self._configure_p_control_actuator(joint=self._ip_joint)
         self._configure_p_control_actuator(joint=self._oop_joint)
+
+    def _configure_dragline_body_site(self) -> None:
+        ip_angle = np.pi
+        oop_angle = -np.pi / 6
+        pos_x = self._abdomen_specification.size_x.value * np.cos(oop_angle) * np.cos(ip_angle)
+        pos_y = self._abdomen_specification.size_y.value * np.cos(oop_angle) * np.sin(ip_angle)
+        pos_z = self._abdomen_specification.size_z.value * np.sin(oop_angle)
+        pos = np.array([pos_x, pos_y, pos_z]) + self._ellipsoid.pos
+
+        self.dragline_body_site = self.mjcf_body.add("site",
+                                                     type="sphere",
+                                                     name=f"{self.base_name}_dragline_start_site",
+                                                     pos=pos,
+                                                     size=[0.01],
+                                                     rgba=colors.rgba_red)

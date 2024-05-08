@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from fprs.parameters import FixedParameter
 from fprs.specification import MorphologySpecification, Specification
@@ -93,11 +93,20 @@ class JumpingSpiderCephalothoraxSpecification(Specification):
         self.leg_connector_radius = FixedParameter(leg_connector_radius)
 
 
+class JumpingSpiderDraglineSpecification(Specification):
+    def __init__(self, stiffness: float, damping: float) -> None:
+        super().__init__()
+        self.stiffness = FixedParameter(stiffness)
+        self.damping = FixedParameter(damping)
+
+
 class JumpingSpiderMorphologySpecification(MorphologySpecification):
     def __init__(self, cephalothorax_specification: JumpingSpiderCephalothoraxSpecification,
                  abdomen_specification: JumpingSpiderAbdomenSpecification,
-                 leg_specifications: List[JumpingSpiderLegSpecification]) -> None:
+                 leg_specifications: List[JumpingSpiderLegSpecification],
+                 dragline_specification: JumpingSpiderDraglineSpecification) -> None:
         super().__init__()
         self.cephalothorax_specification = cephalothorax_specification
         self.abdomen_specification = abdomen_specification
         self.leg_specifications = leg_specifications
+        self.dragline_specification = dragline_specification

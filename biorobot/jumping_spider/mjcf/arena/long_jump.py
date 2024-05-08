@@ -1,11 +1,10 @@
 from typing import Tuple
 
-from moojoco.mjcf.arena import ArenaConfiguration, MJCFArena
-
+from biorobot.jumping_spider.mjcf.arena.shared import MJCFSpiderArena, SpiderArenaConfiguration
 from biorobot.utils import colors
 
 
-class LongJumpArenaConfiguration(ArenaConfiguration):
+class LongJumpArenaConfiguration(SpiderArenaConfiguration):
     def __init__(
             self,
             name: str = "PlatformJumpArena",
@@ -15,16 +14,14 @@ class LongJumpArenaConfiguration(ArenaConfiguration):
         self.track_size = track_size
 
 
-class MJCFLongJumpArena(MJCFArena):
+class MJCFLongJumpArena(MJCFSpiderArena):
     @property
     def arena_configuration(self) -> LongJumpArenaConfiguration:
         return super().arena_configuration
 
     def _build(self, *args, **kwargs) -> None:
-        self._configure_lights()
-        self._configure_sky()
         self._build_track()
-        self._configure_cameras()
+        super()._build(args=args, kwargs=kwargs)
 
     def _configure_cameras(self) -> None:
         self.mjcf_model.worldbody.add(
@@ -32,31 +29,6 @@ class MJCFLongJumpArena(MJCFArena):
         )
         self.mjcf_model.worldbody.add(
             "camera", name="side_camera", pos=[self._track.pos[0], -15, 15], xyaxes=(1, 0, 0, 0, 0.5, 0.5)
-        )
-
-    def _configure_lights(self) -> None:
-        self.mjcf_model.worldbody.add(
-            "light",
-            pos=[-20, 0, 20],
-            directional=True,
-            dir=[0, 0, -0.5],
-            diffuse=[0.1, 0.1, 0.1],
-            castshadow=False,
-        )
-        self.mjcf_model.visual.headlight.set_attributes(
-            ambient=[0.4, 0.4, 0.4], diffuse=[0.8, 0.8, 0.8], specular=[0.1, 0.1, 0.1]
-        )
-
-    def _configure_sky(self) -> None:
-        # white sky
-        self.mjcf_model.asset.add(
-            "texture",
-            type="skybox",
-            builtin="flat",
-            rgb1="1.0 1.0 1.0",
-            rgb2="1.0 1.0 1.0",
-            width=200,
-            height=200,
         )
 
     def _build_track(self) -> None:

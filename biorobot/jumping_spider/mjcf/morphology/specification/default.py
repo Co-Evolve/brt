@@ -4,7 +4,7 @@ import numpy as np
 
 from biorobot.jumping_spider.mjcf.morphology.specification.specification import JumpingSpiderJointSpecification, \
     JumpingSpiderLegSegmentSpecification, JumpingSpiderLegSpecification, JumpingSpiderMorphologySpecification, \
-    JumpingSpiderAbdomenSpecification, JumpingSpiderCephalothoraxSpecification
+    JumpingSpiderAbdomenSpecification, JumpingSpiderCephalothoraxSpecification, JumpingSpiderDraglineSpecification
 
 CONNECTOR_RADIUS = .01333
 LEG_SEGMENT_NAMES = ["coxa", "trochanter", "femur", "patella", "tibia", "metatarsus", "tarsus"]
@@ -89,10 +89,13 @@ def default_jumping_spider_specification(
         leg_specification = default_leg_specification(in_plane_connection_angle=in_plane_connection_angle)
         leg_specifications.append(leg_specification)
 
+    dragline_specification = JumpingSpiderDraglineSpecification(stiffness=2.0, damping=0.1)
+
     specification = JumpingSpiderMorphologySpecification(
         cephalothorax_specification=cephalothorax_specification,
         leg_specifications=leg_specifications,
         abdomen_specification=abdomen_specification,
+        dragline_specification=dragline_specification
     )
 
     return specification

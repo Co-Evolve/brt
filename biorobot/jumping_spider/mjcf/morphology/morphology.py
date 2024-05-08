@@ -1,4 +1,5 @@
 import numpy as np
+from dm_control.mjcf.element import _ElementImpl
 from moojoco.mjcf.morphology import MJCFMorphology
 from transforms3d.euler import euler2quat
 
@@ -7,6 +8,7 @@ from biorobot.jumping_spider.mjcf.morphology.parts.cephalothorax import MJCFJump
 from biorobot.jumping_spider.mjcf.morphology.parts.leg import MJCFJumpingSpiderLeg
 from biorobot.jumping_spider.mjcf.morphology.specification.default import default_jumping_spider_specification
 from biorobot.jumping_spider.mjcf.morphology.specification.specification import JumpingSpiderMorphologySpecification
+from biorobot.utils import colors
 
 
 class MJCFJumpingSpiderMorphology(MJCFMorphology):
@@ -14,7 +16,7 @@ class MJCFJumpingSpiderMorphology(MJCFMorphology):
             self,
             specification: JumpingSpiderMorphologySpecification
     ) -> None:
-        super().__init__(specification)
+        super().__init__(specification, name="JumpingSpiderMorphology")
 
     @property
     def morphology_specification(
@@ -100,6 +102,18 @@ class MJCFJumpingSpiderMorphology(MJCFMorphology):
             quat=euler2quat(40 / 180 * np.pi, 0, 0),
             mode="track",
         )
+
+    def add_dragline(self, attachment_site: _ElementImpl) -> None:
+        self._dragline = self.mjcf_model.tendon.add(
+            'spatial',
+            name=f"{self.base_name}_dragline",
+            width=0.01,
+            rgba=colors.rgba_blue,
+            stiffness=self.morphology_specification.dragline_specification.stiffness.value,
+            damping=self.morphology_specification.dragline_specification.stiffness.value
+        )
+        self._dragline.add('site', site=self._abdomen.dragline_body_site)
+        self._dragline.add('site', site=attachment_site)
 
 
 if __name__ == '__main__':

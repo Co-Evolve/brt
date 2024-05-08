@@ -6,7 +6,7 @@ if __name__ == '__main__':
     # arena_configuration = LongJumpArenaConfiguration(track_size=(10, 3))
     # jump_arena = MJCFLongJumpArena(configuration=arena_configuration)
 
-    arena_configuration = PlatformJumpArenaConfiguration(platform_size=(2, 2), gap=8)
+    arena_configuration = PlatformJumpArenaConfiguration()
     jump_arena = MJCFPlatformJumpArena(configuration=arena_configuration)
 
     morphology_specification = default_jumping_spider_specification()

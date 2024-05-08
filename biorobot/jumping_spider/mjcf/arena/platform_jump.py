@@ -1,34 +1,36 @@
-from typing import Tuple
+from typing import Sequence
 
 import numpy as np
 from dm_control.mjcf.element import _ElementImpl
-from moojoco.mjcf.arena import ArenaConfiguration, MJCFArena
 
+from biorobot.jumping_spider.mjcf.arena.shared import SpiderArenaConfiguration, MJCFSpiderArena
 from biorobot.utils import colors
 
 
-class PlatformJumpArenaConfiguration(ArenaConfiguration):
+class PlatformJumpArenaConfiguration(SpiderArenaConfiguration):
     def __init__(
             self,
             name: str = "PlatformJumpArena",
-            platform_size: Tuple[float, float] = (3, 3),
-            gap: float = 5
+            start_platform_pos: Sequence[float] = (0, 0, -0.125),
+            start_platform_size: Sequence[float] = (4, 3, 0.25),
+            offset_to_end_platform: Sequence[float] = (10, 0, 0),
+            end_platform_size: Sequence[float] = (3, 3, 0.25)
     ) -> None:
         super().__init__(name=name)
-        self.platform_size = platform_size
-        self.gap = gap
+        self.start_platform_pos = start_platform_pos
+        self.start_platform_size = start_platform_size
+        self.offset_to_end_platform = offset_to_end_platform
+        self.end_platform_size = end_platform_size
 
 
-class MJCFPlatformJumpArena(MJCFArena):
+class MJCFPlatformJumpArena(MJCFSpiderArena):
     @property
     def arena_configuration(self) -> PlatformJumpArenaConfiguration:
         return super().arena_configuration
 
     def _build(self, *args, **kwargs) -> None:
-        self._configure_lights()
-        self._configure_sky()
         self._build_platforms()
-        self._configure_cameras()
+        super()._build(args=args, kwargs=kwargs)
 
     def _configure_cameras(self) -> None:
         middle = np.mean([self._start_platform.pos[0], self._end_platform.pos[0]])
@@ -39,49 +41,28 @@ class MJCFPlatformJumpArena(MJCFArena):
             "camera", name="side_camera", pos=[middle, -15, 15], xyaxes=(1, 0, 0, 0, 0.5, 0.5)
         )
 
-    def _configure_lights(self) -> None:
-        self.mjcf_model.worldbody.add(
-            "light",
-            pos=[-20, 0, 20],
-            directional=True,
-            dir=[0, 0, -0.5],
-            diffuse=[0.1, 0.1, 0.1],
-            castshadow=False,
-        )
-        self.mjcf_model.visual.headlight.set_attributes(
-            ambient=[0.4, 0.4, 0.4], diffuse=[0.8, 0.8, 0.8], specular=[0.1, 0.1, 0.1]
-        )
-
-    def _configure_sky(self) -> None:
-        # white sky
-        self.mjcf_model.asset.add(
-            "texture",
-            type="skybox",
-            builtin="flat",
-            rgb1="1.0 1.0 1.0",
-            rgb2="1.0 1.0 1.0",
-            width=200,
-            height=200,
-        )
-
-    def _build_platform(self, x_pos: float, name: str) -> _ElementImpl:
+    def _build_platform(self, pos: Sequence[float], size: Sequence[float],
+                        name: str) -> _ElementImpl:
         return self.mjcf_body.add(
             "geom",
             type="box",
             name=f"{self.base_name}_{name}",
             rgba=colors.rgba_gray,
-            pos=[x_pos, 0, -0.25],
-            size=list(self.arena_configuration.platform_size) + [0.25],
+            pos=pos,
+            size=np.array(size) / 2,
             contype=0,
             conaffinity=1,
         )
 
     def _build_platforms(self) -> None:
         self._start_platform = self._build_platform(
-            x_pos=0.0,
+            pos=self.arena_configuration.start_platform_pos,
+            size=self.arena_configuration.start_platform_size,
             name="start_platform"
         )
         self._end_platform = self._build_platform(
-            x_pos=self.arena_configuration.platform_size[0] + self.arena_configuration.gap,
+            pos=np.array(self.arena_configuration.start_platform_pos) + np.array(
+                self.arena_configuration.offset_to_end_platform),
+            size=self.arena_configuration.end_platform_size,
             name="end_platform"
         )
