@@ -94,13 +94,10 @@ class JumpingSpiderCephalothoraxSpecification(Specification):
 
 
 class JumpingSpiderMorphologySpecification(MorphologySpecification):
-    def __init__(
-            self,
-            cephalothorax_specification: JumpingSpiderCephalothoraxSpecification,
-            abdomen_specification: JumpingSpiderAbdomenSpecification,
-            leg_specifications: List[JumpingSpiderLegSpecification],
-    ) -> None:
-        super(JumpingSpiderMorphologySpecification, self).__init__()
+    def __init__(self, cephalothorax_specification: JumpingSpiderCephalothoraxSpecification,
+                 abdomen_specification: JumpingSpiderAbdomenSpecification,
+                 leg_specifications: List[JumpingSpiderLegSpecification]) -> None:
+        super().__init__()
         self.cephalothorax_specification = cephalothorax_specification
         self.abdomen_specification = abdomen_specification
         self.leg_specifications = leg_specifications

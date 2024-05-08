@@ -56,8 +56,6 @@ class MJCFJumpingSpiderLegSegment(MJCFMorphologyPart):
             size=[self._segment_specification.radius.value, self._segment_specification.length.value / 2],
             friction=[1, 0.05, 0.05],
             rgba=colors.rgba_green,
-            contype=0,
-            conaffinity=1
         )
 
     @property
