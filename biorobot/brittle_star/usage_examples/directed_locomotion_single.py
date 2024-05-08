@@ -1,6 +1,7 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import chex
+import cv2
 import jax.numpy as jnp
 import jax.random
 import numpy as np
@@ -19,7 +20,29 @@ from biorobot.brittle_star.mjcf.morphology.morphology import MJCFBrittleStarMorp
 from biorobot.brittle_star.mjcf.morphology.specification.default import (
     default_brittle_star_morphology_specification,
 )
-from biorobot.toy_example.usage_examples.mjc.example_usage_single import post_render
+
+
+def post_render(
+    render_output: List[np.ndarray],
+    environment_configuration: BrittleStarDirectedLocomotionEnvironmentConfiguration,
+) -> None:
+    if environment_configuration.render_mode == "human":
+        return
+
+    num_cameras = len(environment_configuration.camera_ids)
+    num_envs = len(render_output) // num_cameras
+
+    if num_cameras > 1:
+        # Horizontally stack frames of the same environment
+        frames_per_env = np.array_split(render_output, num_envs)
+        render_output = [
+            np.concatenate(env_frames, axis=1) for env_frames in frames_per_env
+        ]
+
+    # Vertically stack frames of different environments
+    stacked_frames = np.concatenate(render_output, axis=0)
+    cv2.imshow("render", stacked_frames)
+    cv2.waitKey(1)
 
 
 def create_env(

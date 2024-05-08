@@ -31,7 +31,7 @@ class MJCFBrittleStarMorphology(MJCFMorphology):
         self.mjcf_model.compiler.angle = "radian"
 
     def _configure_defaults(self) -> None:
-        self.mjcf_model.default.geom.condim = 3
+        self.mjcf_model.default.geom.condim = 6
         self.mjcf_model.default.geom.contype = 1
         self.mjcf_model.default.geom.conaffinity = 0
 
