@@ -89,7 +89,7 @@ def default_jumping_spider_specification(
         leg_specification = default_leg_specification(in_plane_connection_angle=in_plane_connection_angle)
         leg_specifications.append(leg_specification)
 
-    dragline_specification = JumpingSpiderDraglineSpecification(stiffness=2.0, damping=0.1)
+    dragline_specification = JumpingSpiderDraglineSpecification(stiffness=0.0, damping=1.0)
 
     specification = JumpingSpiderMorphologySpecification(
         cephalothorax_specification=cephalothorax_specification,

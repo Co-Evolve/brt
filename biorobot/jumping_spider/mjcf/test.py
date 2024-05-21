@@ -11,9 +11,9 @@ if __name__ == '__main__':
 
     morphology_specification = default_jumping_spider_specification()
     morphology = MJCFJumpingSpiderMorphology(specification=morphology_specification)
-
     jump_arena.attach(
         other=morphology, free_joint=True, position=[0, 0, 1]
     )
 
     jump_arena.export_to_xml_with_assets("./mjcf")
+

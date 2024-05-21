@@ -30,6 +30,7 @@ class MJCFJumpingSpiderMorphology(MJCFMorphology):
             **kwargs
     ) -> None:
         self._configure_compiler()
+        self._configure_options()
         self._configure_defaults()
 
         self._build_cephalothorax()
@@ -42,6 +43,9 @@ class MJCFJumpingSpiderMorphology(MJCFMorphology):
             self
     ) -> None:
         self.mjcf_model.compiler.angle = "radian"
+
+    def _configure_options(self) -> None:
+        self.mjcf_model.option.integrator = 'implicitfast'
 
     def _configure_defaults(self) -> None:
         self.mjcf_model.default.geom.condim = 3
@@ -103,7 +107,7 @@ class MJCFJumpingSpiderMorphology(MJCFMorphology):
             mode="track",
         )
 
-    def add_dragline(self, attachment_site: _ElementImpl) -> None:
+    def _add_dragline_tendon(self, attachment_site: _ElementImpl) -> None:
         self._dragline = self.mjcf_model.tendon.add(
             'spatial',
             name=f"{self.base_name}_dragline",
@@ -114,6 +118,21 @@ class MJCFJumpingSpiderMorphology(MJCFMorphology):
         )
         self._dragline.add('site', site=self._abdomen.dragline_body_site)
         self._dragline.add('site', site=attachment_site)
+
+    def _add_dragline_actuator(self) -> None:
+        return self.mjcf_model.actuator.add(
+            "damper",
+            name=f"{self._dragline.name}_damper_control",
+            tendon=self._dragline,
+            ctrlrange=[0, 10],
+            kv=10,
+            forcelimited=True,
+            forcerange=[-100, 0]
+        )
+
+    def add_dragline(self, attachment_site: _ElementImpl) -> None:
+        self._add_dragline_tendon(attachment_site=attachment_site)
+        self._add_dragline_actuator()
 
 
 if __name__ == '__main__':
