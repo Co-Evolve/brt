@@ -23,6 +23,7 @@ class MJCFJumpingSpiderAbdomen(MJCFMorphologyPart):
         self._configure_joints()
         self._configure_actuators()
         self._configure_dragline_body_site()
+        self._configure_sensors()
 
     def _build_ellipsoid(self) -> None:
         size_x = self._abdomen_specification.size_x.value
@@ -74,8 +75,8 @@ class MJCFJumpingSpiderAbdomen(MJCFMorphologyPart):
     def _configure_p_control_actuator(
             self,
             joint: _ElementImpl
-    ) -> None:
-        self.mjcf_model.actuator.add(
+    ) -> _ElementImpl:
+        return self.mjcf_model.actuator.add(
             'position',
             name=f"{joint.name}_p_control",
             joint=joint,
@@ -89,8 +90,8 @@ class MJCFJumpingSpiderAbdomen(MJCFMorphologyPart):
     def _configure_actuators(
             self
     ) -> None:
-        self._configure_p_control_actuator(joint=self._ip_joint)
-        self._configure_p_control_actuator(joint=self._oop_joint)
+        self._ip_actuator = self._configure_p_control_actuator(joint=self._ip_joint)
+        self._oop_actuator = self._configure_p_control_actuator(joint=self._oop_joint)
 
     def _configure_dragline_body_site(self) -> None:
         ip_angle = np.pi
@@ -106,3 +107,29 @@ class MJCFJumpingSpiderAbdomen(MJCFMorphologyPart):
                                                      pos=pos,
                                                      size=[0.01],
                                                      rgba=colors.rgba_red)
+
+    def _configure_joint_sensors(self, joint: _ElementImpl) -> None:
+        self.mjcf_model.sensor.add("jointpos", joint=joint, name=f"{joint.name}_jointpos_sensor")
+        self.mjcf_model.sensor.add("jointvel", joint=joint, name=f"{joint.name}_jointvel_sensor")
+        self.mjcf_model.sensor.add(
+            "jointactuatorfrc", joint=joint, name=f"{joint.name}_actuatorfrc_sensor"
+        )
+
+    def _configure_joints_sensors(self) -> None:
+        self._configure_joint_sensors(self._ip_joint)
+        self._configure_joint_sensors(self._oop_joint)
+
+    def _configure_actuator_sensors(self, actuator: _ElementImpl) -> None:
+        self.mjcf_model.sensor.add(
+            "actuatorfrc",
+            actuator=actuator,
+            name=f"{actuator.name}_actuatorfrc_sensor",
+        )
+
+    def _configure_actuators_sensors(self) -> None:
+        self._configure_actuator_sensors(actuator=self._ip_actuator)
+        self._configure_actuator_sensors(actuator=self._oop_actuator)
+
+    def _configure_sensors(self) -> None:
+        self._configure_joints_sensors()
+        self._configure_actuators_sensors()

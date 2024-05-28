@@ -54,7 +54,7 @@ class MJCFJumpingSpiderLegSegment(MJCFMorphologyPart):
             pos=self.center_of_capsule,
             euler=[0, np.pi / 2, 0],
             size=[self._segment_specification.radius.value, self._segment_specification.length.value / 2],
-            friction=[1, 0.05, 0.05],
+            friction=[2, 0.1, 0.1],
             rgba=colors.rgba_green,
         )
 
@@ -107,23 +107,25 @@ class MJCFJumpingSpiderLegSegment(MJCFMorphologyPart):
     def _configure_torque_control_actuator(
             self,
             joint: _ElementImpl,
-    ) -> None:
-        self.mjcf_model.actuator.add(
-            'motor',
-            name=f"{joint.name}_torque",
-            joint=joint,
-            ctrllimited=True,
-            ctrlrange=[-self._segment_specification.torque_limit.value, self._segment_specification.torque_limit.value],
-            forcelimited=True,
-            forcerange=[-self._segment_specification.torque_limit.value, self._segment_specification.torque_limit.value]
-        )
+    ) -> _ElementImpl:
+        if joint is not None:
+            return self.mjcf_model.actuator.add(
+                'motor',
+                name=f"{joint.name}_torque",
+                joint=joint,
+                ctrllimited=True,
+                ctrlrange=[-self._segment_specification.torque_limit.value,
+                           self._segment_specification.torque_limit.value],
+                forcelimited=True,
+                forcerange=[-self._segment_specification.torque_limit.value,
+                            self._segment_specification.torque_limit.value]
+            )
 
     def _configure_actuators(
             self
     ) -> None:
-        if self._ip_joint is not None:
-            self._configure_torque_control_actuator(joint=self._ip_joint)
-        self._configure_torque_control_actuator(joint=self._oop_joint)
+        self._ip_actuator = self._configure_torque_control_actuator(joint=self._ip_joint)
+        self._oop_actuator = self._configure_torque_control_actuator(joint=self._oop_joint)
 
     def _configure_touch_sensors(
             self
@@ -135,36 +137,44 @@ class MJCFJumpingSpiderLegSegment(MJCFMorphologyPart):
                 type="capsule",
                 pos=self._capsule.pos,
                 euler=self._capsule.euler,
-                rgba=colors.rgba_blue,
+                rgba=np.zeros(4),
                 size=self._capsule.size
             )
             self.mjcf_model.sensor.add(
                 "touch", name=f"{self.base_name}_touch_sensor", site=touch_site
             )
 
-    def _configure_joint_sensors(
-            self
-    ) -> None:
-        if self._ip_joint is not None:
+    def _configure_joint_sensors(self, joint: _ElementImpl) -> None:
+        if joint is not None:
             self.mjcf_model.sensor.add(
-                "jointpos", joint=self._ip_joint, name=f"{self._ip_joint.name}"
-                                                       f"_jointpos_sensor"
+                "jointpos", joint=joint, name=f"{joint.name}_jointpos_sensor"
             )
             self.mjcf_model.sensor.add(
-                "jointvel", joint=self._ip_joint, name=f"{self._ip_joint.name}"
-                                                       f"_jointvel_sensor"
+                "jointvel", joint=joint, name=f"{joint.name}_jointvel_sensor"
             )
-        self.mjcf_model.sensor.add(
-            "jointpos", joint=self._oop_joint, name=f"{self._oop_joint.name}"
-                                                    f"_jointpos_sensor"
-        )
-        self.mjcf_model.sensor.add(
-            "jointvel", joint=self._oop_joint, name=f"{self._oop_joint.name}"
-                                                    f"_jointvel_sensor"
-        )
+            self.mjcf_model.sensor.add(
+                "jointactuatorfrc", joint=joint, name=f"{joint.name}_actuatorfrc_sensor"
+            )
+
+    def _configure_joints_sensors(self) -> None:
+        self._configure_joint_sensors(joint=self._ip_joint)
+        self._configure_joint_sensors(joint=self._oop_joint)
+
+    def _configure_actuator_sensors(self, actuator: _ElementImpl) -> None:
+        if actuator is not None:
+            self.mjcf_model.sensor.add(
+                "actuatorfrc",
+                actuator=actuator,
+                name=f"{actuator.name}_actuatorfrc_sensor",
+            )
+
+    def _configure_actuators_sensors(self) -> None:
+        self._configure_actuator_sensors(actuator=self._ip_actuator)
+        self._configure_actuator_sensors(actuator=self._oop_actuator)
 
     def _configure_sensors(
             self
     ) -> None:
         self._configure_touch_sensors()
-        self._configure_joint_sensors()
+        self._configure_joints_sensors()
+        self._configure_actuators_sensors()

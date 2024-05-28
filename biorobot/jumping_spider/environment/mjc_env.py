@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
+import mujoco
 import numpy as np
 from moojoco.environment.base import MuJoCoEnvironmentConfiguration
 from moojoco.environment.mjc_env import MJCEnv, MJCEnvState, MJCObservable
@@ -9,11 +10,14 @@ from moojoco.environment.mjc_env import MJCEnv, MJCEnvState, MJCObservable
 from biorobot.brittle_star.environment.directed_locomotion.shared import (
     BrittleStarDirectedLocomotionEnvironmentConfiguration,
 )
+from biorobot.jumping_spider.environment.shared.base import JumpingSpiderEnvironmentBaseConfiguration, \
+    JumpingSpiderEnvironmentBase
+from biorobot.jumping_spider.environment.shared.mjc_observables import get_shared_jumping_spider_mjc_observables
 from biorobot.jumping_spider.mjcf.arena.shared import MJCFSpiderArena
 from biorobot.jumping_spider.mjcf.morphology.morphology import MJCFJumpingSpiderMorphology
 
 
-class JumpingSpiderEnvironmentConfiguration(MuJoCoEnvironmentConfiguration):
+class JumpingSpiderEnvironmentConfiguration(JumpingSpiderEnvironmentBaseConfiguration):
     def __init__(
             self,
             *args,
@@ -25,7 +29,7 @@ class JumpingSpiderEnvironmentConfiguration(MuJoCoEnvironmentConfiguration):
         )
 
 
-class JumpingSpiderMJCEnvironment(MJCEnv):
+class JumpingSpiderMJCEnvironment(JumpingSpiderEnvironmentBase, MJCEnv):
     metadata = {"render_modes": ["human", "rgb_array"]}
 
     def __init__(
@@ -34,6 +38,7 @@ class JumpingSpiderMJCEnvironment(MJCEnv):
             mjcf_assets: Dict[str, Any],
             configuration: MuJoCoEnvironmentConfiguration,
     ) -> None:
+        JumpingSpiderEnvironmentBase.__init__(self)
         MJCEnv.__init__(
             self,
             mjcf_str=mjcf_str,
@@ -44,7 +49,7 @@ class JumpingSpiderMJCEnvironment(MJCEnv):
     @property
     def environment_configuration(
             self,
-    ) -> MuJoCoEnvironmentConfiguration:
+    ) -> JumpingSpiderEnvironmentConfiguration:
         return super(MJCEnv, self).environment_configuration
 
     @classmethod
@@ -56,19 +61,22 @@ class JumpingSpiderMJCEnvironment(MJCEnv):
     ) -> JumpingSpiderMJCEnvironment:
         return super().from_morphology_and_arena(morphology=morphology, arena=arena, configuration=configuration)
 
+    def _get_mj_models_and_datas_to_render(
+            self, state: MJCEnvState
+    ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
+        mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
+        if self.environment_configuration.color_contacts:
+            self._color_segment_capsule_contacts(
+                mj_models=mj_models, contact_bools=state.observations["leg_tip_contact"]
+            )
+        return mj_models, mj_datas
+
     def _create_observables(self) -> List[MJCObservable]:
+        observables = get_shared_jumping_spider_mjc_observables(mj_model=self.frozen_mj_model,
+                                                                mj_data=self.frozen_mj_data)
         # todo:
-        #   - torso pos
-        #   - torso rotation
-        #   - foot contacts
         #   - target platform pos / size (if target platform arena)
-        #   - joint positions
-        #   - joint velocities
-        #   - actuator torques
-        #   - joint torques
-        #   - dragline length
-        #   - force applied by tendon?
-        return []
+        return observables
 
     @staticmethod
     def _get_time(state: MJCEnvState) -> float:
@@ -85,20 +93,21 @@ class JumpingSpiderMJCEnvironment(MJCEnv):
         # Set morphology position
         mj_model.body("JumpingSpiderMorphology/cephalothorax").pos[2] = 0.5
 
-        # Set arena dragline attachment
-        arena_dragline_site = [site_id for site_id in range(mj_model.nsite) if
-                               "dragline_attachment_site" in mj_model.site(site_id).name][0]
-        spider_dragline_site = mj_data.site_xpos
         state = self._finish_reset(models_and_datas=(mj_model, mj_data), rng=rng)
         return state
 
     def _update_reward(self, state: MJCEnvState, previous_state: MJCEnvState) -> MJCEnvState:
+        # todo: negative distance to target
         return state
 
     def _update_terminated(self, state: MJCEnvState) -> MJCEnvState:
+        # todo: Target platform reached
         return state
 
     def _update_truncated(self, state: MJCEnvState) -> MJCEnvState:
+        # todo:
+        #   Time limit reached
+        #   Z position below platform
         return state
 
     def _update_info(self, state: MJCEnvState) -> MJCEnvState:

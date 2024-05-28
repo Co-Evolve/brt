@@ -6,7 +6,6 @@ from transforms3d.euler import euler2quat
 from biorobot.jumping_spider.mjcf.morphology.parts.abdomen import MJCFJumpingSpiderAbdomen
 from biorobot.jumping_spider.mjcf.morphology.parts.cephalothorax import MJCFJumpingSpiderCephalothorax
 from biorobot.jumping_spider.mjcf.morphology.parts.leg import MJCFJumpingSpiderLeg
-from biorobot.jumping_spider.mjcf.morphology.specification.default import default_jumping_spider_specification
 from biorobot.jumping_spider.mjcf.morphology.specification.specification import JumpingSpiderMorphologySpecification
 from biorobot.utils import colors
 
@@ -48,7 +47,7 @@ class MJCFJumpingSpiderMorphology(MJCFMorphology):
         self.mjcf_model.option.integrator = 'implicitfast'
 
     def _configure_defaults(self) -> None:
-        self.mjcf_model.default.geom.condim = 3
+        self.mjcf_model.default.geom.condim = 6
         self.mjcf_model.default.geom.contype = 1
         self.mjcf_model.default.geom.conaffinity = 0
         self.mjcf_model.default.geom.density = 1  # CGS
@@ -120,7 +119,7 @@ class MJCFJumpingSpiderMorphology(MJCFMorphology):
         self._dragline.add('site', site=attachment_site)
 
     def _add_dragline_actuator(self) -> None:
-        return self.mjcf_model.actuator.add(
+        self._dragline_actuator = self.mjcf_model.actuator.add(
             "damper",
             name=f"{self._dragline.name}_damper_control",
             tendon=self._dragline,
@@ -133,8 +132,10 @@ class MJCFJumpingSpiderMorphology(MJCFMorphology):
     def add_dragline(self, attachment_site: _ElementImpl) -> None:
         self._add_dragline_tendon(attachment_site=attachment_site)
         self._add_dragline_actuator()
+        self._configure_dragline_sensors()
 
-
-if __name__ == '__main__':
-    morphology_specification = default_jumping_spider_specification()
-    MJCFJumpingSpiderMorphology(specification=morphology_specification).export_to_xml_with_assets("./morphtest")
+    def _configure_dragline_sensors(self) -> None:
+        self._mjcf_model.sensor.add("tendonpos", tendon=self._dragline, name=f"{self._dragline.name}_tendonpos_sensor")
+        self._mjcf_model.sensor.add("tendonvel", tendon=self._dragline, name=f"{self._dragline.name}_tendonvel_sensor")
+        self.mjcf_model.sensor.add("actuatorfrc", actuator=self._dragline_actuator,
+                                   name=f"{self._dragline_actuator.name}_actuatorfrc_sensor")
