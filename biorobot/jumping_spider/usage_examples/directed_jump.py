@@ -3,8 +3,8 @@ from typing import List
 import cv2
 import numpy as np
 
-from biorobot.jumping_spider.environment.mjc_env import JumpingSpiderMJCEnvironment, \
-    JumpingSpiderEnvironmentConfiguration
+from biorobot.jumping_spider.environment.directed_jump.mjc_env import JumpingSpiderDirectedJumpEnvironmentConfiguration, \
+    JumpingSpiderDirectedJumpMJCEnvironment
 from biorobot.jumping_spider.mjcf.arena.platform_jump import PlatformJumpArenaConfiguration, MJCFPlatformJumpArena
 from biorobot.jumping_spider.mjcf.morphology.morphology import MJCFJumpingSpiderMorphology
 from biorobot.jumping_spider.mjcf.morphology.specification.default import default_jumping_spider_specification
@@ -12,7 +12,7 @@ from biorobot.jumping_spider.mjcf.morphology.specification.default import defaul
 
 def post_render(
         render_output: List[np.ndarray],
-        environment_configuration: JumpingSpiderEnvironmentConfiguration,
+        environment_configuration: JumpingSpiderDirectedJumpEnvironmentConfiguration,
 ) -> None:
     if environment_configuration.render_mode == "human":
         return
@@ -35,14 +35,14 @@ def post_render(
 
 def create_env(
         render_mode: str
-) -> JumpingSpiderMJCEnvironment:
+) -> JumpingSpiderDirectedJumpMJCEnvironment:
     morphology_specification = default_jumping_spider_specification()
     morphology = MJCFJumpingSpiderMorphology(specification=morphology_specification)
 
     arena_configuration = PlatformJumpArenaConfiguration()
     arena = MJCFPlatformJumpArena(configuration=arena_configuration)
 
-    env_config = JumpingSpiderEnvironmentConfiguration(
+    env_config = JumpingSpiderDirectedJumpEnvironmentConfiguration(
         render_mode=render_mode,
         num_physics_steps_per_control_step=10,
         simulation_time=5,
@@ -50,7 +50,7 @@ def create_env(
         camera_ids=[0, 1],
         color_contacts=True,
     )
-    env = JumpingSpiderMJCEnvironment.from_morphology_and_arena(
+    env = JumpingSpiderDirectedJumpMJCEnvironment.from_morphology_and_arena(
         morphology=morphology, arena=arena, configuration=env_config
     )
     return env
@@ -65,11 +65,10 @@ if __name__ == "__main__":
     step_fn = env.step
     reset_fn = env.reset
 
-    state = reset_fn(env_rng, [-1.0, 0.0, 0.05])
+    state = reset_fn(env_rng)
     while True:
         action = env.action_space.sample()
         state = step_fn(state=state, action=action)
-        print(state.observations)
         post_render(env.render(state=state), env.environment_configuration)
         if state.terminated | state.truncated:
             state = reset_fn(env_rng)

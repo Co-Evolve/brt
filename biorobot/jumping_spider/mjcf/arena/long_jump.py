@@ -7,7 +7,7 @@ from biorobot.utils import colors
 class LongJumpArenaConfiguration(SpiderArenaConfiguration):
     def __init__(
             self,
-            name: str = "PlatformJumpArena",
+            name: str = "LongJumpArena",
             track_size: Tuple[float] = (10, 3)
     ) -> None:
         super().__init__(name=name)
