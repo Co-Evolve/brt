@@ -4,7 +4,8 @@ import numpy as np
 
 from biorobot.jumping_spider.mjcf.morphology.specification.specification import JumpingSpiderJointSpecification, \
     JumpingSpiderLegSegmentSpecification, JumpingSpiderLegSpecification, JumpingSpiderMorphologySpecification, \
-    JumpingSpiderAbdomenSpecification, JumpingSpiderCephalothoraxSpecification, JumpingSpiderDraglineSpecification
+    JumpingSpiderAbdomenSpecification, JumpingSpiderCephalothoraxSpecification, JumpingSpiderDraglineSpecification, \
+    JumpingSpiderActuationSpecification
 
 CONNECTOR_RADIUS = .01333
 LEG_SEGMENT_NAMES = ["coxa", "trochanter", "femur", "patella", "tibia", "metatarsus", "tarsus"]
@@ -30,7 +31,7 @@ def default_joint_specification(
     return joint_specification
 
 
-def default_leg_segment_specification() -> List[
+def default_leg_segment_specifications() -> List[
     JumpingSpiderLegSegmentSpecification]:
     leg_segment_specifications = []
     for length, radius, attachment_angle, oop_lower_rom, oop_upper_rom, ip_rom in zip(LEG_SEGMENT_LENGTHS,
@@ -57,7 +58,7 @@ def default_leg_segment_specification() -> List[
 def default_leg_specification(
         in_plane_connection_angle: float
 ) -> JumpingSpiderLegSpecification:
-    segment_specifications = default_leg_segment_specification()
+    segment_specifications = default_leg_segment_specifications()
 
     leg_specification = JumpingSpiderLegSpecification(
         in_plane_connection_angle=in_plane_connection_angle,
@@ -70,6 +71,8 @@ def default_leg_specification(
 def default_jumping_spider_specification(
         cephalothorax_size: Tuple[float] = (0.3, 0.3, 0.25),
         abdomen_size: Tuple[float] = (0.5, 0.4, 0.3),
+        dragline: bool = False,
+        position_control: bool = False
 ) -> JumpingSpiderMorphologySpecification:
     cephalothorax_specification = JumpingSpiderCephalothoraxSpecification(size_x=cephalothorax_size[0],
                                                                           size_y=cephalothorax_size[1],
@@ -89,13 +92,16 @@ def default_jumping_spider_specification(
         leg_specification = default_leg_specification(in_plane_connection_angle=in_plane_connection_angle)
         leg_specifications.append(leg_specification)
 
-    dragline_specification = JumpingSpiderDraglineSpecification(stiffness=0.0, damping=1.0)
+    dragline_specification = JumpingSpiderDraglineSpecification(stiffness=0.0, damping=1.0, enabled=dragline)
+
+    actuation_specification = JumpingSpiderActuationSpecification(position_control=position_control)
 
     specification = JumpingSpiderMorphologySpecification(
         cephalothorax_specification=cephalothorax_specification,
         leg_specifications=leg_specifications,
         abdomen_specification=abdomen_specification,
-        dragline_specification=dragline_specification
+        dragline_specification=dragline_specification,
+        actuation_specification=actuation_specification
     )
 
     return specification

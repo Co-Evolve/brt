@@ -140,41 +140,6 @@ def get_shared_jumping_spider_mjc_observables(
             for sensor in abdomen_joint_actuatorfrc_sensors])
     )
 
-    # ---------------------------------------------------- Dragline ----------------------------------------------------
-    dragline_length_sensors = [sensor for sensor in sensors if
-                               sensor.type[0] == mujoco.mjtSensor.mjSENS_TENDONPOS and "dragline" in sensor.name]
-    dragline_length_observable = MJCObservable(
-        name="dragline_length",
-        low=np.zeros(1),
-        high=np.inf * np.ones(1),
-        retriever=lambda state: np.array(
-            [state.mj_data.sensordata[sensor.adr[0]: sensor.adr[0] + sensor.dim[0]] for sensor in
-             dragline_length_sensors]).flatten()
-    )
-
-    dragline_velocity_sensors = [sensor for sensor in sensors if
-                                 sensor.type[0] == mujoco.mjtSensor.mjSENS_TENDONVEL and "dragline" in sensor.name]
-    dragline_velocity_observable = MJCObservable(
-        name="dragline_velocity",
-        low=-np.inf * np.ones(1),
-        high=np.inf * np.ones(1),
-        retriever=lambda state: np.array(
-            [state.mj_data.sensordata[sensor.adr[0]: sensor.adr[0] + sensor.dim[0]] for sensor in
-             dragline_velocity_sensors]).flatten()
-    )
-
-    dragline_actuatorfrc_sensors = [sensor for sensor in sensors if
-                                    sensor.type[0] == mujoco.mjtSensor.mjSENS_ACTUATORFRC and "dragline" in sensor.name]
-    dragline_actuator = mj_model.actuator(dragline_actuatorfrc_sensors[0].objid[0])
-    dragline_actuatorfrc_observable = MJCObservable(
-        name="dragline_actuator_force",
-        low=dragline_actuator.forcerange[0] * np.ones(1),
-        high=dragline_actuator.forcerange[1] * np.ones(1),
-        retriever=lambda state: np.array(
-            [state.mj_data.sensordata[sensor.adr[0]: sensor.adr[0] + sensor.dim[0]] for sensor in
-             dragline_actuatorfrc_sensors]).flatten()
-    )
-
     # ------------------------------------------------ Leg tip contacts ------------------------------------------------
     #   Start by mapping geom indices of segment capsules to a contact output index
     indexer = count(0)
@@ -274,7 +239,7 @@ def get_shared_jumping_spider_mjc_observables(
         ),
     )
 
-    return [
+    observables = [
         leg_joint_position_observable,
         leg_joint_velocity_observable,
         leg_joint_actuator_force_observable,
@@ -283,12 +248,50 @@ def get_shared_jumping_spider_mjc_observables(
         abdomen_joint_vel_observable,
         abdomen_joint_actuatorfrc_observable,
         abdomen_actuatorfrc_observable,
-        dragline_length_observable,
-        dragline_velocity_observable,
-        dragline_actuatorfrc_observable,
         touch_observable,
         cephalothorax_position_observable,
         cephalothorax_rotation_observable,
         cephalothorax_linvel_observable,
         cephalothorax_angvel_observable,
     ]
+
+    # ---------------------------------------------------- Dragline ----------------------------------------------------
+    dragline_length_sensors = [sensor for sensor in sensors if
+                               sensor.type[0] == mujoco.mjtSensor.mjSENS_TENDONPOS and "dragline" in sensor.name]
+    if dragline_length_sensors:
+        dragline_length_observable = MJCObservable(
+            name="dragline_length",
+            low=np.zeros(1),
+            high=np.inf * np.ones(1),
+            retriever=lambda state: np.array(
+                [state.mj_data.sensordata[sensor.adr[0]: sensor.adr[0] + sensor.dim[0]] for sensor in
+                 dragline_length_sensors]).flatten()
+        )
+
+        dragline_velocity_sensors = [sensor for sensor in sensors if
+                                     sensor.type[0] == mujoco.mjtSensor.mjSENS_TENDONVEL and "dragline" in sensor.name]
+        dragline_velocity_observable = MJCObservable(
+            name="dragline_velocity",
+            low=-np.inf * np.ones(1),
+            high=np.inf * np.ones(1),
+            retriever=lambda state: np.array(
+                [state.mj_data.sensordata[sensor.adr[0]: sensor.adr[0] + sensor.dim[0]] for sensor in
+                 dragline_velocity_sensors]).flatten()
+        )
+
+        dragline_actuatorfrc_sensors = [sensor for sensor in sensors if
+                                        sensor.type[
+                                            0] == mujoco.mjtSensor.mjSENS_ACTUATORFRC and "dragline" in sensor.name]
+        dragline_actuator = mj_model.actuator(dragline_actuatorfrc_sensors[0].objid[0])
+        dragline_actuatorfrc_observable = MJCObservable(
+            name="dragline_actuator_force",
+            low=dragline_actuator.forcerange[0] * np.ones(1),
+            high=dragline_actuator.forcerange[1] * np.ones(1),
+            retriever=lambda state: np.array(
+                [state.mj_data.sensordata[sensor.adr[0]: sensor.adr[0] + sensor.dim[0]] for sensor in
+                 dragline_actuatorfrc_sensors]).flatten()
+        )
+
+        observables += [dragline_length_observable, dragline_velocity_observable, dragline_actuatorfrc_observable]
+
+    return observables

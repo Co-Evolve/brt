@@ -94,19 +94,28 @@ class JumpingSpiderCephalothoraxSpecification(Specification):
 
 
 class JumpingSpiderDraglineSpecification(Specification):
-    def __init__(self, stiffness: float, damping: float) -> None:
+    def __init__(self, stiffness: float, damping: float, enabled: bool) -> None:
         super().__init__()
         self.stiffness = FixedParameter(stiffness)
         self.damping = FixedParameter(damping)
+        self.enabled = FixedParameter(enabled)
+
+
+class JumpingSpiderActuationSpecification(Specification):
+    def __init__(self, position_control: bool) -> None:
+        super().__init__()
+        self.position_control = FixedParameter(position_control)
 
 
 class JumpingSpiderMorphologySpecification(MorphologySpecification):
     def __init__(self, cephalothorax_specification: JumpingSpiderCephalothoraxSpecification,
                  abdomen_specification: JumpingSpiderAbdomenSpecification,
                  leg_specifications: List[JumpingSpiderLegSpecification],
-                 dragline_specification: JumpingSpiderDraglineSpecification) -> None:
+                 dragline_specification: JumpingSpiderDraglineSpecification,
+                 actuation_specification: JumpingSpiderActuationSpecification) -> None:
         super().__init__()
         self.cephalothorax_specification = cephalothorax_specification
         self.abdomen_specification = abdomen_specification
         self.leg_specifications = leg_specifications
         self.dragline_specification = dragline_specification
+        self.actuation_specification = actuation_specification

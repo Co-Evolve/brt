@@ -11,7 +11,7 @@ from biorobot.jumping_spider.usage_examples.directed_jump import post_render
 def create_env(
         render_mode: str
 ) -> JumpingSpiderLongJumpMJCEnvironment:
-    morphology_specification = default_jumping_spider_specification()
+    morphology_specification = default_jumping_spider_specification(dragline=True, position_control=False)
     morphology = MJCFJumpingSpiderMorphology(specification=morphology_specification)
 
     arena_configuration = LongJumpArenaConfiguration()

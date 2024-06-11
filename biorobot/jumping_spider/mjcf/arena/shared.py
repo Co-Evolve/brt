@@ -72,10 +72,12 @@ class MJCFSpiderArena(MJCFArena, abc.ABC):
             free_joint: bool = False,
     ) -> _AttachmentFrame:
         frame = super().attach(other=other, position=position, euler=euler, free_joint=free_joint)
-        other.add_dragline(attachment_site=self.dragline_attachment_site)
+        if other.morphology_specification.dragline_specification.enabled.value:
+            other.add_dragline(attachment_site=self.dragline_attachment_site)
 
-        # Reposition dragline attachment site to be under abdomen end
-        abdomen_site_pos = other._abdomen.coordinates_of_point_in_root_frame(other._abdomen.dragline_body_site.pos)
-        self.dragline_attachment_site.pos[0] = abdomen_site_pos[0] + np.sign(abdomen_site_pos[0]) * 0.5 / np.tan(45 / 180 * np.pi)
+            # Reposition dragline attachment site to be under abdomen end
+            abdomen_site_pos = other._abdomen.coordinates_of_point_in_root_frame(other._abdomen.dragline_body_site.pos)
+            self.dragline_attachment_site.pos[0] = abdomen_site_pos[0] + np.sign(abdomen_site_pos[0]) * 0.5 / np.tan(
+                45 / 180 * np.pi)
 
         return frame

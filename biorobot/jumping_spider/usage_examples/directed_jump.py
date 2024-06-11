@@ -1,46 +1,28 @@
-from typing import List
-
-import cv2
 import numpy as np
 
-from biorobot.jumping_spider.environment.directed_jump.mjc_env import JumpingSpiderDirectedJumpEnvironmentConfiguration, \
-    JumpingSpiderDirectedJumpMJCEnvironment
-from biorobot.jumping_spider.mjcf.arena.platform_jump import PlatformJumpArenaConfiguration, MJCFPlatformJumpArena
+from biorobot.jumping_spider.environment.directed_jump.mjc_env import JumpingSpiderDirectedJumpMJCEnvironment, \
+    JumpingSpiderDirectedJumpEnvironmentConfiguration
+from biorobot.jumping_spider.mjcf.arena.directed_jump import DirectedJumpArenaConfiguration, MJCFDirectedJumpArena
 from biorobot.jumping_spider.mjcf.morphology.morphology import MJCFJumpingSpiderMorphology
 from biorobot.jumping_spider.mjcf.morphology.specification.default import default_jumping_spider_specification
+from biorobot.jumping_spider.mjcf.morphology.specification.specification import JumpingSpiderMorphologySpecification
+from biorobot.jumping_spider.usage_examples.platform_jump import post_render
 
 
-def post_render(
-        render_output: List[np.ndarray],
-        environment_configuration: JumpingSpiderDirectedJumpEnvironmentConfiguration,
-) -> None:
-    if environment_configuration.render_mode == "human":
-        return
+def create_morphology_specification() -> JumpingSpiderMorphologySpecification:
+    morphology_specification = default_jumping_spider_specification(dragline=False, position_control=True)
 
-    num_cameras = len(environment_configuration.camera_ids)
-    num_envs = len(render_output) // num_cameras
-
-    if num_cameras > 1:
-        # Horizontally stack frames of the same environment
-        frames_per_env = np.array_split(render_output, num_envs)
-        render_output = [
-            np.concatenate(env_frames, axis=1) for env_frames in frames_per_env
-        ]
-
-    # Vertically stack frames of different environments
-    stacked_frames = np.concatenate(render_output, axis=0)
-    cv2.imshow("render", stacked_frames)
-    cv2.waitKey(1)
+    return morphology_specification
 
 
 def create_env(
         render_mode: str
 ) -> JumpingSpiderDirectedJumpMJCEnvironment:
-    morphology_specification = default_jumping_spider_specification()
+    morphology_specification = create_morphology_specification()
     morphology = MJCFJumpingSpiderMorphology(specification=morphology_specification)
 
-    arena_configuration = PlatformJumpArenaConfiguration()
-    arena = MJCFPlatformJumpArena(configuration=arena_configuration)
+    arena_configuration = DirectedJumpArenaConfiguration()
+    arena = MJCFDirectedJumpArena(configuration=arena_configuration)
 
     env_config = JumpingSpiderDirectedJumpEnvironmentConfiguration(
         render_mode=render_mode,
@@ -49,6 +31,8 @@ def create_env(
         time_scale=1,
         camera_ids=[0, 1],
         color_contacts=True,
+        target_distance_range=(10, 15),
+        target_angle_range=(20 / 180 * np.pi, 60 / 180 * np.pi)
     )
     env = JumpingSpiderDirectedJumpMJCEnvironment.from_morphology_and_arena(
         morphology=morphology, arena=arena, configuration=env_config

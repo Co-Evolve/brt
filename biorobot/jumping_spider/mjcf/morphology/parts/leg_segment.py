@@ -111,7 +111,7 @@ class MJCFJumpingSpiderLegSegment(MJCFMorphologyPart):
         if joint is not None:
             return self.mjcf_model.actuator.add(
                 'motor',
-                name=f"{joint.name}_torque",
+                name=f"{joint.name}_torque_control",
                 joint=joint,
                 ctrllimited=True,
                 ctrlrange=[-self._segment_specification.torque_limit.value,
@@ -121,11 +121,32 @@ class MJCFJumpingSpiderLegSegment(MJCFMorphologyPart):
                             self._segment_specification.torque_limit.value]
             )
 
+    def _configure_position_control_actuator(
+            self,
+            joint: _ElementImpl,
+    ) -> _ElementImpl:
+        if joint is not None:
+            return self.mjcf_model.actuator.add(
+                'position',
+                name=f"{joint.name}_position_control",
+                joint=joint,
+                ctrllimited=True,
+                ctrlrange=joint.range,
+                kp=500,
+                forcelimited=True,
+                forcerange=[-self._segment_specification.torque_limit.value,
+                            self._segment_specification.torque_limit.value]
+            )
+
     def _configure_actuators(
             self
     ) -> None:
-        self._ip_actuator = self._configure_torque_control_actuator(joint=self._ip_joint)
-        self._oop_actuator = self._configure_torque_control_actuator(joint=self._oop_joint)
+        if self.morphology_specification.actuation_specification.position_control.value:
+            self._ip_actuator = self._configure_position_control_actuator(joint=self._ip_joint)
+            self._oop_actuator = self._configure_position_control_actuator(joint=self._oop_joint)
+        else:
+            self._ip_actuator = self._configure_torque_control_actuator(joint=self._ip_joint)
+            self._oop_actuator = self._configure_torque_control_actuator(joint=self._oop_joint)
 
     def _configure_touch_sensors(
             self

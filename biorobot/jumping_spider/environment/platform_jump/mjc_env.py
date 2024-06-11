@@ -10,15 +10,14 @@ from moojoco.environment.mjc_env import MJCEnv, MJCEnvState, MJCObservable
 from biorobot.jumping_spider.environment.shared.base import JumpingSpiderEnvironmentBaseConfiguration, \
     JumpingSpiderEnvironmentBase
 from biorobot.jumping_spider.environment.shared.mjc_observables import get_shared_jumping_spider_mjc_observables
-from biorobot.jumping_spider.mjcf.arena.directed_jump import MJCFDirectedJumpArena
+from biorobot.jumping_spider.mjcf.arena.platform_jump import MJCFPlatformJumpArena
 from biorobot.jumping_spider.mjcf.morphology.morphology import MJCFJumpingSpiderMorphology
 
 
-class JumpingSpiderDirectedJumpEnvironmentConfiguration(JumpingSpiderEnvironmentBaseConfiguration):
+class JumpingSpiderPlatformJumpEnvironmentConfiguration(JumpingSpiderEnvironmentBaseConfiguration):
     def __init__(
             self,
-            target_distance_range: Tuple[float, float],
-            target_angle_range: Tuple[float, float],
+            target_platform_distance_range: Tuple[float, float] = (10, 20),
             *args,
             **kwargs,
     ) -> None:
@@ -26,11 +25,10 @@ class JumpingSpiderDirectedJumpEnvironmentConfiguration(JumpingSpiderEnvironment
             *args,
             **kwargs,
         )
-        self.target_distance_range = target_distance_range
-        self.target_angle_range = target_angle_range
+        self.target_platform_distance_range = target_platform_distance_range
 
 
-class JumpingSpiderDirectedJumpMJCEnvironment(JumpingSpiderEnvironmentBase, MJCEnv):
+class JumpingSpiderPlatformJumpMJCEnvironment(JumpingSpiderEnvironmentBase, MJCEnv):
     metadata = {"render_modes": ["human", "rgb_array"]}
 
     def __init__(
@@ -50,16 +48,16 @@ class JumpingSpiderDirectedJumpMJCEnvironment(JumpingSpiderEnvironmentBase, MJCE
     @property
     def environment_configuration(
             self,
-    ) -> JumpingSpiderDirectedJumpEnvironmentConfiguration:
+    ) -> JumpingSpiderPlatformJumpEnvironmentConfiguration:
         return super(MJCEnv, self).environment_configuration
 
     @classmethod
     def from_morphology_and_arena(
             cls,
             morphology: MJCFJumpingSpiderMorphology,
-            arena: MJCFDirectedJumpArena,
-            configuration: JumpingSpiderDirectedJumpEnvironmentConfiguration,
-    ) -> JumpingSpiderDirectedJumpMJCEnvironment:
+            arena: MJCFPlatformJumpArena,
+            configuration: JumpingSpiderPlatformJumpEnvironmentConfiguration,
+    ) -> JumpingSpiderPlatformJumpMJCEnvironment:
         return super().from_morphology_and_arena(morphology=morphology, arena=arena, configuration=configuration)
 
     def _get_mj_models_and_datas_to_render(
@@ -73,49 +71,40 @@ class JumpingSpiderDirectedJumpMJCEnvironment(JumpingSpiderEnvironmentBase, MJCE
         return mj_models, mj_datas
 
     @staticmethod
-    def _get_xy_direction_to_target(state: MJCEnvState) -> np.ndarray:
-        target_position = state.mj_data.body("target").xpos
-        disk_position = state.mj_data.body("BrittleStarMorphology/central_disk").xpos
-        direction_to_target = target_position - disk_position
-        return direction_to_target[:2]
+    def _get_target_platform_position(state: MJCEnvState) -> np.ndarray:
+        return state.mj_data.geom("PlatformJumpArena_end_platform").xpos
 
     @staticmethod
-    def _get_target_position(state: MJCEnvState) -> np.ndarray:
-        return state.mj_data.body("target").xpos
+    def _get_direction_to_target_platform(state: MJCEnvState) -> np.ndarray:
+        target_platform_position = JumpingSpiderPlatformJumpMJCEnvironment._get_target_platform_position(state=state)
+        spider_position = state.mj_data.body("JumpingSpiderMorphology/cephalothorax").xpos
+        return target_platform_position - spider_position
 
     @staticmethod
-    def _get_spider_position(state: MJCEnvState) -> np.ndarray:
-        return state.mj_data.body("JumpingSpiderMorphology/cephalothorax").xpos
-
-    @staticmethod
-    def _get_direction_to_target(state: MJCEnvState) -> np.ndarray:
-        return JumpingSpiderDirectedJumpMJCEnvironment._get_target_position(
-            state=state) - JumpingSpiderDirectedJumpMJCEnvironment._get_spider_position(state=state)
-
-    @staticmethod
-    def _get_distance_to_target(state: MJCEnvState) -> np.ndarray:
-        direction_to_target = JumpingSpiderDirectedJumpMJCEnvironment._get_direction_to_target(state=state)
-        distance_to_target = np.linalg.norm(direction_to_target)
-        return distance_to_target
+    def _get_distance_to_target_platform(state: MJCEnvState) -> np.ndarray:
+        direction_to_target_platform = JumpingSpiderPlatformJumpMJCEnvironment._get_direction_to_target_platform(
+            state=state)
+        distance_to_target_platform = np.linalg.norm(direction_to_target_platform)
+        return distance_to_target_platform
 
     def _create_observables(self) -> List[MJCObservable]:
         observables = get_shared_jumping_spider_mjc_observables(mj_model=self.frozen_mj_model,
                                                                 mj_data=self.frozen_mj_data)
 
         direction_to_target = MJCObservable(
-            name="unit_direction_to_target",
+            name="unit_direction_to_target_platform",
             low=-np.ones(3),
             high=np.ones(3),
-            retriever=lambda state: self._get_direction_to_target(
-                state=state) / self._get_distance_to_target(
+            retriever=lambda state: self._get_direction_to_target_platform(
+                state=state) / self._get_distance_to_target_platform(
                 state=state)
         )
 
         distance_to_target = MJCObservable(
-            name="distance_to_target",
+            name="distance_to_target_platform",
             low=np.zeros(1),
             high=np.inf * np.ones(1),
-            retriever=lambda state: np.array([self._get_distance_to_target(state=state)])
+            retriever=lambda state: np.array([self._get_distance_to_target_platform(state=state)])
         )
         return observables + [direction_to_target, distance_to_target]
 
@@ -123,23 +112,21 @@ class JumpingSpiderDirectedJumpMJCEnvironment(JumpingSpiderEnvironmentBase, MJCE
     def _get_time(state: MJCEnvState) -> float:
         return state.mj_data.time
 
-    def _generate_target_position(self, rng: np.random.RandomState,
-                                  target_position: np.ndarray | None) -> np.ndarray:
-        if target_position is not None:
-            position = np.array(target_position)
+    def _generate_target_platform_position(self, rng: np.random.RandomState,
+                                           target_platform_position: np.ndarray | None) -> np.ndarray:
+        if target_platform_position is not None:
+            position = np.array(target_platform_position)
         else:
-            distance = rng.uniform(self.environment_configuration.target_distance_range[0],
-                                   self.environment_configuration.target_distance_range[1])
-            angle = rng.uniform(self.environment_configuration.target_angle_range[0],
-                                self.environment_configuration.target_angle_range[1])
-            position = distance * np.array([np.cos(angle), 0, np.sin(angle)])
-
+            distance = rng.uniform(self.environment_configuration.target_platform_distance_range[0],
+                                   self.environment_configuration.target_platform_distance_range[1])
+            position = self.frozen_mj_model.geom("PlatformJumpArena_end_platform").pos[:]
+            position[0] = distance
         return position
 
     def reset(
             self,
             rng: np.random.RandomState,
-            target_position: np.ndarray | None = None,
+            target_platform_position: np.ndarray | None = None,
             *args,
             **kwargs,
     ) -> MJCEnvState:
@@ -148,31 +135,33 @@ class JumpingSpiderDirectedJumpMJCEnvironment(JumpingSpiderEnvironmentBase, MJCE
         # Set morphology position
         mj_model.body("JumpingSpiderMorphology/cephalothorax").pos[2] = 0.5
 
-        # Set random target position
-        mj_model.body("target").pos = self._generate_target_position(
-            rng=rng, target_position=target_position
-        )
+        # Set target platform position
+        mj_model.geom("PlatformJumpArena_end_platform").pos = self._generate_target_platform_position(
+            rng=rng, target_platform_position=target_platform_position)
 
         state = self._finish_reset(models_and_datas=(mj_model, mj_data), rng=rng)
         return state
 
     def _update_reward(self, state: MJCEnvState, previous_state: MJCEnvState) -> MJCEnvState:
-        current_distance_to_target = self._get_distance_to_target(state=state)
-        previous_distance_to_target = self._get_distance_to_target(state=state)
+        previous_distance_to_target_platform = self._get_distance_to_target_platform(state=previous_state)
+        current_distance_to_target_platform = self._get_distance_to_target_platform(state=state)
 
-        reward = previous_distance_to_target - current_distance_to_target
+        reward = previous_distance_to_target_platform - current_distance_to_target_platform
 
         # noinspection PyUnresolvedReferences
         return state.replace(reward=reward)
 
     def _update_terminated(self, state: MJCEnvState) -> MJCEnvState:
-        terminated = self._get_distance_to_target(state=state) < 0.2
+        # All foot tips touch target platform
+        terminated = self._get_distance_to_target_platform(state=state) < 1
+        terminated &= np.all(state.observations["leg_tip_contact"])
 
         # noinspection PyUnresolvedReferences
         return state.replace(terminated=terminated)
 
     def _update_truncated(self, state: MJCEnvState) -> MJCEnvState:
-        truncated = self._get_time(state=state) > self.environment_configuration.simulation_time
+        truncated = self._get_direction_to_target_platform(state=state)[2] > 1
+        truncated |= self._get_time(state=state) > self.environment_configuration.simulation_time
 
         # noinspection PyUnresolvedReferences
         return state.replace(truncated=truncated)
@@ -180,7 +169,7 @@ class JumpingSpiderDirectedJumpMJCEnvironment(JumpingSpiderEnvironmentBase, MJCE
     def _update_info(self, state: MJCEnvState) -> MJCEnvState:
         info = {
             "time": self._get_time(state=state),
-            "target_position": self._get_target_position(state=state)
+            "target_platform_position": self._get_target_platform_position(state=state)
         }
 
         # noinspection PyUnresolvedReferences
