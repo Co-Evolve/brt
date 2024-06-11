@@ -52,7 +52,8 @@ def create_env(
         num_arms=5, num_segments_per_arm=5, use_p_control=True
     )
     morphology = MJCFBrittleStarMorphology(morphology_spec)
-    arena_config = AquariumArenaConfiguration(attach_target=True)
+    arena_config = AquariumArenaConfiguration(attach_target=True,
+                                              bumpy_terrain=True)
     arena = MJCFAquariumArena(configuration=arena_config)
 
     env_config = BrittleStarDirectedLocomotionEnvironmentConfiguration(
@@ -70,7 +71,7 @@ def create_env(
 
 
 if __name__ == "__main__":
-    BACKEND = "MJX"
+    BACKEND = "MJC"
     RENDER_MODE = "human"
 
     env = create_env(backend=BACKEND, render_mode=RENDER_MODE)

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Union
 
 import mujoco
 import numpy as np
+from gymnasium.core import RenderFrame
 from moojoco.environment.mjc_env import MJCEnv, MJCEnvState, MJCObservable
+from moojoco.environment.renderer import MujocoRenderer
 
 from biorobot.brittle_star.environment.shared.mjc_observables import (
     get_shared_brittle_star_mjc_observables,
@@ -15,6 +17,7 @@ from biorobot.brittle_star.environment.undirected_locomotion.shared import (
 )
 from biorobot.brittle_star.mjcf.arena.aquarium import MJCFAquariumArena
 from biorobot.brittle_star.mjcf.morphology.morphology import MJCFBrittleStarMorphology
+from biorobot.utils.heightmap import generate_hfield, generate_radial_matrix
 
 
 class BrittleStarUndirectedLocomotionMJCEnvironment(
@@ -23,10 +26,10 @@ class BrittleStarUndirectedLocomotionMJCEnvironment(
     metadata = {"render_modes": ["human", "rgb_array"]}
 
     def __init__(
-        self,
-        mjcf_str: str,
-        mjcf_assets: Dict[str, Any],
-        configuration: BrittleStarUndirectedLocomotionEnvironmentConfiguration,
+            self,
+            mjcf_str: str,
+            mjcf_assets: Dict[str, Any],
+            configuration: BrittleStarUndirectedLocomotionEnvironmentConfiguration,
     ) -> None:
         BrittleStarUndirectedLocomotionEnvironmentBase.__init__(self)
         MJCEnv.__init__(
@@ -39,16 +42,16 @@ class BrittleStarUndirectedLocomotionMJCEnvironment(
 
     @property
     def environment_configuration(
-        self,
+            self,
     ) -> BrittleStarUndirectedLocomotionEnvironmentConfiguration:
         return super(MJCEnv, self).environment_configuration
 
     @classmethod
     def from_morphology_and_arena(
-        cls,
-        morphology: MJCFBrittleStarMorphology,
-        arena: MJCFAquariumArena,
-        configuration: BrittleStarUndirectedLocomotionEnvironmentConfiguration,
+            cls,
+            morphology: MJCFBrittleStarMorphology,
+            arena: MJCFAquariumArena,
+            configuration: BrittleStarUndirectedLocomotionEnvironmentConfiguration,
     ) -> BrittleStarUndirectedLocomotionMJCEnvironment:
         return super().from_morphology_and_arena(
             morphology=morphology, arena=arena, configuration=configuration
@@ -71,7 +74,7 @@ class BrittleStarUndirectedLocomotionMJCEnvironment(
         return np.linalg.norm(xy_disk_position)
 
     def _get_mj_models_and_datas_to_render(
-        self, state: MJCEnvState
+            self, state: MJCEnvState
     ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
         mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
         if self.environment_configuration.color_contacts:
@@ -79,6 +82,42 @@ class BrittleStarUndirectedLocomotionMJCEnvironment(
                 mj_models=mj_models, contact_bools=state.observations["segment_contact"]
             )
         return mj_models, mj_datas
+
+    def get_renderer(
+            self,
+            identifier: int,
+            model: mujoco.MjModel,
+            data: mujoco.MjData,
+            state: MJCEnvState,
+    ) -> Union[MujocoRenderer, mujoco.Renderer]:
+        renderer = super().get_renderer(
+            identifier=identifier, model=model, data=data, state=state
+        )
+        self._update_renderer_context(mj_model=model, state=state, renderer=renderer)
+        return renderer
+
+    def render(self, state: MJCEnvState) -> list[RenderFrame] | None:
+        render_output = super().render(state=state)
+        state.info["_hfield_has_changed"] *= False
+        return render_output
+
+    def _update_hfield(self, state: MJCEnvState) -> MJCEnvState:
+        if self.environment_configuration.hfield_perlin_noise_scale > 0:
+            hfield = state.mj_model.hfield("groundplane_hfield")
+
+            hfield_rng = state.rng.randint(0, 10000)
+            hfield_data = generate_hfield(shape=hfield.data.shape, rng=hfield_rng,
+                                          noise_scale=self.environment_configuration.hfield_perlin_noise_scale, npi=np)
+            mask = generate_radial_matrix(shape=hfield_data.shape, inner_radius=5, outer_radius=100, npi=np)
+            hfield_data = hfield_data * mask
+
+            hfield.data = hfield_data
+
+            state.info.update({"_hfield_has_changed": True})
+        else:
+            state.info.update({"_hfield_has_changed": False})
+
+        return state
 
     def reset(self, rng: np.random.RandomState, *args, **kwargs) -> MJCEnvState:
         mj_model, mj_data = self._prepare_reset()
@@ -103,4 +142,6 @@ class BrittleStarUndirectedLocomotionMJCEnvironment(
         )
 
         state = self._finish_reset(models_and_datas=(mj_model, mj_data), rng=rng)
+        state = self._update_hfield(state=state)
+
         return state

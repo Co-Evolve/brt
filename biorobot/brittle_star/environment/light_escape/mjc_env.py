@@ -255,6 +255,4 @@ class BrittleStarLightEscapeMJCEnvironment(
 
         state = self._finish_reset(models_and_datas=(mj_model, mj_data), rng=rng)
 
-        state = self._update_light_map(state=state)
-
         return state

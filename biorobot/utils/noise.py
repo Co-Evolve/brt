@@ -23,7 +23,7 @@ def interpolant(t: ArrayType) -> ArrayType:
 def generate_perlin_noise_2d(
     shape: Tuple[int, int],
     res: Tuple[int, int],
-    rng_key: Optional[Union[int, jax.random.PRNGKey]] = None,
+    rng: Optional[Union[np.random.RandomState, jax.random.PRNGKey]] = None,
     npi: Union[np, jax.numpy] = np,
 ) -> ArrayType:
     """Generate a 2D numpy array of perlin noise.
@@ -34,7 +34,7 @@ def generate_perlin_noise_2d(
         res: The number of periods of noise to generate along each
             axis (tuple of two ints). Note: shape must be a multiple of
             res.
-        rng_key: The seed used for numpy's RNG or the key for jax's RNG.
+        rng: Numpy's RNG or the key for jax's RNG.
         npi: The numpy implementation to use (numpy or jax.numpy).
     Returns:
         A numpy or jax array of the given shape with the generated noise.
@@ -44,11 +44,10 @@ def generate_perlin_noise_2d(
     """
     if npi == jax.numpy:
         random_values = jax.random.uniform(
-            rng_key, shape=(res[0] + 1, res[1] + 1), minval=0, maxval=1
+            rng, shape=(res[0] + 1, res[1] + 1), minval=0, maxval=1
         )
     else:
-        rs = np.random.RandomState(seed=rng_key)
-        random_values = rs.rand(res[0] + 1, res[1] + 1)
+        random_values = rng.rand(res[0] + 1, res[1] + 1)
 
     def _generate(random_values: ArrayType) -> ArrayType:
         delta = (res[0] / shape[0], res[1] / shape[1])

@@ -34,7 +34,7 @@ def create_env(
         radius_to_strength_factor=200,
     )
     morphology = MJCFBrittleStarMorphology(morphology_spec)
-    arena_config = AquariumArenaConfiguration()
+    arena_config = AquariumArenaConfiguration(bumpy_terrain=True)
     arena = MJCFAquariumArena(configuration=arena_config)
 
     env_config = BrittleStarUndirectedLocomotionEnvironmentConfiguration(
@@ -46,6 +46,7 @@ def create_env(
         color_contacts=True,
         solver_iterations=1,
         solver_ls_iterations=5,
+        hfield_perlin_noise_scale=10
     )
     env = BrittleStarUndirectedLocomotionEnvironment.from_morphology_and_arena(
         morphology=morphology, arena=arena, configuration=env_config, backend=backend
@@ -54,7 +55,7 @@ def create_env(
 
 
 if __name__ == "__main__":
-    BACKEND = "MJX"
+    BACKEND = "MJC"
     RENDER_MODE = "human"
 
     env = create_env(backend=BACKEND, render_mode=RENDER_MODE)
@@ -89,6 +90,8 @@ if __name__ == "__main__":
     while True:
         action, action_rng = action_sample_fn(action_rng, state)
         state = step_fn(state=state, action=action)
-        print(state.observations["joint_position"])
+        # print(state.observations["joint_position"])
         env.render(state=state)
+        if state.terminated | state.truncated:
+            state = reset_fn(env_rng)
     env.close()

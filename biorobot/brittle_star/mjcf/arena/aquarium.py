@@ -9,13 +9,15 @@ from biorobot.utils import colors
 
 class AquariumArenaConfiguration(ArenaConfiguration):
     def __init__(
-        self,
-        name: str = "AquariumArena",
-        size: Tuple[int, int] = (10, 5),
-        sand_ground_color: bool = False,
-        attach_target: bool = False,
-        wall_height: float = 1.5,
-        wall_thickness: float = 0.1,
+            self,
+            name: str = "AquariumArena",
+            size: Tuple[int, int] = (10, 5),
+            sand_ground_color: bool = False,
+            attach_target: bool = False,
+            wall_height: float = 1.5,
+            wall_thickness: float = 0.1,
+            bumpy_terrain: bool = False,
+            max_bump_height: float = 0.5
     ) -> None:
         super().__init__(name=name)
         self.size = size
@@ -23,6 +25,8 @@ class AquariumArenaConfiguration(ArenaConfiguration):
         self.attach_target = attach_target
         self.wall_height = wall_height
         self.wall_thickness = wall_thickness
+        self.bumpy_terrain = bumpy_terrain
+        self.max_bump_height = max_bump_height
 
 
 class MJCFAquariumArena(MJCFArena):
@@ -38,6 +42,10 @@ class MJCFAquariumArena(MJCFArena):
         self._build_ground()
         self._build_walls()
         self._build_target()
+
+    @property
+    def aspect_ratio(self) -> float:
+        return self.arena_configuration.size[0] / self.arena_configuration.size[1]
 
     def _configure_cameras(self) -> None:
         self.mjcf_model.worldbody.add(
@@ -81,7 +89,7 @@ class MJCFAquariumArena(MJCFArena):
                 builtin="flat",
                 name="groundplane",
                 rgb1=colors.rgba_sand[:3],
-                width=200,
+                width=int(200 * self.aspect_ratio),
                 height=200,
             )
             ground_material = self.mjcf_model.asset.add(
@@ -99,7 +107,7 @@ class MJCFAquariumArena(MJCFArena):
                 type="2d",
                 builtin="checker",
                 name="groundplane",
-                width=200,
+                width=int(200 * self.aspect_ratio),
                 height=200,
                 mark="edge",
                 markrgb=[0.8, 0.8, 0.8],
@@ -113,19 +121,40 @@ class MJCFAquariumArena(MJCFArena):
                 texture=ground_texture,
             )
             rgba = None
-        # Build groundplane.
-        self._ground_geom = self.mjcf_body.add(
-            "geom",
-            type="plane",
-            name="groundplane",
-            material=ground_material,
-            rgba=rgba,
-            size=list(self.arena_configuration.size) + [0.25],
-            condim=6,
-            friction=[1, 0.5, 0.5],
-            contype=0,
-            conaffinity=1,
-        )
+
+        if self.arena_configuration.bumpy_terrain:
+            hfield_asset = self.mjcf_model.asset.add(
+                "hfield",
+                name="groundplane_hfield",
+                nrow=200,
+                ncol=int(200 * self.aspect_ratio),
+                size=self.arena_configuration.size + (self.arena_configuration.max_bump_height, 0.1)
+            )
+            self._ground_geom = self.mjcf_body.add(
+                "geom",
+                type="hfield",
+                name="groundplane",
+                material=ground_material,
+                rgba=rgba,
+                condim=6,
+                friction=[1, 0.5, 0.5],
+                contype=0,
+                conaffinity=1,
+                hfield=hfield_asset
+            )
+        else:
+            self._ground_geom = self.mjcf_body.add(
+                "geom",
+                type="plane",
+                name="groundplane",
+                material=ground_material,
+                rgba=rgba,
+                size=list(self.arena_configuration.size) + [0.25],
+                condim=6,
+                friction=[1, 0.5, 0.5],
+                contype=0,
+                conaffinity=1,
+            )
 
     def _build_walls(self) -> None:
         wall_rgba = np.asarray([115, 147, 179, 50]) / 255

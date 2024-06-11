@@ -12,11 +12,11 @@ class BrittleStarUndirectedLocomotionEnvironmentConfiguration(
     BrittleStarEnvironmentBaseConfiguration
 ):
     def __init__(
-        self,
-        joint_randomization_noise_scale: float = 0.0,
-        color_contacts: bool = False,
-        *args,
-        **kwargs,
+            self,
+            joint_randomization_noise_scale: float = 0.0,
+            color_contacts: bool = False,
+            *args,
+            **kwargs,
     ) -> None:
         super().__init__(
             joint_randomization_noise_scale=joint_randomization_noise_scale,
@@ -37,13 +37,13 @@ class BrittleStarUndirectedLocomotionEnvironmentBase(BrittleStarEnvironmentBase)
 
     def _update_truncated(self, state: BaseEnvState) -> BaseEnvState:
         truncated = (
-            self._get_time(state=state) > self.environment_configuration.simulation_time
+                self._get_time(state=state) > self.environment_configuration.simulation_time
         )
         # noinspection PyUnresolvedReferences
         return state.replace(truncated=truncated)
 
     def _update_reward(
-        self, state: BaseEnvState, previous_state: BaseEnvState
+            self, state: BaseEnvState, previous_state: BaseEnvState
     ) -> BaseEnvState:
         previous_distance_from_origin = self._get_xy_distance_from_origin(
             state=previous_state
@@ -55,13 +55,12 @@ class BrittleStarUndirectedLocomotionEnvironmentBase(BrittleStarEnvironmentBase)
         return state.replace(reward=reward)
 
     def _update_info(self, state: BaseEnvState) -> BaseEnvState:
-        info = {
+        state.info.update({
             "time": self._get_time(state=state),
             "xy_distance_from_origin": self._get_xy_distance_from_origin(state=state),
-        }
+        })
 
-        # noinspection PyUnresolvedReferences
-        return state.replace(info=info)
+        return state
 
     @staticmethod
     @abc.abstractmethod
@@ -76,6 +75,6 @@ class BrittleStarUndirectedLocomotionEnvironmentBase(BrittleStarEnvironmentBase)
     @property
     @abc.abstractmethod
     def environment_configuration(
-        self,
+            self,
     ) -> BrittleStarUndirectedLocomotionEnvironmentConfiguration:
         raise NotImplementedError
