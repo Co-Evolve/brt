@@ -146,7 +146,7 @@ class JumpingSpiderDirectedJumpMJCEnvironment(JumpingSpiderEnvironmentBase, MJCE
         mj_model, mj_data = self._prepare_reset()
 
         # Set morphology position
-        mj_model.body("JumpingSpiderMorphology/cephalothorax").pos[2] = 0.5
+        mj_model.body("JumpingSpiderMorphology/cephalothorax").pos[2] = 1
 
         # Set random target position
         mj_model.body("target").pos = self._generate_target_position(

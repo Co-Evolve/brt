@@ -97,7 +97,7 @@ class MJCFJumpingSpiderAbdomen(MJCFMorphologyPart):
             'position',
             name=f"{joint.name}_position_control",
             joint=joint,
-            kp=500,
+            kp=self.morphology_specification.actuation_specification.kp.value,
             ctrllimited=True,
             ctrlrange=joint.range,
             forcelimited=True,

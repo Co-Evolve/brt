@@ -64,7 +64,7 @@ class MJCFDirectedJumpArena(MJCFSpiderArena):
             pos=np.array([0, 0, -self.arena_configuration.platform_size[2] / 2]),
             size=self.arena_configuration.platform_size,
             contype=0,
-            conaffinity=1,
+            conaffinity=1
         )
 
     def _build_target(self) -> None:

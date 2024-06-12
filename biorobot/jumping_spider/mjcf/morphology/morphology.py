@@ -45,12 +45,13 @@ class MJCFJumpingSpiderMorphology(MJCFMorphology):
 
     def _configure_options(self) -> None:
         self.mjcf_model.option.integrator = 'implicitfast'
+        self.mjcf_model.option.density = 1.2
+        self.mjcf_model.option.viscosity = 0.00002
 
     def _configure_defaults(self) -> None:
         self.mjcf_model.default.geom.condim = 6
         self.mjcf_model.default.geom.contype = 1
         self.mjcf_model.default.geom.conaffinity = 0
-        self.mjcf_model.default.geom.density = 1  # CGS
 
     def _build_cephalothorax(
             self

@@ -102,9 +102,11 @@ class JumpingSpiderDraglineSpecification(Specification):
 
 
 class JumpingSpiderActuationSpecification(Specification):
-    def __init__(self, position_control: bool) -> None:
+    def __init__(self, position_control: bool, kp: float | None = None) -> None:
         super().__init__()
+        assert not (position_control and not kp), "Position control requires a gain value (kp)."
         self.position_control = FixedParameter(position_control)
+        self.kp = FixedParameter(kp)
 
 
 class JumpingSpiderMorphologySpecification(MorphologySpecification):

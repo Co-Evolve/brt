@@ -46,7 +46,6 @@ class MJCFJumpingSpiderLegSegment(MJCFMorphologyPart):
     def _build_capsule(
             self
     ) -> None:
-
         self._capsule = self.mjcf_body.add(
             "geom",
             name=f"{self.base_name}_capsule",
@@ -132,7 +131,7 @@ class MJCFJumpingSpiderLegSegment(MJCFMorphologyPart):
                 joint=joint,
                 ctrllimited=True,
                 ctrlrange=joint.range,
-                kp=500,
+                kp=self.morphology_specification.actuation_specification.kp.value,
                 forcelimited=True,
                 forcerange=[-self._segment_specification.torque_limit.value,
                             self._segment_specification.torque_limit.value]

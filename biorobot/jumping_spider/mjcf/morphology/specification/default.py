@@ -24,9 +24,9 @@ def default_joint_specification(
     joint_specification = JumpingSpiderJointSpecification(
         lower_range=lower_range,
         upper_range=upper_range,
-        stiffness=1.5,
-        damping=0.2,
-        armature=0.02
+        stiffness=0.05,
+        damping=0.05,
+        armature=0.01
     )
     return joint_specification
 
@@ -94,7 +94,7 @@ def default_jumping_spider_specification(
 
     dragline_specification = JumpingSpiderDraglineSpecification(stiffness=0.0, damping=1.0, enabled=dragline)
 
-    actuation_specification = JumpingSpiderActuationSpecification(position_control=position_control)
+    actuation_specification = JumpingSpiderActuationSpecification(position_control=position_control, kp=200)
 
     specification = JumpingSpiderMorphologySpecification(
         cephalothorax_specification=cephalothorax_specification,
