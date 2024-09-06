@@ -80,7 +80,7 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
         return state.replace(truncated=truncated)
 
     @staticmethod
-    def _update_mj_models_tex_rgb(
+    def _update_mj_models_tex_data(
         mj_models: List[mujoco.MjModel], state: BaseEnvState
     ) -> None:
         if np.any(state.info["_light_map_has_changed"]):
@@ -100,7 +100,7 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
                 coloured_light_map = 0.3 + 0.7 * np.array(light_map)
                 coloured_light_map = np.stack((coloured_light_map,) * 3, axis=-1)
                 coloured_light_map = coloured_light_map * colors.rgba_sand[:3]
-                mj_model.tex_rgb[adr : adr + size] = coloured_light_map.flatten() * 255
+                mj_model.tex_data[adr : adr + size] = coloured_light_map.flatten() * 255
 
     def _update_renderer_context(
         self,

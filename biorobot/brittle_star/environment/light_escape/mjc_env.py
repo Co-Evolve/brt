@@ -129,7 +129,7 @@ class BrittleStarLightEscapeMJCEnvironment(
         self, state: MJCEnvState
     ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
         mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
-        self._update_mj_models_tex_rgb(mj_models=mj_models, state=state)
+        self._update_mj_models_tex_data(mj_models=mj_models, state=state)
         if self.environment_configuration.color_contacts:
             self._color_segment_capsule_contacts(
                 mj_models=mj_models, contact_bools=state.observations["segment_contact"]
