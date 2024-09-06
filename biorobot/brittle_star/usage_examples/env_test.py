@@ -2,19 +2,31 @@ import jax.numpy as jnp
 import jax.random
 from brax.v1.jumpy import ones_like
 
-from biorobot.brittle_star.environment.directed_locomotion.dual import BrittleStarDirectedLocomotionEnvironment
-from biorobot.brittle_star.environment.directed_locomotion.shared import \
-    BrittleStarDirectedLocomotionEnvironmentConfiguration
-from biorobot.brittle_star.mjcf.arena.aquarium import AquariumArenaConfiguration, MJCFAquariumArena
+from biorobot.brittle_star.environment.directed_locomotion.dual import (
+    BrittleStarDirectedLocomotionEnvironment,
+)
+from biorobot.brittle_star.environment.directed_locomotion.shared import (
+    BrittleStarDirectedLocomotionEnvironmentConfiguration,
+)
+from biorobot.brittle_star.mjcf.arena.aquarium import (
+    AquariumArenaConfiguration,
+    MJCFAquariumArena,
+)
 from biorobot.brittle_star.mjcf.morphology.morphology import MJCFBrittleStarMorphology
-from biorobot.brittle_star.mjcf.morphology.specification.default import default_brittle_star_morphology_specification
+from biorobot.brittle_star.mjcf.morphology.specification.default import (
+    default_brittle_star_morphology_specification,
+)
 
 
 def create_env(
-        backend: str, render_mode: str
+    backend: str, render_mode: str
 ) -> BrittleStarDirectedLocomotionEnvironment:
     morphology_spec = default_brittle_star_morphology_specification(
-        num_arms=5, num_segments_per_arm=6, use_p_control=False, use_torque_control=True, radius_to_strength_factor=500
+        num_arms=5,
+        num_segments_per_arm=6,
+        use_p_control=False,
+        use_torque_control=True,
+        radius_to_strength_factor=500,
     )
     morphology = MJCFBrittleStarMorphology(morphology_spec)
     arena_config = AquariumArenaConfiguration(attach_target=True)
@@ -35,12 +47,12 @@ def create_env(
 
 
 def clip_and_rescale(
-        values: jax.Array,
-        original_low: jax.Array,
-        original_high: jax.Array,
-        new_low: jax.Array,
-        new_high: jax.Array
-        ) -> jax.Array:
+    values: jax.Array,
+    original_low: jax.Array,
+    original_high: jax.Array,
+    new_low: jax.Array,
+    new_high: jax.Array,
+) -> jax.Array:
 
     clipped = jnp.clip(values, original_low, original_high)
     # Normalizing to 0-1
@@ -51,7 +63,8 @@ def clip_and_rescale(
 
     return scaled
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     # Create env
     env = create_env("MJX", "human")
 
@@ -83,15 +96,19 @@ if __name__ == '__main__':
         rower = rower.at[6:].set(0)
         inverse_rower = inverse_rower.at[6:].set(0)
 
-        actions = jnp.clip(jnp.concatenate((leading_arm, rower, rower, inverse_rower, inverse_rower)), -1,
-                           1)
+        actions = jnp.clip(
+            jnp.concatenate((leading_arm, rower, rower, inverse_rower, inverse_rower)),
+            -1,
+            1,
+        )
 
-
-        actions = clip_and_rescale(values=actions,
-                                   original_low=-1,
-                                   original_high=1,
-                                   new_low=env.action_space.low,
-                                   new_high=env.action_space.high)
+        actions = clip_and_rescale(
+            values=actions,
+            original_low=-1,
+            original_high=1,
+            new_low=env.action_space.low,
+            new_high=env.action_space.high,
+        )
 
         state = step_fn(state=state, action=actions)
         env.render(state=state)
