@@ -10,8 +10,8 @@ from biorobot.brittle_star.environment.directed_locomotion.shared import (
     BrittleStarDirectedLocomotionEnvironmentBase,
     BrittleStarDirectedLocomotionEnvironmentConfiguration,
 )
-from biorobot.brittle_star.environment.shared.mjc_observables import (
-    get_shared_brittle_star_mjc_observables,
+from biorobot.brittle_star.environment.shared.observables import (
+    get_base_brittle_star_observables,
 )
 from biorobot.brittle_star.mjcf.arena.aquarium import MJCFAquariumArena
 from biorobot.brittle_star.mjcf.morphology.morphology import MJCFBrittleStarMorphology
@@ -81,8 +81,8 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
         return np.array(state.mj_data.body("target").xpos[:2])
 
     def _create_observables(self) -> List[MJCObservable]:
-        base_observables = get_shared_brittle_star_mjc_observables(
-            mj_model=self.frozen_mj_model, mj_data=self.frozen_mj_data
+        base_observables = get_base_brittle_star_observables(
+            mj_model=self.frozen_mj_model, backend="mjc"
         )
 
         # direction to target

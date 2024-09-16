@@ -6,8 +6,8 @@ import mujoco
 import numpy as np
 from moojoco.environment.mjc_env import MJCEnv, MJCEnvState, MJCObservable
 
-from biorobot.brittle_star.environment.shared.mjc_observables import (
-    get_shared_brittle_star_mjc_observables,
+from biorobot.brittle_star.environment.shared.observables import (
+    get_base_brittle_star_observables,
 )
 from biorobot.brittle_star.environment.undirected_locomotion.shared import (
     BrittleStarUndirectedLocomotionEnvironmentBase,
@@ -55,8 +55,8 @@ class BrittleStarUndirectedLocomotionMJCEnvironment(
         )
 
     def _create_observables(self) -> List[MJCObservable]:
-        base_observables = get_shared_brittle_star_mjc_observables(
-            mj_model=self.frozen_mj_model, mj_data=self.frozen_mj_data
+        base_observables = get_base_brittle_star_observables(
+            mj_model=self.frozen_mj_model, backend="mjc"
         )
         return base_observables
 

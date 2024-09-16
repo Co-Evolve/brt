@@ -70,7 +70,7 @@ def create_env(
 
 
 if __name__ == "__main__":
-    BACKEND = "MJX"
+    BACKEND = "MJC"
     RENDER_MODE = "human"
 
     env = create_env(backend=BACKEND, render_mode=RENDER_MODE)
