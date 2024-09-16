@@ -16,8 +16,8 @@ from biorobot.brittle_star.environment.light_escape.shared import (
     BrittleStarLightEscapeEnvironmentBase,
     BrittleStarLightEscapeEnvironmentConfiguration,
 )
-from biorobot.brittle_star.environment.shared.mjx_observables import (
-    get_shared_brittle_star_mjx_observables,
+from biorobot.brittle_star.environment.shared.observables import (
+    get_base_brittle_star_observables,
 )
 from biorobot.brittle_star.mjcf.arena.aquarium import MJCFAquariumArena
 from biorobot.brittle_star.mjcf.morphology.morphology import MJCFBrittleStarMorphology
@@ -105,8 +105,8 @@ class BrittleStarLightEscapeMJXEnvironment(
         return jnp.average(self._get_light_per_segment(state=state))
 
     def _create_observables(self) -> List[MJXObservable]:
-        base_observables = get_shared_brittle_star_mjx_observables(
-            mj_model=self.frozen_mj_model, mj_data=self.frozen_mj_data
+        base_observables = get_base_brittle_star_observables(
+            mj_model=self.frozen_mj_model, backend="mjx"
         )
 
         num_segments = len(
