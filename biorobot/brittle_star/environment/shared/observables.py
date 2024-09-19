@@ -21,7 +21,7 @@ def get_quat2eueler_fn(backend: str) -> Callable[[chex.Array], chex.Array]:
 
 
 def get_num_contacts_and_segment_contacts_fn(
-        mj_model: mujoco.MjModel, backend: str
+    mj_model: mujoco.MjModel, backend: str
 ) -> Tuple[int, Callable[[BaseEnvState], chex.Array]]:
     if backend == "mjx":
         segment_capsule_geom_ids = np.array(
@@ -29,7 +29,7 @@ def get_num_contacts_and_segment_contacts_fn(
                 geom_id
                 for geom_id in range(mj_model.ngeom)
                 if "segment" in mj_model.geom(geom_id).name
-                   and "capsule" in mj_model.geom(geom_id).name
+                and "capsule" in mj_model.geom(geom_id).name
             ]
         )
 
@@ -39,8 +39,8 @@ def get_num_contacts_and_segment_contacts_fn(
 
             def solve_contact(geom_id: int) -> jnp.ndarray:
                 return (
-                        jnp.sum(contacts * jnp.any(geom_id == contact_data.geom, axis=-1))
-                        > 0
+                    jnp.sum(contacts * jnp.any(geom_id == contact_data.geom, axis=-1))
+                    > 0
                 ).astype(int)
 
             return jax.vmap(solve_contact)(segment_capsule_geom_ids)
@@ -77,7 +77,9 @@ def get_num_contacts_and_segment_contacts_fn(
     return num_contacts, get_segment_contacts
 
 
-def get_actuator_frc_fn(mj_model: mujoco.MjModel, backend: str) -> Callable[[BaseEnvState], chex.Array]:
+def get_actuator_frc_fn(
+    mj_model: mujoco.MjModel, backend: str
+) -> Callable[[BaseEnvState], chex.Array]:
     # Temporary fix until https://github.com/google-deepmind/mujoco/issues/2068 is resolved
     if backend == "mjx":
         low_actuator_force_limit = jnp.array(
@@ -113,7 +115,9 @@ def get_actuator_frc_fn(mj_model: mujoco.MjModel, backend: str) -> Callable[[Bas
         def get_actuator_force(state: MJCEnvState) -> np.ndarray:
             return np.array(
                 [
-                    state.mj_data.sensordata[sensor.adr[0]: sensor.adr[0] + sensor.dim[0]]
+                    state.mj_data.sensordata[
+                        sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
+                    ]
                     for sensor in actuator_frc_sensors
                 ]
             ).flatten()
@@ -122,7 +126,7 @@ def get_actuator_frc_fn(mj_model: mujoco.MjModel, backend: str) -> Callable[[Bas
 
 
 def get_base_brittle_star_observables(
-        mj_model: mujoco.MjModel, backend: str
+    mj_model: mujoco.MjModel, backend: str
 ) -> List[BaseObservable]:
     if backend == "mjx":
         observable_class = MJXObservable
@@ -149,7 +153,9 @@ def get_base_brittle_star_observables(
         high=bnp.array([joint.range[1] for joint in joints]),
         retriever=lambda state: bnp.array(
             [
-                get_data(state).sensordata[sensor.adr[0]: sensor.adr[0] + sensor.dim[0]]
+                get_data(state).sensordata[
+                    sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
+                ]
                 for sensor in joint_pos_sensors
             ]
         ).flatten(),
@@ -167,7 +173,9 @@ def get_base_brittle_star_observables(
         high=bnp.inf * bnp.ones(len(joint_vel_sensors)),
         retriever=lambda state: bnp.array(
             [
-                get_data(state).sensordata[sensor.adr[0]: sensor.adr[0] + sensor.dim[0]]
+                get_data(state).sensordata[
+                    sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
+                ]
                 for sensor in joint_vel_sensors
             ]
         ).flatten(),
@@ -185,7 +193,9 @@ def get_base_brittle_star_observables(
         high=bnp.inf * bnp.ones(len(joint_actuator_frc_sensors)),
         retriever=lambda state: bnp.array(
             [
-                get_data(state).sensordata[sensor.adr[0]: sensor.adr[0] + sensor.dim[0]]
+                get_data(state).sensordata[
+                    sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
+                ]
                 for sensor in joint_actuator_frc_sensors
             ]
         ).flatten(),
@@ -211,7 +221,7 @@ def get_base_brittle_star_observables(
         high=bnp.inf * bnp.ones(3),
         retriever=lambda state: bnp.array(
             get_data(state).sensordata[
-            framepos_sensor.adr[0]: framepos_sensor.adr[0] + framepos_sensor.dim[0]
+                framepos_sensor.adr[0] : framepos_sensor.adr[0] + framepos_sensor.dim[0]
             ]
         ),
     )
@@ -229,8 +239,8 @@ def get_base_brittle_star_observables(
         retriever=lambda state: bnp.array(
             get_quat2eueler_fn(backend=backend)(
                 get_data(state).sensordata[
-                framequat_sensor.adr[0]: framequat_sensor.adr[0]
-                                         + framequat_sensor.dim[0]
+                    framequat_sensor.adr[0] : framequat_sensor.adr[0]
+                    + framequat_sensor.dim[0]
                 ]
             )
         ),
@@ -248,8 +258,8 @@ def get_base_brittle_star_observables(
         high=bnp.inf * bnp.ones(3),
         retriever=lambda state: bnp.array(
             get_data(state).sensordata[
-            framelinvel_sensor.adr[0]: framelinvel_sensor.adr[0]
-                                       + framelinvel_sensor.dim[0]
+                framelinvel_sensor.adr[0] : framelinvel_sensor.adr[0]
+                + framelinvel_sensor.dim[0]
             ]
         ),
     )
@@ -266,8 +276,8 @@ def get_base_brittle_star_observables(
         high=bnp.inf * bnp.ones(3),
         retriever=lambda state: bnp.array(
             get_data(state).sensordata[
-            frameangvel_sensor.adr[0]: frameangvel_sensor.adr[0]
-                                       + frameangvel_sensor.dim[0]
+                frameangvel_sensor.adr[0] : frameangvel_sensor.adr[0]
+                + frameangvel_sensor.dim[0]
             ]
         ),
     )
