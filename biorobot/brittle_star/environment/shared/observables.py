@@ -209,76 +209,46 @@ def get_base_brittle_star_observables(
         retriever=get_actuator_frc_fn(mj_model=mj_model, backend=backend),
     )
 
-    # disk framepos
-    framepos_sensor = [
-        sensor
-        for sensor in sensors
-        if sensor.type[0] == mujoco.mjtSensor.mjSENS_FRAMEPOS
-    ][0]
+    # disk pos
+    disk_body_id = [i for i in range(mj_model.nbody) if "central_disk" in mj_model.body(i).name][0]
     disk_position_observable = observable_class(
         name="disk_position",
         low=-bnp.inf * bnp.ones(3),
         high=bnp.inf * bnp.ones(3),
         retriever=lambda state: bnp.array(
-            get_data(state).sensordata[
-                framepos_sensor.adr[0] : framepos_sensor.adr[0] + framepos_sensor.dim[0]
-            ]
+            get_data(state).xpos[disk_body_id]
         ),
     )
 
-    # disk framequat
-    framequat_sensor = [
-        sensor
-        for sensor in sensors
-        if sensor.type[0] == mujoco.mjtSensor.mjSENS_FRAMEQUAT
-    ][0]
+    # disk rotation
     disk_rotation_observable = observable_class(
         name="disk_rotation",
         low=-bnp.pi * bnp.ones(3),
         high=bnp.pi * bnp.ones(3),
         retriever=lambda state: bnp.array(
             get_quat2eueler_fn(backend=backend)(
-                get_data(state).sensordata[
-                    framequat_sensor.adr[0] : framequat_sensor.adr[0]
-                    + framequat_sensor.dim[0]
-                ]
+                get_data(state).xquat[disk_body_id]
             )
         ),
     )
 
-    # disk framelinvel
-    framelinvel_sensor = [
-        sensor
-        for sensor in sensors
-        if sensor.type[0] == mujoco.mjtSensor.mjSENS_FRAMELINVEL
-    ][0]
+    # disk com linvel
     disk_linvel_observable = observable_class(
         name="disk_linear_velocity",
         low=-bnp.inf * bnp.ones(3),
         high=bnp.inf * bnp.ones(3),
         retriever=lambda state: bnp.array(
-            get_data(state).sensordata[
-                framelinvel_sensor.adr[0] : framelinvel_sensor.adr[0]
-                + framelinvel_sensor.dim[0]
-            ]
+            get_data(state).cvel[disk_body_id, 3:]
         ),
     )
 
-    # disk frameangvel
-    frameangvel_sensor = [
-        sensor
-        for sensor in sensors
-        if sensor.type[0] == mujoco.mjtSensor.mjSENS_FRAMEANGVEL
-    ][0]
+    # disk com angvel
     disk_angvel_observable = observable_class(
         name="disk_angular_velocity",
         low=-bnp.inf * bnp.ones(3),
         high=bnp.inf * bnp.ones(3),
         retriever=lambda state: bnp.array(
-            get_data(state).sensordata[
-                frameangvel_sensor.adr[0] : frameangvel_sensor.adr[0]
-                + frameangvel_sensor.dim[0]
-            ]
+            get_data(state).cvel[disk_body_id, :3]
         ),
     )
 
