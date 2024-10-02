@@ -79,6 +79,7 @@ if __name__ == "__main__":
     state = reset_fn(rng)
 
     print(state.observations["disk_rotation"])
+    print(state.observations["disk_position"])
     i = 0
     while True:
         rng, sub_rng = jax.random.split(rng, 2)

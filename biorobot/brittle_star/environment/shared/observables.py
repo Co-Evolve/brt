@@ -210,14 +210,14 @@ def get_base_brittle_star_observables(
     )
 
     # disk pos
-    disk_body_id = [i for i in range(mj_model.nbody) if "central_disk" in mj_model.body(i).name][0]
+    disk_body_id = [
+        i for i in range(mj_model.nbody) if "central_disk" in mj_model.body(i).name
+    ][0]
     disk_position_observable = observable_class(
         name="disk_position",
         low=-bnp.inf * bnp.ones(3),
         high=bnp.inf * bnp.ones(3),
-        retriever=lambda state: bnp.array(
-            get_data(state).xpos[disk_body_id]
-        ),
+        retriever=lambda state: bnp.array(get_data(state).xpos[disk_body_id]),
     )
 
     # disk rotation
@@ -226,9 +226,7 @@ def get_base_brittle_star_observables(
         low=-bnp.pi * bnp.ones(3),
         high=bnp.pi * bnp.ones(3),
         retriever=lambda state: bnp.array(
-            get_quat2eueler_fn(backend=backend)(
-                get_data(state).xquat[disk_body_id]
-            )
+            get_quat2eueler_fn(backend=backend)(get_data(state).xquat[disk_body_id])
         ),
     )
 
@@ -237,9 +235,7 @@ def get_base_brittle_star_observables(
         name="disk_linear_velocity",
         low=-bnp.inf * bnp.ones(3),
         high=bnp.inf * bnp.ones(3),
-        retriever=lambda state: bnp.array(
-            get_data(state).cvel[disk_body_id, 3:]
-        ),
+        retriever=lambda state: bnp.array(get_data(state).cvel[disk_body_id, 3:]),
     )
 
     # disk com angvel
@@ -247,9 +243,7 @@ def get_base_brittle_star_observables(
         name="disk_angular_velocity",
         low=-bnp.inf * bnp.ones(3),
         high=bnp.inf * bnp.ones(3),
-        retriever=lambda state: bnp.array(
-            get_data(state).cvel[disk_body_id, :3]
-        ),
+        retriever=lambda state: bnp.array(get_data(state).cvel[disk_body_id, :3]),
     )
 
     num_contacts, get_segment_contacts_fn = get_num_contacts_and_segment_contacts_fn(
