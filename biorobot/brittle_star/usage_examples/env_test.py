@@ -1,6 +1,8 @@
 import jax.numpy as jnp
 import jax.random
+import mujoco
 from brax.v1.jumpy import ones_like
+from transforms3d.euler import quat2euler
 
 from biorobot.brittle_star.environment.directed_locomotion.dual import (
     BrittleStarDirectedLocomotionEnvironment,
@@ -76,6 +78,8 @@ if __name__ == "__main__":
     rng = jax.random.PRNGKey(0)
     state = reset_fn(rng)
 
+    print(state.observations["disk_rotation"])
+    print(state.observations["disk_position"])
     i = 0
     while True:
         rng, sub_rng = jax.random.split(rng, 2)
@@ -114,3 +118,5 @@ if __name__ == "__main__":
         env.render(state=state)
 
         i += 1
+        print(state.observations["disk_position"])
+        print("-" * 20)
