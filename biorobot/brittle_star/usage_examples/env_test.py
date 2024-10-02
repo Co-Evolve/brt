@@ -117,6 +117,5 @@ if __name__ == "__main__":
         env.render(state=state)
 
         i += 1
-        print(state.observations["disk_linear_velocity"])
-        print(state.observations["disk_angular_velocity"])
+        print(state.observations["disk_position"])
         print("-" * 20)
