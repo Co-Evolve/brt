@@ -89,18 +89,15 @@ class BrittleStarUndirectedLocomotionMJXEnvironment(
 
         rng, qpos_rng, qvel_rng = jax.random.split(key=rng, num=3)
 
-        disk_body_id = mj_model.body("BrittleStarMorphology/central_disk").id
-
-        # Set morphology position
-        morphology_pos = jnp.array([0.0, 0.0, 0.11])
-        mjx_model = mjx_model.replace(
-            body_pos=mjx_model.body_pos.at[disk_body_id].set(morphology_pos)
-        )
-
-        # Add noise to initial qpos and qvel of segment joints
         qpos = jnp.copy(mjx_model.qpos0)
         qvel = jnp.zeros(mjx_model.nv)
 
+        # Set morphology position
+        morphology_qpos_adr = mj_model.joint("BrittleStarMorphology/freejoint/").qposadr[0]
+        morphology_pos = jnp.array([0.0, 0.0, 0.11])
+        qpos = qpos.at[morphology_qpos_adr:morphology_qpos_adr + 3].set(morphology_pos)
+
+        # Add noise to initial qpos and qvel of segment joints
         joint_qpos_adrs = self._get_segment_joints_qpos_adrs(mj_model=mj_model)
         joint_qvel_adrs = self._get_segment_joints_qvel_adrs(mj_model=mj_model)
         num_segment_joints = len(joint_qpos_adrs)
