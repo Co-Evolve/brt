@@ -31,7 +31,7 @@ class MJCFBrittleStarMorphology(MJCFMorphology):
         self.mjcf_model.compiler.angle = "radian"
 
     def _configure_defaults(self) -> None:
-        self.mjcf_model.default.geom.condim = 6
+        self.mjcf_model.default.geom.condim = 4
         self.mjcf_model.default.geom.contype = 1
         self.mjcf_model.default.geom.conaffinity = 0
 
@@ -72,6 +72,6 @@ class MJCFBrittleStarMorphology(MJCFMorphology):
 
 if __name__ == "__main__":
     spec = default_brittle_star_morphology_specification(
-        num_arms=5, num_segments_per_arm=5, use_p_control=True
+        num_arms=5, num_segments_per_arm=5, use_p_control=False, use_torque_control=True
     )
     MJCFBrittleStarMorphology(spec).export_to_xml_with_assets("./mjcf")

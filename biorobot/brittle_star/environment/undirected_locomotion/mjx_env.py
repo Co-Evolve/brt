@@ -93,9 +93,13 @@ class BrittleStarUndirectedLocomotionMJXEnvironment(
         qvel = jnp.zeros(mjx_model.nv)
 
         # Set morphology position
-        morphology_qpos_adr = mj_model.joint("BrittleStarMorphology/freejoint/").qposadr[0]
+        morphology_qpos_adr = mj_model.joint(
+            "BrittleStarMorphology/freejoint/"
+        ).qposadr[0]
         morphology_pos = jnp.array([0.0, 0.0, 0.11])
-        qpos = qpos.at[morphology_qpos_adr:morphology_qpos_adr + 3].set(morphology_pos)
+        qpos = qpos.at[morphology_qpos_adr : morphology_qpos_adr + 3].set(
+            morphology_pos
+        )
 
         # Add noise to initial qpos and qvel of segment joints
         joint_qpos_adrs = self._get_segment_joints_qpos_adrs(mj_model=mj_model)

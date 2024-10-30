@@ -121,7 +121,7 @@ class MJCFAquariumArena(MJCFArena):
             material=ground_material,
             rgba=rgba,
             size=list(self.arena_configuration.size) + [0.25],
-            condim=6,
+            condim=4,
             contype=0,
             conaffinity=1,
         )
