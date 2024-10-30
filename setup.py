@@ -11,7 +11,7 @@ with open('requirements.txt') as f:
 
 setup(
         name='biorobot',
-        version='0.2.6',
+        version='0.2.7',
         description='The Bio-inspired Robotics Testbed.',
         long_description=readme,
         url='https://github.com/Co-Evolve/brb',
