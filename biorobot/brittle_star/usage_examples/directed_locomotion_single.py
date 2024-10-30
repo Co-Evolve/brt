@@ -88,6 +88,7 @@ if __name__ == "__main__":
 
         step_fn = jax.jit(env.step)
         reset_fn = jax.jit(env.reset)
+        reset_fn = env.reset
 
         def action_sample_fn(rng: chex.PRNGKey) -> Tuple[jnp.ndarray, chex.PRNGKey]:
             rng, sub_rng = jax.random.split(rng, 2)
