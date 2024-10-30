@@ -7,8 +7,12 @@ from biorobot.brittle_star.environment.directed_locomotion.dual import (
 from biorobot.brittle_star.environment.directed_locomotion.shared import (
     BrittleStarDirectedLocomotionEnvironmentConfiguration,
 )
-from biorobot.brittle_star.environment.light_escape.dual import BrittleStarLightEscapeEnvironment
-from biorobot.brittle_star.environment.light_escape.shared import BrittleStarLightEscapeEnvironmentConfiguration
+from biorobot.brittle_star.environment.light_escape.dual import (
+    BrittleStarLightEscapeEnvironment,
+)
+from biorobot.brittle_star.environment.light_escape.shared import (
+    BrittleStarLightEscapeEnvironmentConfiguration,
+)
 from biorobot.brittle_star.mjcf.arena.aquarium import (
     AquariumArenaConfiguration,
     MJCFAquariumArena,
@@ -31,7 +35,7 @@ def create_morphology() -> MJCFBrittleStarMorphology:
 
 
 def create_dirlo_env(
-        backend: str, render_mode: str
+    backend: str, render_mode: str
 ) -> BrittleStarDirectedLocomotionEnvironment:
     morphology = create_morphology()
     arena_config = AquariumArenaConfiguration(attach_target=True)
@@ -50,7 +54,9 @@ def create_dirlo_env(
     return env
 
 
-def create_light_escape_env(backend: str, render_mode: str) -> BrittleStarLightEscapeEnvironment:
+def create_light_escape_env(
+    backend: str, render_mode: str
+) -> BrittleStarLightEscapeEnvironment:
     morphology = create_morphology()
     arena_config = AquariumArenaConfiguration(sand_ground_color=True)
     arena = MJCFAquariumArena(configuration=arena_config)
@@ -71,11 +77,11 @@ def create_light_escape_env(backend: str, render_mode: str) -> BrittleStarLightE
 
 
 def clip_and_rescale(
-        values: jax.Array,
-        original_low: jax.Array,
-        original_high: jax.Array,
-        new_low: jax.Array,
-        new_high: jax.Array,
+    values: jax.Array,
+    original_low: jax.Array,
+    original_high: jax.Array,
+    new_low: jax.Array,
+    new_high: jax.Array,
 ) -> jax.Array:
     clipped = jnp.clip(values, original_low, original_high)
     # Normalizing to 0-1
