@@ -26,10 +26,10 @@ class BrittleStarLightEscapeMJCEnvironment(
     metadata = {"render_modes": ["human", "rgb_array"]}
 
     def __init__(
-        self,
-        mjcf_str: str,
-        mjcf_assets: Dict[str, Any],
-        configuration: BrittleStarLightEscapeEnvironmentConfiguration,
+            self,
+            mjcf_str: str,
+            mjcf_assets: Dict[str, Any],
+            configuration: BrittleStarLightEscapeEnvironmentConfiguration,
     ) -> None:
         BrittleStarLightEscapeEnvironmentBase.__init__(self)
         MJCEnv.__init__(
@@ -42,16 +42,16 @@ class BrittleStarLightEscapeMJCEnvironment(
 
     @property
     def environment_configuration(
-        self,
+            self,
     ) -> BrittleStarLightEscapeEnvironmentConfiguration:
         return super(MJCEnv, self).environment_configuration
 
     @classmethod
     def from_morphology_and_arena(
-        cls,
-        morphology: MJCFBrittleStarMorphology,
-        arena: MJCFAquariumArena,
-        configuration: BrittleStarLightEscapeEnvironmentConfiguration,
+            cls,
+            morphology: MJCFBrittleStarMorphology,
+            arena: MJCFAquariumArena,
+            configuration: BrittleStarLightEscapeEnvironmentConfiguration,
     ) -> BrittleStarLightEscapeMJCEnvironment:
         assert arena.arena_configuration.sand_ground_color, (
             "This environment requires the 'sand_ground_color' "
@@ -71,28 +71,25 @@ class BrittleStarLightEscapeMJCEnvironment(
         )
         return x_disk_position - start_x_position
 
-    def _get_light_per_segment(self, state: MJCEnvState) -> np.ndarray:
-        segment_xy_positions = state.mj_data.geom_xpos[
-            self._get_segment_capsule_geom_ids(mj_model=state.mj_model), :2
-        ].reshape((-1, 2))
-
+    @staticmethod
+    def _get_light_value_at_xy_positions(state: MJCEnvState, xy_positions: np.array) -> np.array:
         arena_size = np.array(state.mj_model.geom("groundplane").size[:2])
 
-        shifted_segment_xy_positions = segment_xy_positions + arena_size
-        normalized_segment_xy_positions = shifted_segment_xy_positions / (
-            2 * arena_size
+        shifted_xy_positions = xy_positions + arena_size
+        normalized_xy_positions = shifted_xy_positions / (
+                2 * arena_size
         )
 
         # Positive Y axis in light map and in world are inverted
-        normalized_segment_xy_positions[:, 1] = (
-            1 - normalized_segment_xy_positions[:, 1]
+        normalized_xy_positions[:, 1] = (
+                1 - normalized_xy_positions[:, 1]
         )
-        segment_yx_light_map_positions = normalized_segment_xy_positions[
-            :, ::-1
-        ] * np.array([state.info["_light_map"].shape])
+        yx_light_map_positions = normalized_xy_positions[
+                                         :, ::-1
+                                         ] * np.array([state.info["_light_map"].shape])
 
         # Just take the closest light map value (should be enough precision)
-        light_map_coords = np.round(segment_yx_light_map_positions).T.astype(int)
+        light_map_coords = np.round(yx_light_map_positions).T.astype(int)
         y_coords = np.clip(
             a=light_map_coords[0], a_min=0, a_max=state.info["_light_map"].shape[0] - 1
         )
@@ -102,8 +99,23 @@ class BrittleStarLightEscapeMJCEnvironment(
 
         return state.info["_light_map"][y_coords, x_coords]
 
-    def _get_average_light_income(self, state: MJCEnvState) -> float:
-        return np.average(self._get_light_per_segment(state=state))
+    def _get_light_per_segment(self, state: MJCEnvState) -> np.ndarray:
+        segment_xy_positions = state.mj_data.geom_xpos[
+                               self._get_segment_capsule_geom_ids(mj_model=state.mj_model), :2
+                               ]
+
+        values = self._get_light_value_at_xy_positions(state=state, xy_positions=segment_xy_positions)
+
+        return values
+
+    def _get_disk_light_income(self, state: MJCEnvState) -> float:
+        # get disk position
+        disk_xy_position = state.mj_data.xpos[self._get_disk_body_id(mj_model=state.mj_model)][:2]
+        values = self._get_light_value_at_xy_positions(
+            state=state,
+            xy_positions=disk_xy_position[None, :]
+        )
+        return values[0]
 
     def _create_observables(self) -> List[MJCObservable]:
         base_observables = get_base_brittle_star_observables(
@@ -126,7 +138,7 @@ class BrittleStarLightEscapeMJCEnvironment(
         return state.mj_data.time
 
     def _get_mj_models_and_datas_to_render(
-        self, state: MJCEnvState
+            self, state: MJCEnvState
     ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
         mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
         self._update_mj_models_tex_data(mj_models=mj_models, state=state)
@@ -137,16 +149,16 @@ class BrittleStarLightEscapeMJCEnvironment(
         return mj_models, mj_datas
 
     def get_renderer_context(
-        self, renderer: Union[MujocoRenderer, mujoco.Renderer]
+            self, renderer: Union[MujocoRenderer, mujoco.Renderer]
     ) -> mujoco.MjrContext:
         return super(MJCEnv, self).get_renderer_context(renderer)
 
     def get_renderer(
-        self,
-        identifier: int,
-        model: mujoco.MjModel,
-        data: mujoco.MjData,
-        state: MJCEnvState,
+            self,
+            identifier: int,
+            model: mujoco.MjModel,
+            data: mujoco.MjData,
+            state: MJCEnvState,
     ) -> Union[MujocoRenderer, mujoco.Renderer]:
         renderer = super().get_renderer(
             identifier=identifier, model=model, data=data, state=state
@@ -195,7 +207,7 @@ class BrittleStarLightEscapeMJCEnvironment(
 
             # normalize light map
             light_map = (light_map - np.min(light_map)) / (
-                np.max(light_map) - np.min(light_map)
+                    np.max(light_map) - np.min(light_map)
             )
 
         info = state.info
@@ -204,9 +216,9 @@ class BrittleStarLightEscapeMJCEnvironment(
         return state.replace(info=info)
 
     def _finish_reset(
-        self,
-        models_and_datas: Tuple[mujoco.MjModel, mujoco.MjData],
-        rng: np.random.RandomState,
+            self,
+            models_and_datas: Tuple[mujoco.MjModel, mujoco.MjData],
+            rng: np.random.RandomState,
     ) -> MJCEnvState:
         mj_model, mj_data = models_and_datas
         mujoco.mj_forward(m=mj_model, d=mj_data)

@@ -8,6 +8,7 @@ import mujoco
 import numpy as np
 from gymnasium.core import RenderFrame
 from jax import numpy as jnp
+from moojoco.environment.base import BaseEnvState
 from moojoco.environment.mjx_env import MJXEnv, MJXEnvState, MJXObservable
 from moojoco.environment.renderer import MujocoRenderer
 from mujoco import mjx
@@ -75,34 +76,39 @@ class BrittleStarLightEscapeMJXEnvironment(
         )
         return x_disk_position - start_x_position
 
-    def _get_light_per_segment(self, state: MJXEnvState) -> jnp.ndarray:
+    @staticmethod
+    def _get_light_value_at_xy_positions(state: MJXEnvState, xy_positions: jax.Array) -> float:
         arena_size = jnp.array(state.mj_model.geom("groundplane").size[:2])
         light_map_size = jnp.array(state.info["_light_map"].shape)
 
-        def _get_light_of_segment(geom_id: int) -> float:
-            segment_xy_position = state.mjx_data.geom_xpos[geom_id, :2]
-            shifted_segment_xy_position = segment_xy_position + arena_size
-            normalized_segment_xy_position = shifted_segment_xy_position / (
+        shifted_xy_positions = xy_positions + arena_size
+        normalized_xy_positions = shifted_xy_positions / (
                 2 * arena_size
-            )
-            normalized_segment_xy_position = normalized_segment_xy_position.at[1].set(
-                1 - normalized_segment_xy_position[1]
-            )
-            segment_yx_light_map_position = (
-                normalized_segment_xy_position[::-1] * light_map_size
-            )
-
-            light_map_coords = jnp.round(segment_yx_light_map_position).astype(int)
-            y_coord = jnp.clip(a=light_map_coords[0], a_min=0, a_max=light_map_size[0])
-            x_coord = jnp.clip(a=light_map_coords[1], a_min=0, a_max=light_map_size[1])
-            return state.info["_light_map"][y_coord, x_coord]
-
-        return jax.vmap(_get_light_of_segment)(
-            jnp.array(self._get_segment_capsule_geom_ids(mj_model=state.mj_model))
+        )
+        normalized_xy_positions = normalized_xy_positions.at[1].set(
+            1 - normalized_xy_positions[1]
+        )
+        yx_light_map_positions = (
+                normalized_xy_positions[::-1] * light_map_size
         )
 
-    def _get_average_light_income(self, state: MJXEnvState) -> jnp.ndarray:
-        return jnp.average(self._get_light_per_segment(state=state))
+        light_map_coords = jnp.round(yx_light_map_positions).astype(int)
+        y_coord = jnp.clip(a=light_map_coords[0], a_min=0, a_max=light_map_size[0])
+        x_coord = jnp.clip(a=light_map_coords[1], a_min=0, a_max=light_map_size[1])
+        return state.info["_light_map"][y_coord, x_coord]
+
+    def _get_light_per_segment(self, state: MJXEnvState) -> jnp.ndarray:
+        segment_xy_positions = state.mjx_data.geom_xpos[self._get_segment_capsule_geom_ids(mj_model=state.mj_model), :2]
+        values = jax.vmap(self._get_light_value_at_xy_positions, in_axes=(None, 0))(state, segment_xy_positions)
+        return values
+
+    def _get_disk_light_income(self, state: MJXEnvState) -> float:
+        disk_xy_position = state.mjx_data.xpos[self._get_disk_body_id(mj_model=state.mj_model)][:2]
+        value = self._get_light_value_at_xy_positions(
+            state=state,
+            xy_positions=disk_xy_position
+        )
+        return value
 
     def _create_observables(self) -> List[MJXObservable]:
         base_observables = get_base_brittle_star_observables(

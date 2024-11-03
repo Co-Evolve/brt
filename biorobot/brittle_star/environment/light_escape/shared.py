@@ -45,11 +45,11 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
     def _update_reward(
         self, state: BaseEnvState, previous_state: BaseEnvState
     ) -> BaseEnvState:
-        previous_average_light_income = self._get_average_light_income(
+        previous_light_income = self._get_disk_light_income(
             state=previous_state
         )
-        current_average_light_income = self._get_average_light_income(state=state)
-        reward = previous_average_light_income - current_average_light_income
+        current_light_income = self._get_disk_light_income(state=state)
+        reward = previous_light_income - current_light_income
 
         # noinspection PyUnresolvedReferences
         return state.replace(reward=reward)
@@ -135,12 +135,17 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
     def _get_x_distance_from_start_position(state: BaseEnvState) -> float:
         raise NotImplementedError
 
+    @staticmethod
+    @abc.abstractmethod
+    def _get_light_value_at_xy_positions(state: BaseEnvState, xy_positions: chex.Array) -> float:
+        raise NotImplementedError
+
     @abc.abstractmethod
     def _get_light_per_segment(self, state: BaseEnvState) -> chex.Array:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def _get_average_light_income(self, state: BaseEnvState) -> float:
+    def _get_disk_light_income(self, state: BaseEnvState) -> float:
         raise NotImplementedError
 
     @abc.abstractmethod
