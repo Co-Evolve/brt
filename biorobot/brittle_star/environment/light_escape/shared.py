@@ -45,9 +45,7 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
     def _update_reward(
         self, state: BaseEnvState, previous_state: BaseEnvState
     ) -> BaseEnvState:
-        previous_light_income = self._get_disk_light_income(
-            state=previous_state
-        )
+        previous_light_income = self._get_disk_light_income(state=previous_state)
         current_light_income = self._get_disk_light_income(state=state)
         reward = previous_light_income - current_light_income
 
@@ -137,7 +135,9 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
 
     @staticmethod
     @abc.abstractmethod
-    def _get_light_value_at_xy_positions(state: BaseEnvState, xy_positions: chex.Array) -> float:
+    def _get_light_value_at_xy_positions(
+        state: BaseEnvState, xy_positions: chex.Array
+    ) -> float:
         raise NotImplementedError
 
     @abc.abstractmethod

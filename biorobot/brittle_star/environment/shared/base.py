@@ -78,7 +78,11 @@ class BrittleStarEnvironmentBase:
 
     def _get_disk_body_id(self, mj_model: mujoco.MjModel) -> int:
         if self._disk_body_id is None:
-            self._disk_body_id = [i for i in range(mj_model.nbody) if "central_disk" in mj_model.body(i).name][0]
+            self._disk_body_id = [
+                i
+                for i in range(mj_model.nbody)
+                if "central_disk" in mj_model.body(i).name
+            ][0]
         return self._disk_body_id
 
     def _color_segment_capsule_contacts(
