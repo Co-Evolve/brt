@@ -23,7 +23,7 @@ from biorobot.brittle_star.mjcf.morphology.specification.default import (
 
 def create_env(backend: str, render_mode: str) -> BrittleStarLightEscapeEnvironment:
     morphology_spec = default_brittle_star_morphology_specification(
-        num_arms=5, num_segments_per_arm=5, use_p_control=True
+        num_arms=5, num_segments_per_arm=5, use_p_control=False, use_torque_control=True
     )
     morphology = MJCFBrittleStarMorphology(morphology_spec)
     arena_config = AquariumArenaConfiguration(sand_ground_color=True)
