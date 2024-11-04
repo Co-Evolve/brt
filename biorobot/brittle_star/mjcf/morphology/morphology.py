@@ -34,6 +34,7 @@ class MJCFBrittleStarMorphology(MJCFMorphology):
         self.mjcf_model.default.geom.condim = 4
         self.mjcf_model.default.geom.contype = 1
         self.mjcf_model.default.geom.conaffinity = 0
+        self.mjcf_model.default.geom.density = 1100
 
     def _build_disk(self) -> None:
         self._disk = MJCFBrittleStarDisk(

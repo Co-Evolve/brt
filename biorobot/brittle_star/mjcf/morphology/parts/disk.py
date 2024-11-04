@@ -55,6 +55,7 @@ class MJCFBrittleStarDisk(MJCFMorphologyPart):
                 rgba=colors.rgba_green,
                 contype=0,
                 conaffinity=0,
+                mass=0
             )
 
         self.mjcf_body.add(
