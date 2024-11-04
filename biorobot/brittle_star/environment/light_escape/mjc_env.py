@@ -40,17 +40,24 @@ class BrittleStarLightEscapeMJCEnvironment(
         )
         self._cache_references(mj_model=self.frozen_mj_model)
         segment_capsule_geoms = [
-                self.frozen_mj_model.geom(geom_id)
-                for geom_id in self._get_segment_capsule_geom_ids(
-                    mj_model=self.frozen_mj_model
-                )
-            ]
+            self.frozen_mj_model.geom(geom_id)
+            for geom_id in self._get_segment_capsule_geom_ids(
+                mj_model=self.frozen_mj_model
+            )
+        ]
         self._segment_capsule_areas = np.array(
-            [(np.pi * geom.size[0] ** 2) + (2 * geom.size[0] * 2 * geom.size[1])  for geom in segment_capsule_geoms]
+            [
+                (np.pi * geom.size[0] ** 2) + (2 * geom.size[0] * 2 * geom.size[1])
+                for geom in segment_capsule_geoms
+            ]
         )
-        self._disk_area = np.pi * self.frozen_mj_model.geom(
-            "BrittleStarMorphology/central_disk_pentagon_collider"
-        ).size[0] ** 2
+        self._disk_area = (
+            np.pi
+            * self.frozen_mj_model.geom(
+                "BrittleStarMorphology/central_disk_pentagon_collider"
+            ).size[0]
+            ** 2
+        )
 
     @property
     def environment_configuration(
