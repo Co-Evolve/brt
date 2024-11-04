@@ -59,12 +59,12 @@ class MJCFBrittleStarDisk(MJCFMorphologyPart):
 
         self.mjcf_body.add(
             "geom",
-            type="box",
+            type="cylinder",
             name=f"{self.base_name}_pentagon_collider",
             pos=[0.0, 0.0, 0.0],
             euler=[0, 0, 0],
-            size=[radius * 0.55, radius * 0.55, height],
-            rgba=colors.rgba_green,
+            size=[radius, height],
+            rgba=[0, 0, 0, 0],
             contype=1,
             conaffinity=0,
         )

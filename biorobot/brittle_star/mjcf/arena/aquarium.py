@@ -9,13 +9,13 @@ from biorobot.utils import colors
 
 class AquariumArenaConfiguration(ArenaConfiguration):
     def __init__(
-        self,
-        name: str = "AquariumArena",
-        size: Tuple[int, int] = (10, 5),
-        sand_ground_color: bool = False,
-        attach_target: bool = False,
-        wall_height: float = 1.5,
-        wall_thickness: float = 0.1,
+            self,
+            name: str = "AquariumArena",
+            size: Tuple[int, int] = (10, 5),
+            sand_ground_color: bool = False,
+            attach_target: bool = False,
+            wall_height: float = 1.5,
+            wall_thickness: float = 0.1,
     ) -> None:
         super().__init__(name=name)
         self.size = size
@@ -129,7 +129,8 @@ class MJCFAquariumArena(MJCFArena):
     def _build_walls(self) -> None:
         wall_rgba = np.asarray([115, 147, 179, 50]) / 255
 
-        self.mjcf_model.worldbody.add(
+        walls = []
+        walls.append(self.mjcf_model.worldbody.add(
             "geom",
             type="box",
             name="north_wall",
@@ -146,9 +147,9 @@ class MJCFAquariumArena(MJCFArena):
             ],
             rgba=wall_rgba,
             contype=0,
-            conaffinity=1,
-        )
-        self.mjcf_model.worldbody.add(
+            conaffinity=0,
+        ))
+        walls.append(self.mjcf_model.worldbody.add(
             "geom",
             type="box",
             name="south_wall",
@@ -165,9 +166,9 @@ class MJCFAquariumArena(MJCFArena):
             ],
             rgba=wall_rgba,
             contype=0,
-            conaffinity=1,
-        )
-        self.mjcf_model.worldbody.add(
+            conaffinity=0,
+        ))
+        walls.append(self.mjcf_model.worldbody.add(
             "geom",
             type="box",
             name="east_wall",
@@ -185,9 +186,9 @@ class MJCFAquariumArena(MJCFArena):
             ],
             rgba=wall_rgba,
             contype=0,
-            conaffinity=1,
-        )
-        self.mjcf_model.worldbody.add(
+            conaffinity=0,
+        ))
+        walls.append(self.mjcf_model.worldbody.add(
             "geom",
             type="box",
             name="west_wall",
@@ -205,8 +206,25 @@ class MJCFAquariumArena(MJCFArena):
             ],
             rgba=wall_rgba,
             contype=0,
-            conaffinity=1,
-        )
+            conaffinity=0
+        ))
+
+        eulers = [[np.pi / 2, 0, 0],
+                  [-np.pi / 2, 0, 0],
+                  [0, np.pi / 2, 0],
+                  [0, -np.pi / 2, 0]]
+        for wall, euler in zip(walls, eulers):
+            self.mjcf_model.worldbody.add(
+                "geom",
+                type="plane",
+                name=wall.name + "_collider",
+                pos=wall.pos,
+                size=wall.size,
+                euler=euler,
+                rgba=[0, 0, 0, 0],
+                contype=0,
+                conaffinity=1,
+            )
 
     def _build_target(self) -> None:
         if self.arena_configuration.attach_target:

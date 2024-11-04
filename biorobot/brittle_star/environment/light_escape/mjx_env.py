@@ -45,7 +45,7 @@ class BrittleStarLightEscapeMJXEnvironment(
         self._cache_references(mj_model=self.frozen_mj_model)
         self._segment_capsule_lengths = jnp.array([self.frozen_mj_model.geom(geom_id).size[1] for geom_id in
                                                    self._get_segment_capsule_geom_ids(mj_model=self.frozen_mj_model)])
-        self._disk_radius = self.frozen_mj_model.body("BrittleStarMorphology/central_disk").user[0]
+        self._disk_radius = self.frozen_mj_model.geom("BrittleStarMorphology/central_disk_pentagon_collider").size[0]
 
     @property
     def environment_configuration(
@@ -65,9 +65,6 @@ class BrittleStarLightEscapeMJXEnvironment(
             "parameter of the AquariumArenaConfiguration to be "
             "set to 'True'."
         )
-        morphology._disk.mjcf_body.user = np.array(
-            [morphology.morphology_specification.disk_specification.radius.value])
-
         return super().from_morphology_and_arena(
             morphology=morphology, arena=arena, configuration=configuration
         )
