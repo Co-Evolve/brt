@@ -42,8 +42,8 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
     def __init__(self) -> None:
         super().__init__()
 
-        self._segment_capsule_lengths: chex.Array | None = None
-        self._disk_radius: float | None = None
+        self._segment_capsule_areas: chex.Array | None = None
+        self._disk_area: float | None = None
 
     def _update_reward(
         self, state: BaseEnvState, previous_state: BaseEnvState
@@ -60,12 +60,12 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
         disk_light_value = self._get_disk_light_income(state=state)
 
         segment_light_values = (
-            segment_light_values * self._segment_capsule_lengths
+            segment_light_values * self._segment_capsule_areas
         ).sum()
-        disk_light_value = disk_light_value * self._disk_radius
+        disk_light_value = disk_light_value * self._disk_area
 
         body_light = (segment_light_values + disk_light_value) / (
-            self._segment_capsule_lengths.sum() + self._disk_radius
+            self._segment_capsule_areas.sum() + self._disk_area
         )
         return body_light
 
