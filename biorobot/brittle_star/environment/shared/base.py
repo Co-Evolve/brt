@@ -34,13 +34,11 @@ class BrittleStarEnvironmentBase:
         self._segment_joints_qpos_adrs = None
         self._segment_joints_qvel_adrs = None
         self._segment_capsule_geom_ids = None
-        self._disk_body_id = None
 
     def _cache_references(self, mj_model: mujoco.MjModel) -> None:
         self._get_segment_capsule_geom_ids(mj_model=mj_model)
         self._get_segment_joints_qpos_adrs(mj_model=mj_model)
         self._get_segment_joints_qvel_adrs(mj_model=mj_model)
-        self._get_disk_body_id(mj_model=mj_model)
 
     def _get_segment_joints_qpos_adrs(self, mj_model: mujoco.MjModel) -> jnp.ndarray:
         if self._segment_joints_qpos_adrs is None:
@@ -75,15 +73,6 @@ class BrittleStarEnvironmentBase:
                 ]
             )
         return self._segment_capsule_geom_ids
-
-    def _get_disk_body_id(self, mj_model: mujoco.MjModel) -> int:
-        if self._disk_body_id is None:
-            self._disk_body_id = [
-                i
-                for i in range(mj_model.nbody)
-                if "central_disk" in mj_model.body(i).name
-            ][0]
-        return self._disk_body_id
 
     def _color_segment_capsule_contacts(
         self, mj_models: List[mujoco.MjModel], contact_bools: chex.Array

@@ -8,7 +8,6 @@ import mujoco
 import numpy as np
 from gymnasium.core import RenderFrame
 from jax import numpy as jnp
-from moojoco.environment.base import BaseEnvState
 from moojoco.environment.mjx_env import MJXEnv, MJXEnvState, MJXObservable
 from moojoco.environment.renderer import MujocoRenderer
 from mujoco import mjx
@@ -44,6 +43,17 @@ class BrittleStarLightEscapeMJXEnvironment(
             configuration=configuration,
         )
         self._cache_references(mj_model=self.frozen_mj_model)
+        self._segment_capsule_lengths = jnp.array(
+            [
+                self.frozen_mj_model.geom(geom_id).size[1]
+                for geom_id in self._get_segment_capsule_geom_ids(
+                    mj_model=self.frozen_mj_model
+                )
+            ]
+        )
+        self._disk_radius = self.frozen_mj_model.geom(
+            "BrittleStarMorphology/central_disk_pentagon_collider"
+        ).size[0]
 
     @property
     def environment_configuration(
@@ -106,7 +116,7 @@ class BrittleStarLightEscapeMJXEnvironment(
 
     def _get_disk_light_income(self, state: MJXEnvState) -> float:
         disk_xy_position = state.mjx_data.xpos[
-            self._get_disk_body_id(mj_model=state.mj_model)
+            state.mj_model.body("BrittleStarMorphology/central_disk").id
         ][:2]
         value = self._get_light_value_at_xy_positions(
             state=state, xy_positions=disk_xy_position
