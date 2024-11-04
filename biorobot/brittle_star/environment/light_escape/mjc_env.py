@@ -39,6 +39,9 @@ class BrittleStarLightEscapeMJCEnvironment(
             configuration=configuration,
         )
         self._cache_references(mj_model=self.frozen_mj_model)
+        self._segment_capsule_lengths = np.array([self.frozen_mj_model.geom(geom_id).size[1] for geom_id in
+                                                   self._get_segment_capsule_geom_ids(mj_model=self.frozen_mj_model)])
+        self._disk_radius = self.frozen_mj_model.body("BrittleStarMorphology/central_disk").user[0]
 
     @property
     def environment_configuration(
@@ -58,6 +61,8 @@ class BrittleStarLightEscapeMJCEnvironment(
             "parameter of the AquariumArenaConfiguration to be "
             "set to 'True'."
         )
+        morphology._disk.mjcf_body.user = np.array(
+            [morphology.morphology_specification.disk_specification.radius.value])
         return super().from_morphology_and_arena(
             morphology=morphology, arena=arena, configuration=configuration
         )
@@ -111,7 +116,7 @@ class BrittleStarLightEscapeMJCEnvironment(
     def _get_disk_light_income(self, state: MJCEnvState) -> float:
         # get disk position
         disk_xy_position = state.mj_data.xpos[
-            self._get_disk_body_id(mj_model=state.mj_model)
+            state.mj_model.body("BrittleStarMorphology/central_disk").id
         ][:2]
         values = self._get_light_value_at_xy_positions(
             state=state, xy_positions=disk_xy_position[None, :]

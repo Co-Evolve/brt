@@ -10,13 +10,13 @@ from biorobot.utils import colors
 
 class BrittleStarEnvironmentBaseConfiguration(MuJoCoEnvironmentConfiguration):
     def __init__(
-        self,
-        joint_randomization_noise_scale: float = 0.0,
-        color_contacts: bool = False,
-        solver_iterations: int = 1,
-        solver_ls_iterations: int = 5,
-        *args,
-        **kwargs,
+            self,
+            joint_randomization_noise_scale: float = 0.0,
+            color_contacts: bool = False,
+            solver_iterations: int = 1,
+            solver_ls_iterations: int = 5,
+            *args,
+            **kwargs,
     ):
         super().__init__(
             disable_eulerdamp=True,
@@ -34,13 +34,11 @@ class BrittleStarEnvironmentBase:
         self._segment_joints_qpos_adrs = None
         self._segment_joints_qvel_adrs = None
         self._segment_capsule_geom_ids = None
-        self._disk_body_id = None
 
     def _cache_references(self, mj_model: mujoco.MjModel) -> None:
         self._get_segment_capsule_geom_ids(mj_model=mj_model)
         self._get_segment_joints_qpos_adrs(mj_model=mj_model)
         self._get_segment_joints_qvel_adrs(mj_model=mj_model)
-        self._get_disk_body_id(mj_model=mj_model)
 
     def _get_segment_joints_qpos_adrs(self, mj_model: mujoco.MjModel) -> jnp.ndarray:
         if self._segment_joints_qpos_adrs is None:
@@ -71,22 +69,13 @@ class BrittleStarEnvironmentBase:
                     geom_id
                     for geom_id in range(mj_model.ngeom)
                     if "segment" in mj_model.geom(geom_id).name
-                    and "capsule" in mj_model.geom(geom_id).name
+                       and "capsule" in mj_model.geom(geom_id).name
                 ]
             )
         return self._segment_capsule_geom_ids
 
-    def _get_disk_body_id(self, mj_model: mujoco.MjModel) -> int:
-        if self._disk_body_id is None:
-            self._disk_body_id = [
-                i
-                for i in range(mj_model.nbody)
-                if "central_disk" in mj_model.body(i).name
-            ][0]
-        return self._disk_body_id
-
     def _color_segment_capsule_contacts(
-        self, mj_models: List[mujoco.MjModel], contact_bools: chex.Array
+            self, mj_models: List[mujoco.MjModel], contact_bools: chex.Array
     ) -> None:
         for i, mj_model in enumerate(mj_models):
             if len(contact_bools.shape) > 1:
@@ -95,7 +84,7 @@ class BrittleStarEnvironmentBase:
                 contacts = contact_bools
 
             for capsule_geom_id, contact in zip(
-                self._segment_capsule_geom_ids, contacts
+                    self._segment_capsule_geom_ids, contacts
             ):
                 if contact:
                     mj_model.geom(capsule_geom_id).rgba = colors.rgba_red

@@ -42,15 +42,28 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
     def __init__(self) -> None:
         super().__init__()
 
+        self._segment_capsule_lengths : chex.Array | None = None
+        self._disk_radius : float | None = None
+
     def _update_reward(
         self, state: BaseEnvState, previous_state: BaseEnvState
     ) -> BaseEnvState:
-        previous_light_income = self._get_disk_light_income(state=previous_state)
-        current_light_income = self._get_disk_light_income(state=state)
+        previous_light_income = self._get_body_light_income(state=previous_state)
+        current_light_income = self._get_body_light_income(state=state)
         reward = previous_light_income - current_light_income
 
         # noinspection PyUnresolvedReferences
         return state.replace(reward=reward)
+
+    def _get_body_light_income(self, state: BaseEnvState) -> float:
+        segment_light_values = self._get_light_per_segment(state=state)
+        disk_light_value = self._get_disk_light_income(state=state)
+
+        segment_light_values = segment_light_values * self._segment_capsule_lengths
+        disk_light_value = disk_light_value * self._disk_radius
+
+        body_light = (segment_light_values + disk_light_value) / (self._segment_capsule_lengths + self._disk_radius)
+        return body_light
 
     def _update_info(self, state: BaseEnvState) -> BaseEnvState:
         info = state.info
