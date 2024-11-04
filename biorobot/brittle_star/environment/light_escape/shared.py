@@ -59,7 +59,9 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
         segment_light_values = self._get_light_per_segment(state=state)
         disk_light_value = self._get_disk_light_income(state=state)
 
-        segment_light_values = (segment_light_values * self._segment_capsule_lengths).sum()
+        segment_light_values = (
+            segment_light_values * self._segment_capsule_lengths
+        ).sum()
         disk_light_value = disk_light_value * self._disk_radius
 
         body_light = (segment_light_values + disk_light_value) / (
