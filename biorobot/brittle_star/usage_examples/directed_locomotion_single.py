@@ -94,6 +94,7 @@ if __name__ == "__main__":
             return env.action_space.sample(rng=sub_rng), rng
 
     state = reset_fn(env_rng, [-1.0, 0.0, 0.05])
+
     while True:
         action, action_rng = action_sample_fn(action_rng)
         state = step_fn(state=state, action=action)
