@@ -11,13 +11,13 @@ from biorobot.utils import colors
 
 class MJCFBrittleStarDisk(MJCFMorphologyPart):
     def __init__(
-        self,
-        parent: Union[MJCFMorphology, MJCFMorphologyPart],
-        name: str,
-        pos: np.array,
-        euler: np.array,
-        *args,
-        **kwargs,
+            self,
+            parent: Union[MJCFMorphology, MJCFMorphologyPart],
+            name: str,
+            pos: np.array,
+            euler: np.array,
+            *args,
+            **kwargs,
     ) -> None:
         super().__init__(parent, name, pos, euler, *args, **kwargs)
 
@@ -30,6 +30,7 @@ class MJCFBrittleStarDisk(MJCFMorphologyPart):
 
         self._build_pentagon()
         self._build_arm_connections()
+        self._configure_sensors()
 
     def _build_pentagon(self) -> None:
         # Todo: replace this with a dynamically generated mesh
@@ -93,3 +94,29 @@ class MJCFBrittleStarDisk(MJCFMorphologyPart):
                 contype=0,
                 conaffinity=0,
             )
+
+    def _configure_sensors(self) -> None:
+        self.mjcf_model.sensor.add(
+            'framepos',
+            name=f"{self.base_name}_framepos_sensor",
+            objtype="xbody",
+            objname=self.mjcf_body.name
+        )
+        self.mjcf_model.sensor.add(
+            'framequat',
+            name=f"{self.base_name}_framequat_sensor",
+            objtype="xbody",
+            objname=self.mjcf_body.name
+        )
+        self.mjcf_model.sensor.add(
+            'framelinvel',
+            name=f"{self.base_name}_framelinvel_sensor",
+            objtype="xbody",
+            objname=self.mjcf_body.name
+        )
+        self.mjcf_model.sensor.add(
+            'frameangvel',
+            name=f"{self.base_name}_frameangvel_sensor",
+            objtype="xbody",
+            objname=self.mjcf_body.name
+        )
