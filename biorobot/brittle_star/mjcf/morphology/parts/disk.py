@@ -11,13 +11,13 @@ from biorobot.utils import colors
 
 class MJCFBrittleStarDisk(MJCFMorphologyPart):
     def __init__(
-            self,
-            parent: Union[MJCFMorphology, MJCFMorphologyPart],
-            name: str,
-            pos: np.array,
-            euler: np.array,
-            *args,
-            **kwargs,
+        self,
+        parent: Union[MJCFMorphology, MJCFMorphologyPart],
+        name: str,
+        pos: np.array,
+        euler: np.array,
+        *args,
+        **kwargs,
     ) -> None:
         super().__init__(parent, name, pos, euler, *args, **kwargs)
 
@@ -97,26 +97,26 @@ class MJCFBrittleStarDisk(MJCFMorphologyPart):
 
     def _configure_sensors(self) -> None:
         self.mjcf_model.sensor.add(
-            'framepos',
+            "framepos",
             name=f"{self.base_name}_framepos_sensor",
             objtype="xbody",
-            objname=self.mjcf_body.name
+            objname=self.mjcf_body.name,
         )
         self.mjcf_model.sensor.add(
-            'framequat',
+            "framequat",
             name=f"{self.base_name}_framequat_sensor",
             objtype="xbody",
-            objname=self.mjcf_body.name
+            objname=self.mjcf_body.name,
         )
         self.mjcf_model.sensor.add(
-            'framelinvel',
+            "framelinvel",
             name=f"{self.base_name}_framelinvel_sensor",
             objtype="xbody",
-            objname=self.mjcf_body.name
+            objname=self.mjcf_body.name,
         )
         self.mjcf_model.sensor.add(
-            'frameangvel',
+            "frameangvel",
             name=f"{self.base_name}_frameangvel_sensor",
             objtype="xbody",
-            objname=self.mjcf_body.name
+            objname=self.mjcf_body.name,
         )

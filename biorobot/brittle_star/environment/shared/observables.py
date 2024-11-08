@@ -15,6 +15,7 @@ from transforms3d.euler import quat2euler
 
 def get_quat2euler_fn(backend: str) -> Callable[[chex.Array], chex.Array]:
     if backend == "mjx":
+
         def jquat2euler(quat):
             xywz = jnp.roll(a=quat, shift=-1)
             return Rotation.from_quat(xywz).as_euler(seq="xyz", degrees=False)
@@ -25,7 +26,7 @@ def get_quat2euler_fn(backend: str) -> Callable[[chex.Array], chex.Array]:
 
 
 def get_num_contacts_and_segment_contacts_fn(
-        mj_model: mujoco.MjModel, backend: str
+    mj_model: mujoco.MjModel, backend: str
 ) -> Tuple[int, Callable[[BaseEnvState], chex.Array]]:
     if backend == "mjx":
         segment_capsule_geom_ids = np.array(
@@ -33,7 +34,7 @@ def get_num_contacts_and_segment_contacts_fn(
                 geom_id
                 for geom_id in range(mj_model.ngeom)
                 if "segment" in mj_model.geom(geom_id).name
-                   and "capsule" in mj_model.geom(geom_id).name
+                and "capsule" in mj_model.geom(geom_id).name
             ]
         )
 
@@ -43,8 +44,8 @@ def get_num_contacts_and_segment_contacts_fn(
 
             def solve_contact(geom_id: int) -> jnp.ndarray:
                 return (
-                        jnp.sum(contacts * jnp.any(geom_id == contact_data.geom, axis=-1))
-                        > 0
+                    jnp.sum(contacts * jnp.any(geom_id == contact_data.geom, axis=-1))
+                    > 0
                 ).astype(int)
 
             return jax.vmap(solve_contact)(segment_capsule_geom_ids)
@@ -82,7 +83,7 @@ def get_num_contacts_and_segment_contacts_fn(
 
 
 def get_base_brittle_star_observables(
-        mj_model: mujoco.MjModel, backend: str
+    mj_model: mujoco.MjModel, backend: str
 ) -> List[BaseObservable]:
     if backend == "mjx":
         observable_class = MJXObservable
@@ -110,7 +111,7 @@ def get_base_brittle_star_observables(
         retriever=lambda state: bnp.array(
             [
                 get_data(state).sensordata[
-                sensor.adr[0]: sensor.adr[0] + sensor.dim[0]
+                    sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
                 ]
                 for sensor in joint_pos_sensors
             ]
@@ -130,7 +131,7 @@ def get_base_brittle_star_observables(
         retriever=lambda state: bnp.array(
             [
                 get_data(state).sensordata[
-                sensor.adr[0]: sensor.adr[0] + sensor.dim[0]
+                    sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
                 ]
                 for sensor in joint_vel_sensors
             ]
@@ -150,7 +151,7 @@ def get_base_brittle_star_observables(
         retriever=lambda state: bnp.array(
             [
                 get_data(state).sensordata[
-                sensor.adr[0]: sensor.adr[0] + sensor.dim[0]
+                    sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
                 ]
                 for sensor in joint_actuator_frc_sensors
             ]
@@ -170,7 +171,7 @@ def get_base_brittle_star_observables(
         retriever=lambda state: bnp.array(
             [
                 get_data(state).sensordata[
-                sensor.adr[0]: sensor.adr[0] + sensor.dim[0]
+                    sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
                 ]
                 for sensor in actuator_frc_sensors
             ]
@@ -182,33 +183,34 @@ def get_base_brittle_star_observables(
         mj_model.sensor(i)
         for i in range(mj_model.nsensor)
         if mj_model.sensor(i).type[0] == mujoco.mjtSensor.mjSENS_FRAMEPOS
-           and "disk" in mj_model.sensor(i).name
+        and "disk" in mj_model.sensor(i).name
     ][0]
     disk_position_observable = observable_class(
         name="disk_position",
         low=-bnp.inf * bnp.ones(3),
         high=bnp.inf * bnp.ones(3),
-        retriever=lambda state:
-        get_data(state).sensordata[
-        disk_framepos_sensor.adr[0]: disk_framepos_sensor.adr[0] + disk_framepos_sensor.dim[0]
-        ]
+        retriever=lambda state: get_data(state).sensordata[
+            disk_framepos_sensor.adr[0] : disk_framepos_sensor.adr[0]
+            + disk_framepos_sensor.dim[0]
+        ],
     )
     # disk rotation
     disk_framequat_sensor = [
         mj_model.sensor(i)
         for i in range(mj_model.nsensor)
         if mj_model.sensor(i).type[0] == mujoco.mjtSensor.mjSENS_FRAMEQUAT
-           and "disk" in mj_model.sensor(i).name
+        and "disk" in mj_model.sensor(i).name
     ][0]
     disk_rotation_observable = observable_class(
         name="disk_rotation",
         low=-bnp.pi * bnp.ones(3),
         high=bnp.pi * bnp.ones(3),
-        retriever=lambda state:
-        get_quat2euler_fn(backend=backend)(get_data(state).sensordata[
-                                           disk_framequat_sensor.adr[0]: disk_framequat_sensor.adr[0] +
-                                                                         disk_framequat_sensor.dim[0]
-                                           ])
+        retriever=lambda state: get_quat2euler_fn(backend=backend)(
+            get_data(state).sensordata[
+                disk_framequat_sensor.adr[0] : disk_framequat_sensor.adr[0]
+                + disk_framequat_sensor.dim[0]
+            ]
+        ),
     )
 
     # disk linvel
@@ -216,16 +218,16 @@ def get_base_brittle_star_observables(
         mj_model.sensor(i)
         for i in range(mj_model.nsensor)
         if mj_model.sensor(i).type[0] == mujoco.mjtSensor.mjSENS_FRAMELINVEL
-           and "disk" in mj_model.sensor(i).name
+        and "disk" in mj_model.sensor(i).name
     ][0]
     disk_linvel_observable = observable_class(
         name="disk_linear_velocity",
         low=-bnp.inf * bnp.ones(3),
         high=bnp.inf * bnp.ones(3),
-        retriever=lambda state:
-        get_data(state).sensordata[
-        disk_framelinvel_sensor.adr[0]: disk_framelinvel_sensor.adr[0] + disk_framelinvel_sensor.dim[0]
-        ]
+        retriever=lambda state: get_data(state).sensordata[
+            disk_framelinvel_sensor.adr[0] : disk_framelinvel_sensor.adr[0]
+            + disk_framelinvel_sensor.dim[0]
+        ],
     )
 
     # disk angvel
@@ -233,16 +235,16 @@ def get_base_brittle_star_observables(
         mj_model.sensor(i)
         for i in range(mj_model.nsensor)
         if mj_model.sensor(i).type[0] == mujoco.mjtSensor.mjSENS_FRAMEANGVEL
-           and "disk" in mj_model.sensor(i).name
+        and "disk" in mj_model.sensor(i).name
     ][0]
     disk_angvel_observable = observable_class(
         name="disk_angular_velocity",
         low=-bnp.inf * bnp.ones(3),
         high=bnp.inf * bnp.ones(3),
-        retriever=lambda state:
-        get_data(state).sensordata[
-        disk_frameangvel_sensor.adr[0]: disk_frameangvel_sensor.adr[0] + disk_frameangvel_sensor.dim[0]
-        ]
+        retriever=lambda state: get_data(state).sensordata[
+            disk_frameangvel_sensor.adr[0] : disk_frameangvel_sensor.adr[0]
+            + disk_frameangvel_sensor.dim[0]
+        ],
     )
 
     num_contacts, get_segment_contacts_fn = get_num_contacts_and_segment_contacts_fn(
