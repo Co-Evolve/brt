@@ -61,6 +61,7 @@ class BrittleStarDiskSpecification(Specification):
 class BrittleStarActuationSpecification(Specification):
     def __init__(
         self,
+        use_tendons: bool,
         use_p_control: bool,
         use_torque_control: bool,
         radius_to_strength_factor: float,
@@ -69,7 +70,10 @@ class BrittleStarActuationSpecification(Specification):
         assert (
             use_p_control + use_torque_control == 1
         ), "Only one actuation method can be used."
-
+        assert (
+            not use_tendons or use_torque_control
+        ), "Only torque control is supported with tendons."
+        self.use_tendons = FixedParameter(use_tendons)
         self.use_p_control = FixedParameter(use_p_control)
         self.use_torque_control = FixedParameter(use_torque_control)
         self.radius_to_strength_factor = FixedParameter(radius_to_strength_factor)

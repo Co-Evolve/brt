@@ -49,7 +49,11 @@ def create_env(
     backend: str, render_mode: str
 ) -> BrittleStarDirectedLocomotionEnvironment:
     morphology_spec = default_brittle_star_morphology_specification(
-        num_arms=5, num_segments_per_arm=5, use_p_control=False, use_torque_control=True
+        num_arms=5,
+        num_segments_per_arm=5,
+        use_p_control=False,
+        use_torque_control=True,
+        use_tendons=False,
     )
     morphology = MJCFBrittleStarMorphology(morphology_spec)
     arena_config = AquariumArenaConfiguration(attach_target=True)
@@ -88,6 +92,7 @@ if __name__ == "__main__":
 
         step_fn = jax.jit(env.step)
         reset_fn = jax.jit(env.reset)
+        reset_fn = env.reset
 
         def action_sample_fn(rng: chex.PRNGKey) -> Tuple[jnp.ndarray, chex.PRNGKey]:
             rng, sub_rng = jax.random.split(rng, 2)
@@ -99,7 +104,7 @@ if __name__ == "__main__":
         action, action_rng = action_sample_fn(action_rng)
         state = step_fn(state=state, action=action)
         post_render(env.render(state=state), env.environment_configuration)
-        print(state.observations["actuator_force"])
+        print(state.observations["tendon_position"])
         if state.terminated | state.truncated:
             state = reset_fn(env_rng)
     env.close()

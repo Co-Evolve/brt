@@ -247,6 +247,46 @@ def get_base_brittle_star_observables(
         ],
     )
 
+    # tendons
+    tendon_pos_sensors = [
+        sensor
+        for sensor in sensors
+        if sensor.type[0] == mujoco.mjtSensor.mjSENS_TENDONPOS
+    ]
+    tendon_pos_observable = observable_class(
+        name="tendon_position",
+        low=-bnp.inf * bnp.ones(len(tendon_pos_sensors)),
+        high=bnp.inf * bnp.ones(len(tendon_pos_sensors)),
+        retriever=lambda state: bnp.array(
+            [
+                get_data(state).sensordata[
+                    sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
+                ]
+                for sensor in tendon_pos_sensors
+            ]
+        ).flatten(),
+    )
+
+    tendon_vel_sensors = [
+        sensor
+        for sensor in sensors
+        if sensor.type[0] == mujoco.mjtSensor.mjSENS_TENDONVEL
+    ]
+    tendon_vel_observable = observable_class(
+        name="tendon_velocity",
+        low=-bnp.inf * bnp.ones(len(tendon_vel_sensors)),
+        high=bnp.inf * bnp.ones(len(tendon_vel_sensors)),
+        retriever=lambda state: bnp.array(
+            [
+                get_data(state).sensordata[
+                    sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
+                ]
+                for sensor in tendon_vel_sensors
+            ]
+        ).flatten(),
+    )
+
+    # contacts
     num_contacts, get_segment_contacts_fn = get_num_contacts_and_segment_contacts_fn(
         mj_model=mj_model, backend=backend
     )
@@ -266,5 +306,7 @@ def get_base_brittle_star_observables(
         disk_rotation_observable,
         disk_linvel_observable,
         disk_angvel_observable,
+        tendon_pos_observable,
+        tendon_vel_observable,
         segment_contact_observable,
     ]

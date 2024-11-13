@@ -165,6 +165,11 @@ Two example in-silico brittle star morphologies.
 
 Every segment has two degrees of freedom (DoF), one for in-plane motion and one for out-of-plane motion.
 
+In terms of actuation, the morphology specification can be used to select either position based control, and torque
+based control.
+The morphology specification can also be used to use tendon-based transmission (but only with torque based control). In
+this case, four tendons will be added, similar to the muscle architecture of the brittle star as shown above.
+
 In terms of sensing, the following sensors are implemented. These sensors define the base set of observations that every
 brittle star environment returns as observations (further discussed below).
 
@@ -172,7 +177,9 @@ brittle star environment returns as observations (further discussed below).
     - Joint positions (two per segment, in-plane and out-of-plane, in radians)
     - Joint velocities (two per segment, in-plane and out-of-plane, in radians / second)
     - Joint actuator force (i.e. the total actuator force acting on a joint, in Newton meters) (two per segment)
-    - Actuator force (the scalar actuator force, in Newtons) (two per segment)
+    - Actuator force (the scalar actuator force, in Newtons) (four per segment in case of tendon transmission, otherwise two)
+    - Tendon position (in case tendon transmission is used, four per segment, in meters)
+    - Tendon velocity (in case tendon transmission is used, four per segment, in meters / second)
     - Central disk's position (w.r.t. world frame)
     - Central disk's rotation (w.r.t. world frame, in radians)
     - Central disk's velocity (w.r.t. world frame, in m/s)
