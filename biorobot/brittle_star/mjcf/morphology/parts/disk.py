@@ -33,6 +33,7 @@ class MJCFBrittleStarDisk(MJCFMorphologyPart):
         self._build_pentagon()
         self._build_arm_connections()
         self._configure_tendon_attachment_points()
+        self._configure_sensors()
 
     def _build_pentagon(self) -> None:
         # Todo: replace this with a dynamically generated mesh
@@ -58,16 +59,17 @@ class MJCFBrittleStarDisk(MJCFMorphologyPart):
                 rgba=colors.rgba_green,
                 contype=0,
                 conaffinity=0,
+                mass=0,
             )
 
         self.mjcf_body.add(
             "geom",
-            type="box",
+            type="cylinder",
             name=f"{self.base_name}_pentagon_collider",
             pos=[0.0, 0.0, 0.0],
             euler=[0, 0, 0],
-            size=[radius * 0.55, radius * 0.55, height],
-            rgba=colors.rgba_green,
+            size=[radius, height],
+            rgba=[0, 0, 0, 0],
             contype=1,
             conaffinity=0,
         )
@@ -133,3 +135,29 @@ class MJCFBrittleStarDisk(MJCFMorphologyPart):
                                                        pos=rotated_point,
                                                        size=[0.001]))
                 self.distal_taps.append(arm_taps)
+
+    def _configure_sensors(self) -> None:
+        self.mjcf_model.sensor.add(
+            "framepos",
+            name=f"{self.base_name}_framepos_sensor",
+            objtype="xbody",
+            objname=self.mjcf_body.name,
+        )
+        self.mjcf_model.sensor.add(
+            "framequat",
+            name=f"{self.base_name}_framequat_sensor",
+            objtype="xbody",
+            objname=self.mjcf_body.name,
+        )
+        self.mjcf_model.sensor.add(
+            "framelinvel",
+            name=f"{self.base_name}_framelinvel_sensor",
+            objtype="xbody",
+            objname=self.mjcf_body.name,
+        )
+        self.mjcf_model.sensor.add(
+            "frameangvel",
+            name=f"{self.base_name}_frameangvel_sensor",
+            objtype="xbody",
+            objname=self.mjcf_body.name,
+        )

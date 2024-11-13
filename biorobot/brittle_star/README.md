@@ -181,8 +181,10 @@ brittle star environment returns as observations (further discussed below).
     - Touch (per segment, boolean)
 
 In terms of actuation, the following actuators are implemented (two per segment, one for the in-plane DoF and one for
-the out-of-plane DoF). The brittle star's morphology specification defines which if either position-based or torque-based control is used.
-The actuator force limits are scaled by the segment radii. Consequently, the maximum force applied by an actuator decreases along the arm. 
+the out-of-plane DoF). The brittle star's morphology specification defines which if either position-based or
+torque-based control is used.
+The actuator force limits are scaled by the segment radii. Consequently, the maximum force applied by an actuator
+decreases along the arm.
 
 ## Environment variants
 
@@ -201,14 +203,18 @@ difficulty:
     - Requires an aquarium with `attach_target=True`.
     - Target position can be specified using the `target_position` argument of
       the `reset` function.
-      If no target position is given, a target will be spawned randomly on a circle with a radius given by the `target_distance` argument of the [BrittleStarDirectedLocomotionEnvironmentConfiguration](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/environment/directed_locomotion/shared.py).
+      If no target position is given, a target will be spawned randomly on a circle with a radius given by the
+      `target_distance` argument of
+      the [BrittleStarDirectedLocomotionEnvironmentConfiguration](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/environment/directed_locomotion/shared.py).
     - Additional observations:
         - Unit direction on the horizontal XY plane from the central disk to the target.
         - The distance in XY plane from the central disk to the target.
 3. Light escape (hard): Move the brittle star towards darker spots in the environment.
-    - Reward per timestep: $light\\_income\\_previous\\_timestep - light\\_income\\_current\\_timestep$. The reward will thus
+    - Reward per timestep: $light\\_income\\_previous\\_timestep - light\\_income\\_current\\_timestep$. The reward will
+      thus
       be positive if the measured light income has decreased in the current timestep, and negative if the light income
-      has increased.
+      has increased. The light income at a given timestep is calculated as a weighted average over all body geoms (
+      weight scales with the surface area of the geom).
     - Requires an aquarium with `sand_ground_color=True`.
     - Additional observations:
         - The amount of light each segment takes in.

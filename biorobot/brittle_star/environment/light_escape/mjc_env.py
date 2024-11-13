@@ -39,6 +39,25 @@ class BrittleStarLightEscapeMJCEnvironment(
             configuration=configuration,
         )
         self._cache_references(mj_model=self.frozen_mj_model)
+        segment_capsule_geoms = [
+            self.frozen_mj_model.geom(geom_id)
+            for geom_id in self._get_segment_capsule_geom_ids(
+                mj_model=self.frozen_mj_model
+            )
+        ]
+        self._segment_capsule_areas = np.array(
+            [
+                (np.pi * geom.size[0] ** 2) + (2 * geom.size[0] * 2 * geom.size[1])
+                for geom in segment_capsule_geoms
+            ]
+        )
+        self._disk_area = (
+            np.pi
+            * self.frozen_mj_model.geom(
+                "BrittleStarMorphology/central_disk_pentagon_collider"
+            ).size[0]
+            ** 2
+        )
 
     @property
     def environment_configuration(
@@ -71,28 +90,23 @@ class BrittleStarLightEscapeMJCEnvironment(
         )
         return x_disk_position - start_x_position
 
-    def _get_light_per_segment(self, state: MJCEnvState) -> np.ndarray:
-        segment_xy_positions = state.mj_data.geom_xpos[
-            self._get_segment_capsule_geom_ids(mj_model=state.mj_model), :2
-        ].reshape((-1, 2))
-
+    @staticmethod
+    def _get_light_value_at_xy_positions(
+        state: MJCEnvState, xy_positions: np.array
+    ) -> np.array:
         arena_size = np.array(state.mj_model.geom("groundplane").size[:2])
 
-        shifted_segment_xy_positions = segment_xy_positions + arena_size
-        normalized_segment_xy_positions = shifted_segment_xy_positions / (
-            2 * arena_size
-        )
+        shifted_xy_positions = xy_positions + arena_size
+        normalized_xy_positions = shifted_xy_positions / (2 * arena_size)
 
         # Positive Y axis in light map and in world are inverted
-        normalized_segment_xy_positions[:, 1] = (
-            1 - normalized_segment_xy_positions[:, 1]
+        normalized_xy_positions[:, 1] = 1 - normalized_xy_positions[:, 1]
+        yx_light_map_positions = normalized_xy_positions[:, ::-1] * np.array(
+            [state.info["_light_map"].shape]
         )
-        segment_yx_light_map_positions = normalized_segment_xy_positions[
-            :, ::-1
-        ] * np.array([state.info["_light_map"].shape])
 
         # Just take the closest light map value (should be enough precision)
-        light_map_coords = np.round(segment_yx_light_map_positions).T.astype(int)
+        light_map_coords = np.round(yx_light_map_positions).T.astype(int)
         y_coords = np.clip(
             a=light_map_coords[0], a_min=0, a_max=state.info["_light_map"].shape[0] - 1
         )
@@ -102,8 +116,26 @@ class BrittleStarLightEscapeMJCEnvironment(
 
         return state.info["_light_map"][y_coords, x_coords]
 
-    def _get_average_light_income(self, state: MJCEnvState) -> float:
-        return np.average(self._get_light_per_segment(state=state))
+    def _get_light_per_segment(self, state: MJCEnvState) -> np.ndarray:
+        segment_xy_positions = state.mj_data.geom_xpos[
+            self._get_segment_capsule_geom_ids(mj_model=state.mj_model), :2
+        ]
+
+        values = self._get_light_value_at_xy_positions(
+            state=state, xy_positions=segment_xy_positions
+        )
+
+        return values
+
+    def _get_disk_light_income(self, state: MJCEnvState) -> float:
+        # get disk position
+        disk_xy_position = state.mj_data.xpos[
+            state.mj_model.body("BrittleStarMorphology/central_disk").id
+        ][:2]
+        values = self._get_light_value_at_xy_positions(
+            state=state, xy_positions=disk_xy_position[None, :]
+        )
+        return values[0]
 
     def _create_observables(self) -> List[MJCObservable]:
         base_observables = get_base_brittle_star_observables(

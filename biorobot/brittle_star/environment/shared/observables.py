@@ -6,16 +6,21 @@ import jax
 import jax.numpy as jnp
 import mujoco
 import numpy as np
-from jax._src.scipy.spatial.transform import Rotation
+from jax.scipy.spatial.transform import Rotation
 from moojoco.environment.base import BaseObservable, BaseEnvState
 from moojoco.environment.mjc_env import MJCObservable, MJCEnvState
 from moojoco.environment.mjx_env import MJXObservable, MJXEnvState
 from transforms3d.euler import quat2euler
 
 
-def get_quat2eueler_fn(backend: str) -> Callable[[chex.Array], chex.Array]:
+def get_quat2euler_fn(backend: str) -> Callable[[chex.Array], chex.Array]:
     if backend == "mjx":
-        return lambda quat: Rotation.from_quat(quat).as_euler(seq="xyz")
+
+        def jquat2euler(quat):
+            xywz = jnp.roll(a=quat, shift=-1)
+            return Rotation.from_quat(xywz).as_euler(seq="xyz", degrees=False)
+
+        return jquat2euler
     else:
         return quat2euler
 
@@ -75,54 +80,6 @@ def get_num_contacts_and_segment_contacts_fn(
 
         num_contacts = len(segment_capsule_geom_id_to_contact_idx)
     return num_contacts, get_segment_contacts
-
-
-def get_actuator_frc_fn(
-    mj_model: mujoco.MjModel, backend: str
-) -> Callable[[BaseEnvState], chex.Array]:
-    # Temporary fix until https://github.com/google-deepmind/mujoco/issues/2068 is resolved
-    if backend == "mjx":
-        low_actuator_force_limit = jnp.array(
-            [limits[0] for limits in mj_model.actuator_forcerange]
-        )
-        high_actuator_force_limit = jnp.array(
-            [limits[1] for limits in mj_model.actuator_forcerange]
-        )
-
-        def calculate_actuator_force(state: MJXEnvState) -> jnp.ndarray:
-            l = state.mjx_data.actuator_length
-            v = state.mjx_data.actuator_velocity
-            gain = state.mjx_model.actuator_gainprm[:, 0]
-            b0 = state.mjx_model.actuator_biasprm[:, 0]
-            b1 = state.mjx_model.actuator_biasprm[:, 1]
-            b2 = state.mjx_model.actuator_biasprm[:, 2]
-            ctrl = state.mjx_data.ctrl
-
-            return jnp.clip(
-                gain * ctrl + b0 + b1 * l + b2 * v,
-                low_actuator_force_limit,
-                high_actuator_force_limit,
-            )
-
-        return calculate_actuator_force
-    else:
-        actuator_frc_sensors = [
-            mj_model.sensor(i)
-            for i in range(mj_model.nsensor)
-            if mj_model.sensor(i).type[0] == mujoco.mjtSensor.mjSENS_ACTUATORFRC
-        ]
-
-        def get_actuator_force(state: MJCEnvState) -> np.ndarray:
-            return np.array(
-                [
-                    state.mj_data.sensordata[
-                        sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
-                    ]
-                    for sensor in actuator_frc_sensors
-                ]
-            ).flatten()
-
-        return get_actuator_force
 
 
 def get_base_brittle_star_observables(
@@ -202,48 +159,92 @@ def get_base_brittle_star_observables(
     )
 
     # All actuator forces
+    actuator_frc_sensors = [
+        mj_model.sensor(i)
+        for i in range(mj_model.nsensor)
+        if mj_model.sensor(i).type[0] == mujoco.mjtSensor.mjSENS_ACTUATORFRC
+    ]
     actuator_force_observable = observable_class(
         name="actuator_force",
         low=bnp.array([limits[0] for limits in mj_model.actuator_forcerange]),
         high=bnp.array([limits[1] for limits in mj_model.actuator_forcerange]),
-        retriever=get_actuator_frc_fn(mj_model=mj_model, backend=backend),
+        retriever=lambda state: bnp.array(
+            [
+                get_data(state).sensordata[
+                    sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
+                ]
+                for sensor in actuator_frc_sensors
+            ]
+        ).flatten(),
     )
 
     # disk pos
-    disk_body_id = [
-        i for i in range(mj_model.nbody) if "central_disk" in mj_model.body(i).name
+    disk_framepos_sensor = [
+        mj_model.sensor(i)
+        for i in range(mj_model.nsensor)
+        if mj_model.sensor(i).type[0] == mujoco.mjtSensor.mjSENS_FRAMEPOS
+        and "disk" in mj_model.sensor(i).name
     ][0]
     disk_position_observable = observable_class(
         name="disk_position",
         low=-bnp.inf * bnp.ones(3),
         high=bnp.inf * bnp.ones(3),
-        retriever=lambda state: bnp.array(get_data(state).xpos[disk_body_id]),
+        retriever=lambda state: get_data(state).sensordata[
+            disk_framepos_sensor.adr[0] : disk_framepos_sensor.adr[0]
+            + disk_framepos_sensor.dim[0]
+        ],
     )
-
     # disk rotation
+    disk_framequat_sensor = [
+        mj_model.sensor(i)
+        for i in range(mj_model.nsensor)
+        if mj_model.sensor(i).type[0] == mujoco.mjtSensor.mjSENS_FRAMEQUAT
+        and "disk" in mj_model.sensor(i).name
+    ][0]
     disk_rotation_observable = observable_class(
         name="disk_rotation",
         low=-bnp.pi * bnp.ones(3),
         high=bnp.pi * bnp.ones(3),
-        retriever=lambda state: bnp.array(
-            get_quat2eueler_fn(backend=backend)(get_data(state).xquat[disk_body_id])
+        retriever=lambda state: get_quat2euler_fn(backend=backend)(
+            get_data(state).sensordata[
+                disk_framequat_sensor.adr[0] : disk_framequat_sensor.adr[0]
+                + disk_framequat_sensor.dim[0]
+            ]
         ),
     )
 
-    # disk com linvel
+    # disk linvel
+    disk_framelinvel_sensor = [
+        mj_model.sensor(i)
+        for i in range(mj_model.nsensor)
+        if mj_model.sensor(i).type[0] == mujoco.mjtSensor.mjSENS_FRAMELINVEL
+        and "disk" in mj_model.sensor(i).name
+    ][0]
     disk_linvel_observable = observable_class(
         name="disk_linear_velocity",
         low=-bnp.inf * bnp.ones(3),
         high=bnp.inf * bnp.ones(3),
-        retriever=lambda state: bnp.array(get_data(state).cvel[disk_body_id, 3:]),
+        retriever=lambda state: get_data(state).sensordata[
+            disk_framelinvel_sensor.adr[0] : disk_framelinvel_sensor.adr[0]
+            + disk_framelinvel_sensor.dim[0]
+        ],
     )
 
-    # disk com angvel
+    # disk angvel
+    disk_frameangvel_sensor = [
+        mj_model.sensor(i)
+        for i in range(mj_model.nsensor)
+        if mj_model.sensor(i).type[0] == mujoco.mjtSensor.mjSENS_FRAMEANGVEL
+        and "disk" in mj_model.sensor(i).name
+    ][0]
     disk_angvel_observable = observable_class(
         name="disk_angular_velocity",
         low=-bnp.inf * bnp.ones(3),
         high=bnp.inf * bnp.ones(3),
-        retriever=lambda state: bnp.array(get_data(state).cvel[disk_body_id, :3]),
+        retriever=lambda state: get_data(state).sensordata[
+            disk_frameangvel_sensor.adr[0] : disk_frameangvel_sensor.adr[0]
+            + disk_frameangvel_sensor.dim[0]
+        ],
     )
 
     num_contacts, get_segment_contacts_fn = get_num_contacts_and_segment_contacts_fn(

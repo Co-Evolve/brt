@@ -31,9 +31,10 @@ class MJCFBrittleStarMorphology(MJCFMorphology):
         self.mjcf_model.compiler.angle = "radian"
 
     def _configure_defaults(self) -> None:
-        self.mjcf_model.default.geom.condim = 6
+        self.mjcf_model.default.geom.condim = 4
         self.mjcf_model.default.geom.contype = 1
         self.mjcf_model.default.geom.conaffinity = 0
+        self.mjcf_model.default.geom.density = 1100
 
     def _build_disk(self) -> None:
         self._disk = MJCFBrittleStarDisk(
@@ -72,6 +73,7 @@ class MJCFBrittleStarMorphology(MJCFMorphology):
 
 if __name__ == "__main__":
     spec = default_brittle_star_morphology_specification(
-        num_arms=5, num_segments_per_arm=5, use_p_control=True, use_tendons=True
+        num_arms=5, num_segments_per_arm=5, use_p_control=False, use_torque_control=True, use_tendons=True,
+        radius_to_strength_factor=200
     )
     MJCFBrittleStarMorphology(spec).export_to_xml_with_assets("./mjcf")

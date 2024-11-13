@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Union
+from typing import Union, List
 
 import numpy as np
 from dm_control.mjcf.element import _ElementImpl
@@ -12,7 +12,7 @@ from biorobot.brittle_star.mjcf.morphology.specification.specification import (
     BrittleStarMorphologySpecification,
 )
 from biorobot.utils import colors
-from biorobot.utils.colors import rgba_red
+from biorobot.utils.colors import rgba_red, rgba_tendon_contracted, rgba_tendon_relaxed
 
 
 class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
@@ -107,16 +107,15 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
         return joint
 
     def _configure_joints(self) -> None:
-        self._in_plane_joint = self._configure_joint(
-            name=f"{self.base_name}_in_plane_joint",
-            axis=[0, 0, 1],
-            joint_specification=self._segment_specification.in_plane_joint_specification,
-        )
-        self._out_of_plane_joint = self._configure_joint(
-            name=f"{self.base_name}_out_of_plane_joint",
-            axis=[0, -1, 0],
-            joint_specification=self._segment_specification.out_of_plane_joint_specification,
-        )
+        self._joints = [
+            self._configure_joint(
+                name=f"{self.base_name}_in_plane_joint",
+                axis=[0, 0, 1],
+                joint_specification=self._segment_specification.in_plane_joint_specification),
+            self._configure_joint(
+                name=f"{self.base_name}_out_of_plane_joint",
+                axis=[0, -1, 0],
+                joint_specification=self._segment_specification.out_of_plane_joint_specification)]
 
     def _configure_tendon_attachment_points(self) -> None:
         angles = np.linspace(np.pi / 4, 7 * np.pi / 4, 4)
@@ -144,15 +143,19 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
 
     def _build_tendons(self) -> None:
         if self._segment_index == 0:
-            parent : MJCFBrittleStarDisk = self.parent.parent
+            parent: MJCFBrittleStarDisk = self.parent.parent
             distal_taps = parent.distal_taps[self._arm_index]
         else:
             distal_taps = self.parent.distal_taps
 
+        self._tendons = []
         for tendon_index, (parent_tap, segment_tap) in enumerate(zip(distal_taps, self._proximal_taps)):
-            tendon = self.mjcf_model.tendon.add('spatial', name=f"{self.base_name}_tendon_{tendon_index}")
+            tendon = self.mjcf_model.tendon.add('spatial', name=f"{self.base_name}_tendon_{tendon_index}",
+                                                rgba=rgba_tendon_relaxed,
+                                                width=self._segment_specification.radius.value * 0.1)
             tendon.add('site', site=parent_tap)
             tendon.add('site', site=segment_tap)
+            self._tendons.append(tendon)
 
     def _configure_tendons(self) -> None:
         if self.morphology_specification.actuation_specification.use_tendons.value:
@@ -166,55 +169,70 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
         number_of_segments = len(self._arm_specification.segment_specifications)
         return self._segment_index == number_of_segments - 1
 
-    def _get_strength(self, joint: _ElementImpl) -> float:
+    @property
+    def _actuator_strength(self) -> float:
         strength = (
                 self._segment_specification.radius.value
                 * self.morphology_specification.actuation_specification.radius_to_strength_factor.value
         )
         return strength
 
-    def _configure_p_control_actuator(self, joint: _ElementImpl) -> _ElementImpl:
+    @property
+    def _transmissions(self) -> List[_ElementImpl]:
+        if self.morphology_specification.actuation_specification.use_tendons.value:
+            return self._tendons
+        else:
+            return self._joints
+
+    def _configure_p_control_actuator(self, transmission: _ElementImpl) -> _ElementImpl:
+        actuator_attributes = {
+            "name": f"{transmission.name}_p_control",
+            "kp": 50,
+            "ctrllimited": True,
+            "ctrlrange": transmission.range,
+            "forcelimited": True,
+            "forcerange": [-self._actuator_strength, self._actuator_strength],
+            "joint": transmission
+        }
+
         return self.mjcf_model.actuator.add(
             "position",
-            name=f"{joint.name}_p_control",
-            joint=joint,
-            kp=50,
-            ctrllimited=True,
-            ctrlrange=joint.range,
-            forcelimited=True,
-            forcerange=[-self._get_strength(joint), self._get_strength(joint)],
+            **actuator_attributes
         )
 
     def _configure_p_control_actuators(self) -> None:
         if self.morphology_specification.actuation_specification.use_p_control.value:
-            self._in_plane_actuator = self._configure_p_control_actuator(
-                self._in_plane_joint
-            )
-            self._out_of_plane_actuator = self._configure_p_control_actuator(
-                self._out_of_plane_joint
-            )
+            self._actuators = [self._configure_p_control_actuator(transmission) for transmission in self._transmissions]
 
-    def _configure_torque_control_actuator(self, joint: _ElementImpl) -> _ElementImpl:
+    def _configure_torque_control_actuator(self, transmission: _ElementImpl) -> _ElementImpl:
+        actuator_attributes = {
+            "name": f"{transmission.name}_torque_control",
+            "ctrllimited": True,
+            "forcelimited": True,
+            "ctrlrange": [-self._actuator_strength, self._actuator_strength],
+            "forcerange": [-self._actuator_strength, self._actuator_strength]
+        }
+
+        if self.morphology_specification.actuation_specification.use_tendons.value:
+            actuator_attributes["tendon"] = transmission
+            actuator_attributes["ctrlrange"] = [-self._actuator_strength, 0]
+            gear = 15
+            actuator_attributes["gear"] = [gear]
+            actuator_attributes["forcerange"] = [-self._actuator_strength * gear, 0]
+        else:
+            actuator_attributes["joint"] = transmission
+            actuator_attributes["ctrlrange"] = [-self._actuator_strength, self._actuator_strength]
+            actuator_attributes["forcerange"] = [-self._actuator_strength, self._actuator_strength]
+
         return self.mjcf_model.actuator.add(
             "motor",
-            name=f"{joint.name}_torque_control",
-            joint=joint,
-            ctrllimited=True,
-            ctrlrange=[-self._get_strength(joint), self._get_strength(joint)],
-            forcelimited=True,
-            forcerange=[-self._get_strength(joint), self._get_strength(joint)],
+            **actuator_attributes
         )
 
     def _configure_torque_control_actuators(self) -> None:
-        if (
-                self.morphology_specification.actuation_specification.use_torque_control.value
-        ):
-            self._in_plane_actuator = self._configure_torque_control_actuator(
-                self._in_plane_joint
-            )
-            self._out_of_plane_actuator = self._configure_torque_control_actuator(
-                self._out_of_plane_joint
-            )
+        if self.morphology_specification.actuation_specification.use_torque_control.value:
+            self._actuators = [self._configure_torque_control_actuator(transmission) for transmission in
+                               self._transmissions]
 
     def _configure_actuators(self) -> None:
         self._configure_p_control_actuators()
@@ -228,34 +246,42 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
             objname=self._capsule.name,
         )
 
-    def _configure_joint_sensors(self, joint: _ElementImpl) -> None:
-        self.mjcf_model.sensor.add(
-            "jointpos", joint=joint, name=f"{joint.name}_jointpos_sensor"
-        )
-        self.mjcf_model.sensor.add(
-            "jointvel", joint=joint, name=f"{joint.name}_jointvel_sensor"
-        )
-        self.mjcf_model.sensor.add(
-            "jointactuatorfrc", joint=joint, name=f"{joint.name}_actuatorfrc_sensor"
-        )
-
     def _configure_joints_sensors(self) -> None:
-        self._configure_joint_sensors(joint=self._in_plane_joint)
-        self._configure_joint_sensors(joint=self._out_of_plane_joint)
+        for joint in self._joints:
+            self.mjcf_model.sensor.add(
+                "jointpos", joint=joint, name=f"{joint.name}_jointpos_sensor"
+            )
+            self.mjcf_model.sensor.add(
+                "jointvel", joint=joint, name=f"{joint.name}_jointvel_sensor"
+            )
+            self.mjcf_model.sensor.add(
+                "jointactuatorfrc", joint=joint, name=f"{joint.name}_actuatorfrc_sensor"
+            )
 
     def _configure_actuator_sensors(self) -> None:
-        self.mjcf_model.sensor.add(
-            "actuatorfrc",
-            actuator=self._in_plane_actuator,
-            name=f"{self._in_plane_actuator.name}_actuatorfrc_sensor",
-        )
-        self.mjcf_model.sensor.add(
-            "actuatorfrc",
-            actuator=self._out_of_plane_actuator,
-            name=f"{self._out_of_plane_actuator.name}_actuatorfrc_sensor",
-        )
+        for actuator in self._actuators:
+            self.mjcf_model.sensor.add(
+                "actuatorfrc",
+                actuator=actuator,
+                name=f"{actuator.name}_actuatorfrc_sensor",
+            )
+
+    def _configure_tendon_sensors(self) -> None:
+        if self.morphology_specification.actuation_specification.use_tendons.value:
+            for tendon in self._tendons:
+                self.mjcf_model.sensor.add(
+                    "tendonpos",
+                    name=f"{tendon.name}_tendonpos_sensor",
+                    tendon=tendon
+                )
+                self.mjcf_model.sensor.add(
+                    "tendonvel",
+                    name=f"{tendon.name}_tendonvel_sensor",
+                    tendon=tendon
+                )
 
     def _configure_sensors(self) -> None:
         self._configure_position_sensor()
         self._configure_joints_sensors()
         self._configure_actuator_sensors()
+        self._configure_tendon_sensors()
