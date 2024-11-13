@@ -37,7 +37,7 @@ def create_env(backend: str, render_mode: str) -> BrittleStarLightEscapeEnvironm
         time_scale=1,
         camera_ids=[0, 1],
         color_contacts=True,
-        random_initial_rotation=True
+        random_initial_rotation=True,
     )
     env = BrittleStarLightEscapeEnvironment.from_morphology_and_arena(
         morphology=morphology, arena=arena, configuration=env_config, backend=backend
@@ -55,7 +55,6 @@ if __name__ == "__main__":
         env_rng, action_rng = np.random.RandomState(0), None
         step_fn = env.step
         reset_fn = env.reset
-
 
         def action_sample_fn(_: None) -> Tuple[np.ndarray, None]:
             return env.action_space.sample(), None
