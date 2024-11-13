@@ -8,6 +8,7 @@ import mujoco
 import numpy as np
 from gymnasium.core import RenderFrame
 from jax import numpy as jnp
+from jax.scipy.spatial.transform import Rotation
 from moojoco.environment.mjx_env import MJXEnv, MJXEnvState, MJXObservable
 from moojoco.environment.renderer import MujocoRenderer
 from mujoco import mjx
@@ -30,10 +31,10 @@ class BrittleStarLightEscapeMJXEnvironment(
     metadata = {"render_modes": ["human", "rgb_array"]}
 
     def __init__(
-        self,
-        mjcf_str: str,
-        mjcf_assets: Dict[str, Any],
-        configuration: BrittleStarLightEscapeEnvironmentConfiguration,
+            self,
+            mjcf_str: str,
+            mjcf_assets: Dict[str, Any],
+            configuration: BrittleStarLightEscapeEnvironmentConfiguration,
     ) -> None:
         BrittleStarLightEscapeEnvironmentBase.__init__(self)
         MJXEnv.__init__(
@@ -56,25 +57,25 @@ class BrittleStarLightEscapeMJXEnvironment(
             ]
         )
         self._disk_area = (
-            jnp.pi
-            * self.frozen_mj_model.geom(
-                "BrittleStarMorphology/central_disk_pentagon_collider"
-            ).size[0]
-            ** 2
+                jnp.pi
+                * self.frozen_mj_model.geom(
+            "BrittleStarMorphology/central_disk_pentagon_collider"
+        ).size[0]
+                ** 2
         )
 
     @property
     def environment_configuration(
-        self,
+            self,
     ) -> BrittleStarLightEscapeEnvironmentConfiguration:
         return super(MJXEnv, self).environment_configuration
 
     @classmethod
     def from_morphology_and_arena(
-        cls,
-        morphology: MJCFBrittleStarMorphology,
-        arena: MJCFAquariumArena,
-        configuration: BrittleStarLightEscapeEnvironmentConfiguration,
+            cls,
+            morphology: MJCFBrittleStarMorphology,
+            arena: MJCFAquariumArena,
+            configuration: BrittleStarLightEscapeEnvironmentConfiguration,
     ) -> BrittleStarLightEscapeMJXEnvironment:
         assert arena.arena_configuration.sand_ground_color, (
             "This environment requires the 'sand_ground_color' "
@@ -96,7 +97,7 @@ class BrittleStarLightEscapeMJXEnvironment(
 
     @staticmethod
     def _get_light_value_at_xy_positions(
-        state: MJXEnvState, xy_positions: jax.Array
+            state: MJXEnvState, xy_positions: jax.Array
     ) -> float:
         arena_size = jnp.array(state.mj_model.geom("groundplane").size[:2])
         light_map_size = jnp.array(state.info["_light_map"].shape)
@@ -115,8 +116,8 @@ class BrittleStarLightEscapeMJXEnvironment(
 
     def _get_light_per_segment(self, state: MJXEnvState) -> jnp.ndarray:
         segment_xy_positions = state.mjx_data.geom_xpos[
-            self._get_segment_capsule_geom_ids(mj_model=state.mj_model), :2
-        ]
+                               self._get_segment_capsule_geom_ids(mj_model=state.mj_model), :2
+                               ]
         values = jax.vmap(self._get_light_value_at_xy_positions, in_axes=(None, 0))(
             state, segment_xy_positions
         )
@@ -124,8 +125,8 @@ class BrittleStarLightEscapeMJXEnvironment(
 
     def _get_disk_light_income(self, state: MJXEnvState) -> float:
         disk_xy_position = state.mjx_data.xpos[
-            state.mj_model.body("BrittleStarMorphology/central_disk").id
-        ][:2]
+                               state.mj_model.body("BrittleStarMorphology/central_disk").id
+                           ][:2]
         value = self._get_light_value_at_xy_positions(
             state=state, xy_positions=disk_xy_position
         )
@@ -152,7 +153,7 @@ class BrittleStarLightEscapeMJXEnvironment(
         return state.mjx_data.time
 
     def _get_mj_models_and_datas_to_render(
-        self, state: MJXEnvState
+            self, state: MJXEnvState
     ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
         mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
         self._update_mj_models_tex_data(mj_models=mj_models, state=state)
@@ -163,11 +164,11 @@ class BrittleStarLightEscapeMJXEnvironment(
         return mj_models, mj_datas
 
     def get_renderer(
-        self,
-        identifier: int,
-        model: mujoco.MjModel,
-        data: mujoco.MjData,
-        state: MJXEnvState,
+            self,
+            identifier: int,
+            model: mujoco.MjModel,
+            data: mujoco.MjData,
+            state: MJXEnvState,
     ) -> Union[MujocoRenderer, mujoco.Renderer]:
         renderer = super().get_renderer(
             identifier=identifier, model=model, data=data, state=state
@@ -176,14 +177,14 @@ class BrittleStarLightEscapeMJXEnvironment(
         return renderer
 
     def get_renderer_context(
-        self, renderer: Union[MujocoRenderer, mujoco.Renderer]
+            self, renderer: Union[MujocoRenderer, mujoco.Renderer]
     ) -> mujoco.MjrContext:
         return super(MJXEnv, self).get_renderer_context(renderer)
 
     def render(self, state: MJXEnvState) -> list[RenderFrame] | None:
         render_output = super().render(state=state)
         state.info["_light_map_has_changed"] = (
-            state.info["_light_map_has_changed"] * False
+                state.info["_light_map_has_changed"] * False
         )
         return render_output
 
@@ -218,7 +219,7 @@ class BrittleStarLightEscapeMJXEnvironment(
             light_map = light_map * light_noise
 
             light_map = (light_map - jnp.min(light_map)) / (
-                jnp.max(light_map) - jnp.min(light_map)
+                    jnp.max(light_map) - jnp.min(light_map)
             )
 
         info = state.info
@@ -227,11 +228,11 @@ class BrittleStarLightEscapeMJXEnvironment(
         return state.replace(rng=rng, info=info)
 
     def _finish_reset(
-        self,
-        models_and_datas: Tuple[
-            Tuple[mujoco.MjModel, mujoco.MjData], Tuple[mjx.Model, mjx.Data]
-        ],
-        rng: np.random.RandomState,
+            self,
+            models_and_datas: Tuple[
+                Tuple[mujoco.MjModel, mujoco.MjData], Tuple[mjx.Model, mjx.Data]
+            ],
+            rng: np.random.RandomState,
     ) -> MJXEnvState:
         (mj_model, mj_data), (mjx_model, mjx_data) = models_and_datas
         mjx_data = mjx.forward(m=mjx_model, d=mjx_data)
@@ -267,16 +268,27 @@ class BrittleStarLightEscapeMJXEnvironment(
         ).qposadr[0]
         morphology_pos = jnp.array(
             [
-                BrittleStarLightEscapeEnvironmentBase._get_x_start_position(
+                self._get_x_start_position(
                     mj_model=mj_model
                 ),
                 0.0,
                 0.11,
             ]
         )
-        qpos = qpos.at[morphology_qpos_adr : morphology_qpos_adr + 3].set(
+        qpos = qpos.at[morphology_qpos_adr: morphology_qpos_adr + 3].set(
             morphology_pos
         )
+
+        if self.environment_configuration.random_initial_rotation:
+            rng, rotation_rng = jax.random.split(key=rng, num=2)
+            z_axis_rotation = jax.random.uniform(key=rotation_rng,
+                                                 shape=(),
+                                                 minval=-jnp.pi,
+                                                 maxval=jnp.pi)
+            quat = Rotation.from_euler(seq="xyz", angles=jnp.array([0, 0, z_axis_rotation]), degrees=False).as_quat()
+            qpos = qpos.at[morphology_qpos_adr + 3: morphology_qpos_adr + 7].set(
+                jnp.roll(quat, shift=1)
+            )
 
         # Add noise to initial qpos and qvel of segment joints
         joint_qpos_adrs = self._get_segment_joints_qpos_adrs(mj_model=mj_model)

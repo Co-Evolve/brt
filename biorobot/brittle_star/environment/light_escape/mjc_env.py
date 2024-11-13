@@ -7,6 +7,7 @@ import numpy as np
 from gymnasium.core import RenderFrame
 from moojoco.environment.mjc_env import MJCEnv, MJCEnvState, MJCObservable
 from moojoco.environment.renderer import MujocoRenderer
+from transforms3d.euler import euler2quat
 
 from biorobot.brittle_star.environment.light_escape.shared import (
     BrittleStarLightEscapeEnvironmentBase,
@@ -26,10 +27,10 @@ class BrittleStarLightEscapeMJCEnvironment(
     metadata = {"render_modes": ["human", "rgb_array"]}
 
     def __init__(
-        self,
-        mjcf_str: str,
-        mjcf_assets: Dict[str, Any],
-        configuration: BrittleStarLightEscapeEnvironmentConfiguration,
+            self,
+            mjcf_str: str,
+            mjcf_assets: Dict[str, Any],
+            configuration: BrittleStarLightEscapeEnvironmentConfiguration,
     ) -> None:
         BrittleStarLightEscapeEnvironmentBase.__init__(self)
         MJCEnv.__init__(
@@ -52,25 +53,25 @@ class BrittleStarLightEscapeMJCEnvironment(
             ]
         )
         self._disk_area = (
-            np.pi
-            * self.frozen_mj_model.geom(
-                "BrittleStarMorphology/central_disk_pentagon_collider"
-            ).size[0]
-            ** 2
+                np.pi
+                * self.frozen_mj_model.geom(
+            "BrittleStarMorphology/central_disk_pentagon_collider"
+        ).size[0]
+                ** 2
         )
 
     @property
     def environment_configuration(
-        self,
+            self,
     ) -> BrittleStarLightEscapeEnvironmentConfiguration:
         return super(MJCEnv, self).environment_configuration
 
     @classmethod
     def from_morphology_and_arena(
-        cls,
-        morphology: MJCFBrittleStarMorphology,
-        arena: MJCFAquariumArena,
-        configuration: BrittleStarLightEscapeEnvironmentConfiguration,
+            cls,
+            morphology: MJCFBrittleStarMorphology,
+            arena: MJCFAquariumArena,
+            configuration: BrittleStarLightEscapeEnvironmentConfiguration,
     ) -> BrittleStarLightEscapeMJCEnvironment:
         assert arena.arena_configuration.sand_ground_color, (
             "This environment requires the 'sand_ground_color' "
@@ -92,7 +93,7 @@ class BrittleStarLightEscapeMJCEnvironment(
 
     @staticmethod
     def _get_light_value_at_xy_positions(
-        state: MJCEnvState, xy_positions: np.array
+            state: MJCEnvState, xy_positions: np.array
     ) -> np.array:
         arena_size = np.array(state.mj_model.geom("groundplane").size[:2])
 
@@ -118,8 +119,8 @@ class BrittleStarLightEscapeMJCEnvironment(
 
     def _get_light_per_segment(self, state: MJCEnvState) -> np.ndarray:
         segment_xy_positions = state.mj_data.geom_xpos[
-            self._get_segment_capsule_geom_ids(mj_model=state.mj_model), :2
-        ]
+                               self._get_segment_capsule_geom_ids(mj_model=state.mj_model), :2
+                               ]
 
         values = self._get_light_value_at_xy_positions(
             state=state, xy_positions=segment_xy_positions
@@ -130,8 +131,8 @@ class BrittleStarLightEscapeMJCEnvironment(
     def _get_disk_light_income(self, state: MJCEnvState) -> float:
         # get disk position
         disk_xy_position = state.mj_data.xpos[
-            state.mj_model.body("BrittleStarMorphology/central_disk").id
-        ][:2]
+                               state.mj_model.body("BrittleStarMorphology/central_disk").id
+                           ][:2]
         values = self._get_light_value_at_xy_positions(
             state=state, xy_positions=disk_xy_position[None, :]
         )
@@ -158,7 +159,7 @@ class BrittleStarLightEscapeMJCEnvironment(
         return state.mj_data.time
 
     def _get_mj_models_and_datas_to_render(
-        self, state: MJCEnvState
+            self, state: MJCEnvState
     ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
         mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
         self._update_mj_models_tex_data(mj_models=mj_models, state=state)
@@ -169,16 +170,16 @@ class BrittleStarLightEscapeMJCEnvironment(
         return mj_models, mj_datas
 
     def get_renderer_context(
-        self, renderer: Union[MujocoRenderer, mujoco.Renderer]
+            self, renderer: Union[MujocoRenderer, mujoco.Renderer]
     ) -> mujoco.MjrContext:
         return super(MJCEnv, self).get_renderer_context(renderer)
 
     def get_renderer(
-        self,
-        identifier: int,
-        model: mujoco.MjModel,
-        data: mujoco.MjData,
-        state: MJCEnvState,
+            self,
+            identifier: int,
+            model: mujoco.MjModel,
+            data: mujoco.MjData,
+            state: MJCEnvState,
     ) -> Union[MujocoRenderer, mujoco.Renderer]:
         renderer = super().get_renderer(
             identifier=identifier, model=model, data=data, state=state
@@ -227,7 +228,7 @@ class BrittleStarLightEscapeMJCEnvironment(
 
             # normalize light map
             light_map = (light_map - np.min(light_map)) / (
-                np.max(light_map) - np.min(light_map)
+                    np.max(light_map) - np.min(light_map)
             )
 
         info = state.info
@@ -236,9 +237,9 @@ class BrittleStarLightEscapeMJCEnvironment(
         return state.replace(info=info)
 
     def _finish_reset(
-        self,
-        models_and_datas: Tuple[mujoco.MjModel, mujoco.MjData],
-        rng: np.random.RandomState,
+            self,
+            models_and_datas: Tuple[mujoco.MjModel, mujoco.MjData],
+            rng: np.random.RandomState,
     ) -> MJCEnvState:
         mj_model, mj_data = models_and_datas
         mujoco.mj_forward(m=mj_model, d=mj_data)
@@ -263,11 +264,21 @@ class BrittleStarLightEscapeMJCEnvironment(
         mj_model, mj_data = self._prepare_reset()
 
         # Set morphology position
-        mj_model.body("BrittleStarMorphology/central_disk").pos = [
+        morphology_qpos_adr = mj_model.joint(
+            "BrittleStarMorphology/freejoint/"
+        ).qposadr[0]
+        morphology_pos = np.array([
             self._get_x_start_position(mj_model=mj_model),
             0.0,
             0.11,
-        ]
+        ])
+
+        mj_data.qpos[morphology_qpos_adr: morphology_qpos_adr + 3] = morphology_pos
+
+        if self.environment_configuration.random_initial_rotation:
+            z_axis_rotation = rng.uniform(-np.pi, np.pi)
+            quat = euler2quat(0, 0, z_axis_rotation, axes="sxyz")
+            mj_data.qpos[morphology_qpos_adr + 3: morphology_qpos_adr + 7] = quat
 
         # Add noise to initial qpos and qvel of segment joints
         joint_qpos_adrs = self._get_segment_joints_qpos_adrs(mj_model=mj_model)
