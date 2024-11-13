@@ -49,7 +49,11 @@ def create_env(
     backend: str, render_mode: str
 ) -> BrittleStarDirectedLocomotionEnvironment:
     morphology_spec = default_brittle_star_morphology_specification(
-        num_arms=5, num_segments_per_arm=5, use_p_control=False, use_torque_control=True, use_tendons=False
+        num_arms=5,
+        num_segments_per_arm=5,
+        use_p_control=False,
+        use_torque_control=True,
+        use_tendons=False,
     )
     morphology = MJCFBrittleStarMorphology(morphology_spec)
     arena_config = AquariumArenaConfiguration(attach_target=True)

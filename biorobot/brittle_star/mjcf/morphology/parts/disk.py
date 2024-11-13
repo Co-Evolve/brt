@@ -13,13 +13,13 @@ from biorobot.utils.colors import rgba_red
 
 class MJCFBrittleStarDisk(MJCFMorphologyPart):
     def __init__(
-            self,
-            parent: Union[MJCFMorphology, MJCFMorphologyPart],
-            name: str,
-            pos: np.array,
-            euler: np.array,
-            *args,
-            **kwargs,
+        self,
+        parent: Union[MJCFMorphology, MJCFMorphologyPart],
+        name: str,
+        pos: np.array,
+        euler: np.array,
+        *args,
+        **kwargs,
     ) -> None:
         super().__init__(parent, name, pos, euler, *args, **kwargs)
 
@@ -108,32 +108,42 @@ class MJCFBrittleStarDisk(MJCFMorphologyPart):
             tap_angles = np.linspace(np.pi / 4, 7 * np.pi / 4, 4)
 
             for arm_index, arm_angle in enumerate(arm_angles):
-                arm_specification = self.morphology_specification.arm_specifications[arm_index]
+                arm_specification = self.morphology_specification.arm_specifications[
+                    arm_index
+                ]
                 if arm_specification.number_of_segments == 0:
                     continue
 
-                base_segment_radius = arm_specification.segment_specifications[0].radius.value
+                base_segment_radius = arm_specification.segment_specifications[
+                    0
+                ].radius.value
 
                 arm_taps = []
                 positions = []
                 for angle in tap_angles:
-                    pos = center_pos + 0.8 * base_segment_radius * np.array([0, np.cos(angle), np.sin(angle)])
+                    pos = center_pos + 0.8 * base_segment_radius * np.array(
+                        [0, np.cos(angle), np.sin(angle)]
+                    )
                     positions.append(pos)
 
                 for tap_index, position in enumerate(positions):
                     # rotate position around arm_angle degress
                     # Define the rotation
-                    rotation = R.from_euler('z', arm_angle, degrees=False)
+                    rotation = R.from_euler("z", arm_angle, degrees=False)
 
                     # Rotate point A around point B
                     rotated_point = rotation.apply(position)
 
-                    arm_taps.append(self.mjcf_body.add("site",
-                                                       name=f"{self.base_name}_arm_{arm_index}_tap_{tap_index}",
-                                                       type="sphere",
-                                                       rgba=rgba_red,
-                                                       pos=rotated_point,
-                                                       size=[0.001]))
+                    arm_taps.append(
+                        self.mjcf_body.add(
+                            "site",
+                            name=f"{self.base_name}_arm_{arm_index}_tap_{tap_index}",
+                            type="sphere",
+                            rgba=rgba_red,
+                            pos=rotated_point,
+                            size=[0.001],
+                        )
+                    )
                 self.distal_taps.append(arm_taps)
 
     def _configure_sensors(self) -> None:

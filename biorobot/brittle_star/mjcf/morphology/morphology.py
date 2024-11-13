@@ -73,7 +73,11 @@ class MJCFBrittleStarMorphology(MJCFMorphology):
 
 if __name__ == "__main__":
     spec = default_brittle_star_morphology_specification(
-        num_arms=5, num_segments_per_arm=5, use_p_control=False, use_torque_control=True, use_tendons=True,
-        radius_to_strength_factor=200
+        num_arms=5,
+        num_segments_per_arm=5,
+        use_p_control=False,
+        use_torque_control=True,
+        use_tendons=True,
+        radius_to_strength_factor=200,
     )
     MJCFBrittleStarMorphology(spec).export_to_xml_with_assets("./mjcf")
