@@ -79,6 +79,6 @@ if __name__ == "__main__":
         use_torque_control=True,
         use_tendons=True,
         radius_to_strength_factor=200,
-        num_contact_sensors_per_segment=8
+        num_contact_sensors_per_segment=8,
     )
     MJCFBrittleStarMorphology(spec).export_to_xml_with_assets("./mjcf")
