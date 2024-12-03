@@ -7,6 +7,7 @@ import numpy as np
 from gymnasium.core import RenderFrame
 from moojoco.environment.mjc_env import MJCEnv, MJCEnvState, MJCObservable
 from moojoco.environment.renderer import MujocoRenderer
+from transforms3d.euler import euler2quat
 
 from biorobot.brittle_star.environment.light_escape.shared import (
     BrittleStarLightEscapeEnvironmentBase,
@@ -263,11 +264,23 @@ class BrittleStarLightEscapeMJCEnvironment(
         mj_model, mj_data = self._prepare_reset()
 
         # Set morphology position
-        mj_model.body("BrittleStarMorphology/central_disk").pos = [
-            self._get_x_start_position(mj_model=mj_model),
-            0.0,
-            0.11,
-        ]
+        morphology_qpos_adr = mj_model.joint(
+            "BrittleStarMorphology/freejoint/"
+        ).qposadr[0]
+        morphology_pos = np.array(
+            [
+                self._get_x_start_position(mj_model=mj_model),
+                0.0,
+                0.11,
+            ]
+        )
+
+        mj_data.qpos[morphology_qpos_adr : morphology_qpos_adr + 3] = morphology_pos
+
+        if self.environment_configuration.random_initial_rotation:
+            z_axis_rotation = rng.uniform(-np.pi, np.pi)
+            quat = euler2quat(0, 0, z_axis_rotation, axes="sxyz")
+            mj_data.qpos[morphology_qpos_adr + 3 : morphology_qpos_adr + 7] = quat
 
         # Add noise to initial qpos and qvel of segment joints
         joint_qpos_adrs = self._get_segment_joints_qpos_adrs(mj_model=mj_model)
