@@ -12,18 +12,18 @@ from biorobot.brittle_star.mjcf.morphology.specification.specification import (
     BrittleStarMorphologySpecification,
 )
 from biorobot.utils import colors
-from biorobot.utils.colors import rgba_red, rgba_tendon_relaxed
+from biorobot.utils.colors import rgba_red, rgba_tendon_contracted, rgba_tendon_relaxed
 
 
 class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
     def __init__(
-            self,
-            parent: Union[MJCFMorphology, MJCFMorphologyPart],
-            name: str,
-            pos: np.array,
-            euler: np.array,
-            *args,
-            **kwargs,
+        self,
+        parent: Union[MJCFMorphology, MJCFMorphologyPart],
+        name: str,
+        pos: np.array,
+        euler: np.array,
+        *args,
+        **kwargs,
     ) -> None:
         super().__init__(parent, name, pos, euler, *args, **kwargs)
 
@@ -88,10 +88,10 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
         return np.array([x_offset, 0, 0])
 
     def _configure_joint(
-            self,
-            name: str,
-            axis: np.ndarray,
-            joint_specification: BrittleStarJointSpecification,
+        self,
+        name: str,
+        axis: np.ndarray,
+        joint_specification: BrittleStarJointSpecification,
     ) -> _ElementImpl:
         joint = self.mjcf_body.add(
             "joint",
@@ -127,9 +127,9 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
         for i, angle in enumerate(angles):
             # proximal
             pos = (
-                    0.8
-                    * self._segment_specification.radius.value
-                    * np.array([0, np.cos(angle), np.sin(angle)])
+                0.8
+                * self._segment_specification.radius.value
+                * np.array([0, np.cos(angle), np.sin(angle)])
             )
             pos[0] = self._segment_specification.radius.value
             self._proximal_taps.append(
@@ -145,8 +145,8 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
 
             # distal
             pos[0] = (
-                    self._segment_specification.radius.value
-                    + self._segment_specification.length.value
+                self._segment_specification.radius.value
+                + self._segment_specification.length.value
             )
             self.distal_taps.append(
                 self.mjcf_body.add(
@@ -168,7 +168,7 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
 
         self._tendons = []
         for tendon_index, (parent_tap, segment_tap) in enumerate(
-                zip(distal_taps, self._proximal_taps)
+            zip(distal_taps, self._proximal_taps)
         ):
             tendon = self.mjcf_model.tendon.add(
                 "spatial",
@@ -195,8 +195,8 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
     @property
     def _actuator_strength(self) -> float:
         strength = (
-                self._segment_specification.radius.value
-                * self.morphology_specification.actuation_specification.radius_to_strength_factor.value
+            self._segment_specification.radius.value
+            * self.morphology_specification.actuation_specification.radius_to_strength_factor.value
         )
         return strength
 
@@ -228,7 +228,7 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
             ]
 
     def _configure_torque_control_actuator(
-            self, transmission: _ElementImpl
+        self, transmission: _ElementImpl
     ) -> _ElementImpl:
         actuator_attributes = {
             "name": f"{transmission.name}_torque_control",
@@ -259,7 +259,7 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
 
     def _configure_torque_control_actuators(self) -> None:
         if (
-                self.morphology_specification.actuation_specification.use_torque_control.value
+            self.morphology_specification.actuation_specification.use_torque_control.value
         ):
             self._actuators = [
                 self._configure_torque_control_actuator(transmission)
@@ -308,46 +308,8 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
                     "tendonvel", name=f"{tendon.name}_tendonvel_sensor", tendon=tendon
                 )
 
-    def _configure_contact_sensors(self) -> None:
-        num_contact_sensors = self.morphology_specification.sensor_specification.num_contact_sensors_per_segment.value
-
-        contact_sites = []
-        if num_contact_sensors == 1:
-            contact_sites.append(
-                self.mjcf_body.add("site",
-                                   type="capsule",
-                                   pos=self._capsule.pos,
-                                   size=self._capsule.size * np.array([1.01, 1]),
-                                   rgba=rgba_red * np.array([1, 1, 1, 0.5]),
-                                   euler=self._capsule.euler,
-                                   name=f"{self.base_name}_contact_site",
-                                   group=3),
-            )
-        else:
-            angles = np.linspace(-np.pi / 2, 1.5 * np.pi, num_contact_sensors + 1)[:num_contact_sensors]
-            radius = self._segment_specification.radius.value
-
-            for i, angle in enumerate(angles):
-                pos = self.center_of_capsule + 0.95 * radius * np.array([0, np.cos(angle), np.sin(angle)])
-                contact_sites.append(self.mjcf_body.add(
-                    "site",
-                    pos=pos,
-                    euler=[angle, 0, 0],
-                    type="box",
-                    size=[self._segment_specification.length.value / 2 + radius / 2, 0.05 * radius, 0.4 * radius],
-                    rgba=rgba_red * np.array([1, 1, 1, 0.5]),
-                    group=3,
-                    name=f"{self.base_name}_contact_site_{i}"
-                ))
-
-        for site in contact_sites:
-            self.mjcf_model.sensor.add(
-                "touch", name=f"{site.name}_contact_sensor", site=site
-            )
-
     def _configure_sensors(self) -> None:
         self._configure_position_sensor()
         self._configure_joints_sensors()
         self._configure_actuator_sensors()
         self._configure_tendon_sensors()
-        self._configure_contact_sensors()

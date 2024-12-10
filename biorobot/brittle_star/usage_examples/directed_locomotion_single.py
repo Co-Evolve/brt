@@ -53,8 +53,7 @@ def create_env(
         num_segments_per_arm=5,
         use_p_control=False,
         use_torque_control=True,
-        use_tendons=False,
-        num_contact_sensors_per_segment=1
+        use_tendons=True,
     )
     morphology = MJCFBrittleStarMorphology(morphology_spec)
     arena_config = AquariumArenaConfiguration(attach_target=True)
