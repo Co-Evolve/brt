@@ -1,15 +1,13 @@
-from itertools import count
-from typing import List, Callable, Tuple
+from typing import List, Callable
 
 import chex
-import jax
 import jax.numpy as jnp
 import mujoco
 import numpy as np
 from jax.scipy.spatial.transform import Rotation
-from moojoco.environment.base import BaseObservable, BaseEnvState
-from moojoco.environment.mjc_env import MJCObservable, MJCEnvState
-from moojoco.environment.mjx_env import MJXObservable, MJXEnvState
+from moojoco.environment.base import BaseObservable
+from moojoco.environment.mjc_env import MJCObservable
+from moojoco.environment.mjx_env import MJXObservable
 from transforms3d.euler import quat2euler
 
 
@@ -23,63 +21,6 @@ def get_quat2euler_fn(backend: str) -> Callable[[chex.Array], chex.Array]:
         return jquat2euler
     else:
         return quat2euler
-
-
-def get_num_contacts_and_segment_contacts_fn(
-    mj_model: mujoco.MjModel, backend: str
-) -> Tuple[int, Callable[[BaseEnvState], chex.Array]]:
-    if backend == "mjx":
-        segment_capsule_geom_ids = np.array(
-            [
-                geom_id
-                for geom_id in range(mj_model.ngeom)
-                if "segment" in mj_model.geom(geom_id).name
-                and "capsule" in mj_model.geom(geom_id).name
-            ]
-        )
-
-        def get_segment_contacts(state: MJXEnvState) -> jnp.ndarray:
-            contact_data = state.mjx_data.contact
-            contacts = contact_data.dist <= 0
-
-            def solve_contact(geom_id: int) -> jnp.ndarray:
-                return (
-                    jnp.sum(contacts * jnp.any(geom_id == contact_data.geom, axis=-1))
-                    > 0
-                ).astype(int)
-
-            return jax.vmap(solve_contact)(segment_capsule_geom_ids)
-
-        num_contacts = len(segment_capsule_geom_ids)
-    else:
-        # segment touch values
-        #   Start by mapping geom indices of segment capsules to a contact output index
-        indexer = count(0)
-        segment_capsule_geom_id_to_contact_idx = {}
-        for geom_id in range(mj_model.ngeom):
-            geom_name = mj_model.geom(geom_id).name
-            if "segment" in geom_name and "capsule" in geom_name:
-                segment_capsule_geom_id_to_contact_idx[geom_id] = next(indexer)
-
-        def get_segment_contacts(state: MJCEnvState) -> np.ndarray:
-            contacts = np.zeros(len(segment_capsule_geom_id_to_contact_idx), dtype=int)
-            # based on https://gist.github.com/WuXinyang2012/b6649817101dfcb061eff901e9942057
-            for contact_id in range(state.mj_data.ncon):
-                contact = state.mj_data.contact[contact_id]
-                if contact.dist < 0:
-                    if contact.geom1 in segment_capsule_geom_id_to_contact_idx:
-                        contacts[
-                            segment_capsule_geom_id_to_contact_idx[contact.geom1]
-                        ] = 1
-                    if contact.geom2 in segment_capsule_geom_id_to_contact_idx:
-                        contacts[
-                            segment_capsule_geom_id_to_contact_idx[contact.geom2]
-                        ] = 1
-
-            return contacts
-
-        num_contacts = len(segment_capsule_geom_id_to_contact_idx)
-    return num_contacts, get_segment_contacts
 
 
 def get_base_brittle_star_observables(
@@ -287,14 +228,21 @@ def get_base_brittle_star_observables(
     )
 
     # contacts
-    num_contacts, get_segment_contacts_fn = get_num_contacts_and_segment_contacts_fn(
-        mj_model=mj_model, backend=backend
-    )
+    contact_sensors = [
+        sensor for sensor in sensors if sensor.type[0] == mujoco.mjtSensor.mjSENS_TOUCH
+    ]
     segment_contact_observable = observable_class(
         name="segment_contact",
-        low=np.zeros(num_contacts),
-        high=np.ones(num_contacts),
-        retriever=get_segment_contacts_fn,
+        low=bnp.zeros(len(contact_sensors)),
+        high=bnp.inf * bnp.ones(len(contact_sensors)),
+        retriever=lambda state: bnp.array(
+            [
+                get_data(state).sensordata[
+                    sensor.adr[0] : sensor.adr[0] + sensor.dim[0]
+                ]
+                for sensor in contact_sensors
+            ]
+        ).flatten(),
     )
 
     return [
