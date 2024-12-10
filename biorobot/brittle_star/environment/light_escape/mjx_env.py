@@ -8,7 +8,6 @@ import mujoco
 import numpy as np
 from gymnasium.core import RenderFrame
 from jax import numpy as jnp
-from jax.scipy.spatial.transform import Rotation
 from moojoco.environment.mjx_env import MJXEnv, MJXEnvState, MJXObservable
 from moojoco.environment.renderer import MujocoRenderer
 from mujoco import mjx
@@ -268,7 +267,9 @@ class BrittleStarLightEscapeMJXEnvironment(
         ).qposadr[0]
         morphology_pos = jnp.array(
             [
-                self._get_x_start_position(mj_model=mj_model),
+                BrittleStarLightEscapeEnvironmentBase._get_x_start_position(
+                    mj_model=mj_model
+                ),
                 0.0,
                 0.11,
             ]
@@ -276,18 +277,6 @@ class BrittleStarLightEscapeMJXEnvironment(
         qpos = qpos.at[morphology_qpos_adr : morphology_qpos_adr + 3].set(
             morphology_pos
         )
-
-        if self.environment_configuration.random_initial_rotation:
-            rng, rotation_rng = jax.random.split(key=rng, num=2)
-            z_axis_rotation = jax.random.uniform(
-                key=rotation_rng, shape=(), minval=-jnp.pi, maxval=jnp.pi
-            )
-            quat = Rotation.from_euler(
-                seq="xyz", angles=jnp.array([0, 0, z_axis_rotation]), degrees=False
-            ).as_quat()
-            qpos = qpos.at[morphology_qpos_adr + 3 : morphology_qpos_adr + 7].set(
-                jnp.roll(quat, shift=1)
-            )
 
         # Add noise to initial qpos and qvel of segment joints
         joint_qpos_adrs = self._get_segment_joints_qpos_adrs(mj_model=mj_model)
