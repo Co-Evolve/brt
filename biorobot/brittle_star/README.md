@@ -177,8 +177,7 @@ brittle star environment returns as observations (further discussed below).
     - Joint positions (two per segment, in-plane and out-of-plane, in radians)
     - Joint velocities (two per segment, in-plane and out-of-plane, in radians / second)
     - Joint actuator force (i.e. the total actuator force acting on a joint, in Newton meters) (two per segment)
-    - Actuator force (the scalar actuator force, in Newtons) (four per segment in case of tendon transmission, otherwise
-      two)
+    - Actuator force (the scalar actuator force, in Newtons) (four per segment in case of tendon transmission, otherwise two)
     - Tendon position (in case tendon transmission is used, four per segment, in meters)
     - Tendon velocity (in case tendon transmission is used, four per segment, in meters / second)
     - Central disk's position (w.r.t. world frame)
@@ -223,8 +222,6 @@ difficulty:
       be positive if the measured light income has decreased in the current timestep, and negative if the light income
       has increased. The light income at a given timestep is calculated as a weighted average over all body geoms (
       weight scales with the surface area of the geom).
-    - The light escape environment configuration accepts an additional argument `random_initial_rotation`. This sets a
-      random z-axis rotation of the brittle star upon environment resets.
     - Requires an aquarium with `sand_ground_color=True`.
     - Additional observations:
         - The amount of light each segment takes in.

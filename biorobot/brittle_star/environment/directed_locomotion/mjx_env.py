@@ -157,6 +157,7 @@ class BrittleStarDirectedLocomotionMJXEnvironment(
         rng, target_pos_rng, qpos_rng, qvel_rng = jax.random.split(key=rng, num=4)
 
         target_body_id = mj_model.body("target").id
+        disk_body_id = mj_model.body("BrittleStarMorphology/central_disk").id
 
         # Set random target position
         target_pos = self._get_target_position(
