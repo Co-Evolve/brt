@@ -87,7 +87,9 @@ class BrittleStarEnvironmentBase:
             c = c.reshape((len(self._segment_capsule_geom_ids), -1)) > 0
             c = np.any(c, axis=-1).flatten()
 
-            for capsule_geom_id, contact in zip(self._segment_capsule_geom_ids, c):
+            for capsule_geom_id, contact in zip(
+                self._segment_capsule_geom_ids, c
+            ):
                 if contact:
                     mj_model.geom(capsule_geom_id).rgba = colors.rgba_red
                 else:
