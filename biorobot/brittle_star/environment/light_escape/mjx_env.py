@@ -159,7 +159,7 @@ class BrittleStarLightEscapeMJXEnvironment(
         self._update_mj_models_tex_data(mj_models=mj_models, state=state)
         if self.environment_configuration.color_contacts:
             self._color_segment_capsule_contacts(
-                mj_models=mj_models, contact_bools=state.observations["segment_contact"]
+                mj_models=mj_models, contacts=state.observations["segment_contact"]
             )
         return mj_models, mj_datas
 
