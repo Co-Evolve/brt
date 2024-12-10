@@ -186,7 +186,7 @@ brittle star environment returns as observations (further discussed below).
     - Central disk's velocity (w.r.t. world frame, in m/s)
     - Central disk's angular velocity (w.r.t. world frame, in radians/s)
 - Exteroception
-    - Touch (per segment, boolean)
+    - Contact (X continuous values per segment, in Newtons) (X is defined in the morphology specification)
 
 In terms of actuation, the following actuators are implemented (two per segment, one for the in-plane DoF and one for
 the out-of-plane DoF). The brittle star's morphology specification defines which if either position-based or
