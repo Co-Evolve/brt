@@ -79,27 +79,17 @@ class BrittleStarActuationSpecification(Specification):
         self.radius_to_strength_factor = FixedParameter(radius_to_strength_factor)
 
 
-class BrittleStarSensorSpecification(Specification):
-    def __init__(self, num_contact_sensors_per_segment: int) -> int:
-        super().__init__()
-        self.num_contact_sensors_per_segment = FixedParameter(
-            num_contact_sensors_per_segment
-        )
-
-
 class BrittleStarMorphologySpecification(MorphologySpecification):
     def __init__(
         self,
         disk_specification: BrittleStarDiskSpecification,
         arm_specifications: List[BrittleStarArmSpecification],
         actuation_specification: BrittleStarActuationSpecification,
-        sensor_specification: BrittleStarSensorSpecification,
     ) -> None:
         super(BrittleStarMorphologySpecification, self).__init__()
         self.disk_specification = disk_specification
         self.arm_specifications = arm_specifications
         self.actuation_specification = actuation_specification
-        self.sensor_specification = sensor_specification
 
     @property
     def number_of_arms(self) -> int:

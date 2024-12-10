@@ -9,7 +9,6 @@ from biorobot.brittle_star.mjcf.morphology.specification.specification import (
     BrittleStarDiskSpecification,
     BrittleStarJointSpecification,
     BrittleStarMorphologySpecification,
-    BrittleStarSensorSpecification,
 )
 
 START_SEGMENT_RADIUS = 0.025
@@ -79,7 +78,6 @@ def default_brittle_star_morphology_specification(
     use_p_control: bool = False,
     use_torque_control: bool = False,
     radius_to_strength_factor: float = 200,
-    num_contact_sensors_per_segment: int = 1,
 ) -> BrittleStarMorphologySpecification:
     disk_specification = BrittleStarDiskSpecification(
         diameter=DISK_DIAMETER, height=DISK_HEIGHT
@@ -104,15 +102,10 @@ def default_brittle_star_morphology_specification(
         use_torque_control=use_torque_control,
         radius_to_strength_factor=radius_to_strength_factor,
     )
-    sensor_specification = BrittleStarSensorSpecification(
-        num_contact_sensors_per_segment=num_contact_sensors_per_segment
-    )
-
     specification = BrittleStarMorphologySpecification(
         disk_specification=disk_specification,
         arm_specifications=arm_specifications,
         actuation_specification=actuation_specification,
-        sensor_specification=sensor_specification,
     )
 
     return specification

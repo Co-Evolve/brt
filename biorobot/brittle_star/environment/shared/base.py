@@ -3,7 +3,6 @@ from typing import List
 import chex
 import jax.numpy as jnp
 import mujoco
-import numpy as np
 from moojoco.environment.base import MuJoCoEnvironmentConfiguration
 
 from biorobot.utils import colors
@@ -76,18 +75,17 @@ class BrittleStarEnvironmentBase:
         return self._segment_capsule_geom_ids
 
     def _color_segment_capsule_contacts(
-        self, mj_models: List[mujoco.MjModel], contacts: chex.Array
+        self, mj_models: List[mujoco.MjModel], contact_bools: chex.Array
     ) -> None:
         for i, mj_model in enumerate(mj_models):
-            if len(contacts.shape) > 1:
-                c = contacts[i]
+            if len(contact_bools.shape) > 1:
+                contacts = contact_bools[i]
             else:
-                c = contacts
+                contacts = contact_bools
 
-            c = c.reshape((len(self._segment_capsule_geom_ids), -1)) > 0
-            c = np.any(c, axis=-1).flatten()
-
-            for capsule_geom_id, contact in zip(self._segment_capsule_geom_ids, c):
+            for capsule_geom_id, contact in zip(
+                self._segment_capsule_geom_ids, contacts
+            ):
                 if contact:
                     mj_model.geom(capsule_geom_id).rgba = colors.rgba_red
                 else:
