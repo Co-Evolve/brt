@@ -12,7 +12,7 @@ from biorobot.brittle_star.mjcf.morphology.specification.specification import (
     BrittleStarMorphologySpecification,
 )
 from biorobot.utils import colors
-from biorobot.utils.colors import rgba_red, rgba_tendon_relaxed
+from biorobot.utils.colors import rgba_red, rgba_tendon_contracted, rgba_tendon_relaxed
 
 
 class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
@@ -308,60 +308,8 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
                     "tendonvel", name=f"{tendon.name}_tendonvel_sensor", tendon=tendon
                 )
 
-    def _configure_contact_sensors(self) -> None:
-        num_contact_sensors = (
-            self.morphology_specification.sensor_specification.num_contact_sensors_per_segment.value
-        )
-
-        contact_sites = []
-        if num_contact_sensors == 1:
-            contact_sites.append(
-                self.mjcf_body.add(
-                    "site",
-                    type="capsule",
-                    pos=self._capsule.pos,
-                    size=self._capsule.size * np.array([1.01, 1]),
-                    rgba=rgba_red * np.array([1, 1, 1, 0.5]),
-                    euler=self._capsule.euler,
-                    name=f"{self.base_name}_contact_site",
-                    group=3,
-                ),
-            )
-        else:
-            angles = np.linspace(-np.pi / 2, 1.5 * np.pi, num_contact_sensors + 1)[
-                :num_contact_sensors
-            ]
-            radius = self._segment_specification.radius.value
-
-            for i, angle in enumerate(angles):
-                pos = self.center_of_capsule + 0.95 * radius * np.array(
-                    [0, np.cos(angle), np.sin(angle)]
-                )
-                contact_sites.append(
-                    self.mjcf_body.add(
-                        "site",
-                        pos=pos,
-                        euler=[angle, 0, 0],
-                        type="box",
-                        size=[
-                            self._segment_specification.length.value / 2 + radius / 2,
-                            0.05 * radius,
-                            0.4 * radius,
-                        ],
-                        rgba=rgba_red * np.array([1, 1, 1, 0.5]),
-                        group=3,
-                        name=f"{self.base_name}_contact_site_{i}",
-                    )
-                )
-
-        for site in contact_sites:
-            self.mjcf_model.sensor.add(
-                "touch", name=f"{site.name}_contact_sensor", site=site
-            )
-
     def _configure_sensors(self) -> None:
         self._configure_position_sensor()
         self._configure_joints_sensors()
         self._configure_actuator_sensors()
         self._configure_tendon_sensors()
-        self._configure_contact_sensors()
