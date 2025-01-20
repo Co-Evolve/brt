@@ -54,7 +54,7 @@ def create_env(
         use_p_control=False,
         use_torque_control=True,
         use_tendons=False,
-        num_contact_sensors_per_segment=1,
+        num_contact_sensors_per_segment=2,
     )
     morphology = MJCFBrittleStarMorphology(morphology_spec)
     arena_config = AquariumArenaConfiguration(attach_target=True)
@@ -105,7 +105,7 @@ if __name__ == "__main__":
         action, action_rng = action_sample_fn(action_rng)
         state = step_fn(state=state, action=action)
         post_render(env.render(state=state), env.environment_configuration)
-        print(state.observations["tendon_position"])
+        print(state.observations["segment_contact"])
         if state.terminated | state.truncated:
             state = reset_fn(env_rng)
     env.close()

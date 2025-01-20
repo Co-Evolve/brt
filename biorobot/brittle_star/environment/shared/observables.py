@@ -196,7 +196,7 @@ def get_base_brittle_star_observables(
     ]
     tendon_pos_observable = observable_class(
         name="tendon_position",
-        low=-bnp.inf * bnp.ones(len(tendon_pos_sensors)),
+        low=bnp.zeros(len(tendon_pos_sensors)),
         high=bnp.inf * bnp.ones(len(tendon_pos_sensors)),
         retriever=lambda state: bnp.array(
             [
