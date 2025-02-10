@@ -114,14 +114,12 @@ class MJCFBrittleStarDisk(MJCFMorphologyPart):
                 if arm_specification.number_of_segments == 0:
                     continue
 
-                base_segment_radius = arm_specification.segment_specifications[
-                    0
-                ].radius.value
+                base_segment_radius = arm_specification.segment_specifications[0].radius.value
 
                 arm_taps = []
                 positions = []
                 for angle in tap_angles:
-                    pos = center_pos + 0.8 * base_segment_radius * np.array(
+                    pos = 0.8 * center_pos + 0.8 * base_segment_radius * np.array(
                         [0, np.cos(angle), np.sin(angle)]
                     )
                     positions.append(pos)
