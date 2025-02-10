@@ -36,10 +36,10 @@ def default_arm_segment_specification(
     alpha: float,
 ) -> BrittleStarArmSegmentSpecification:
     in_plane_joint_specification = default_joint_specification(
-        range=30 / 180 * np.pi
+        range=60 / 180 * np.pi
     )  # 30
     out_of_plane_joint_specification = default_joint_specification(
-        range=30 / 180 * np.pi
+        range=60 / 180 * np.pi
     )  # 5
 
     radius = linear_interpolation(
