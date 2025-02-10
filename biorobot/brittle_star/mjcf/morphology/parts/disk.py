@@ -114,7 +114,9 @@ class MJCFBrittleStarDisk(MJCFMorphologyPart):
                 if arm_specification.number_of_segments == 0:
                     continue
 
-                base_segment_radius = arm_specification.segment_specifications[0].radius.value
+                base_segment_radius = arm_specification.segment_specifications[
+                    0
+                ].radius.value
 
                 arm_taps = []
                 positions = []

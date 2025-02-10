@@ -173,7 +173,6 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
                 )
             )
 
-
     def _build_tendons(self) -> None:
         if self._segment_index == 0:
             parent: MJCFBrittleStarDisk = self.parent.parent
