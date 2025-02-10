@@ -124,6 +124,7 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
         angles = np.linspace(np.pi / 4, 7 * np.pi / 4, 4)
         self._proximal_taps = []
         self.distal_taps = []
+        self._connector_taps = []
         for i, angle in enumerate(angles):
             # proximal
             pos = (
@@ -159,6 +160,20 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
                 )
             )
 
+            # Vertebrae
+            pos[0] = self._connector.pos[0]
+            self._connector_taps.append(
+                self.mjcf_body.add(
+                    "site",
+                    name=f"{self.base_name}_connector_tap_{i}",
+                    type="sphere",
+                    rgba=rgba_red,
+                    pos=pos,
+                    size=[0.001],
+                )
+            )
+
+
     def _build_tendons(self) -> None:
         if self._segment_index == 0:
             parent: MJCFBrittleStarDisk = self.parent.parent
@@ -167,8 +182,8 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
             distal_taps = self.parent.distal_taps
 
         self._tendons = []
-        for tendon_index, (parent_tap, segment_tap) in enumerate(
-            zip(distal_taps, self._proximal_taps)
+        for tendon_index, (parent_tap, connector_tap, segment_tap) in enumerate(
+            zip(distal_taps, self._connector_taps, self._proximal_taps)
         ):
             tendon = self.mjcf_model.tendon.add(
                 "spatial",
@@ -177,6 +192,7 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
                 width=self._segment_specification.radius.value * 0.1,
             )
             tendon.add("site", site=parent_tap)
+            tendon.add("site", site=connector_tap)
             tendon.add("site", site=segment_tap)
             self._tendons.append(tendon)
 
@@ -210,7 +226,7 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
     def _configure_p_control_actuator(self, transmission: _ElementImpl) -> _ElementImpl:
         actuator_attributes = {
             "name": f"{transmission.name}_p_control",
-            "kp": 50,
+            "kp": 20,
             "ctrllimited": True,
             "ctrlrange": transmission.range,
             "forcelimited": True,
