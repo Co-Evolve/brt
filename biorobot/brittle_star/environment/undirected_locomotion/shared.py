@@ -55,10 +55,15 @@ class BrittleStarUndirectedLocomotionEnvironmentBase(BrittleStarEnvironmentBase)
         return state.replace(reward=reward)
 
     def _update_info(self, state: BaseEnvState) -> BaseEnvState:
-        info = {
-            "time": self._get_time(state=state),
-            "xy_distance_from_origin": self._get_xy_distance_from_origin(state=state),
-        }
+        info = state.info
+        info.update(
+            {
+                "time": self._get_time(state=state),
+                "xy_distance_from_origin": self._get_xy_distance_from_origin(
+                    state=state
+                )
+            }
+        )
 
         # noinspection PyUnresolvedReferences
         return state.replace(info=info)
