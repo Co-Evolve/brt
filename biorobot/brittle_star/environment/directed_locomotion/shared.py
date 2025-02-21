@@ -50,7 +50,7 @@ class BrittleStarDirectedLocomotionEnvironmentBase(BrittleStarEnvironmentBase):
         info.update(
             {
                 "time": self._get_time(state=state),
-                "xy_target_position": self._get_xy_target_position(state=state)
+                "xy_target_position": self._get_xy_target_position(state=state),
             }
         )
 

@@ -61,7 +61,7 @@ class BrittleStarUndirectedLocomotionEnvironmentBase(BrittleStarEnvironmentBase)
                 "time": self._get_time(state=state),
                 "xy_distance_from_origin": self._get_xy_distance_from_origin(
                     state=state
-                )
+                ),
             }
         )
 
