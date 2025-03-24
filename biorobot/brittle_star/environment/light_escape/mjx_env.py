@@ -172,7 +172,13 @@ class BrittleStarLightEscapeMJXEnvironment(
             high=np.ones(num_segments),
             retriever=lambda state: self._get_light_per_segment(state=state),
         )
-        return base_observables + [segment_light_intake_observable]
+        disk_light_intake_observable = MJXObservable(
+            name="disk_light_intake",
+            low=np.zeros(1),
+            high=np.ones(1),
+            retriever=lambda state: self._get_disk_light_income(state=state),
+        )
+        return base_observables + [segment_light_intake_observable, disk_light_intake_observable]
 
     @staticmethod
     def _get_time(state: MJXEnvState) -> float:

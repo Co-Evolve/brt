@@ -228,6 +228,7 @@ difficulty:
     - Requires an aquarium with `sand_ground_color=True`.
     - Additional observations:
         - The amount of light each segment takes in.
+        - The amount of light the disk takes in.
 
 All brittle star environments support visualising segment contacts (i.e., coloring a segment's capsule red upon contact)
 via the `color_contacts` argument of the environment configuration.
