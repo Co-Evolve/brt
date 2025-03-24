@@ -25,12 +25,14 @@ class BrittleStarArmSegmentSpecification(Specification):
         self,
         radius: float,
         length: float,
+        density: float,
         in_plane_joint_specification: BrittleStarJointSpecification,
         out_of_plane_joint_specification: BrittleStarJointSpecification,
     ) -> None:
         super().__init__()
         self.radius = FixedParameter(radius)
         self.length = FixedParameter(length)
+        self.density = FixedParameter(density)
         self.in_plane_joint_specification = in_plane_joint_specification
         self.out_of_plane_joint_specification = out_of_plane_joint_specification
 
@@ -48,14 +50,11 @@ class BrittleStarArmSpecification(Specification):
 
 
 class BrittleStarDiskSpecification(Specification):
-    def __init__(
-        self,
-        diameter: float,
-        height: float,
-    ) -> None:
+    def __init__(self, diameter: float, height: float, density: float) -> None:
         super().__init__()
         self.radius = FixedParameter(diameter / 2)
         self.height = FixedParameter(height)
+        self.density = FixedParameter(density)
 
 
 class BrittleStarActuationSpecification(Specification):

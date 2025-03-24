@@ -72,6 +72,7 @@ class MJCFBrittleStarDisk(MJCFMorphologyPart):
             rgba=[0, 0, 0, 0],
             contype=1,
             conaffinity=0,
+            density=self._disk_specification.density.value,
         )
 
     def _build_arm_connections(self) -> None:
