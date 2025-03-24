@@ -73,10 +73,10 @@ if __name__ == "__main__":
     while True:
         action, action_rng = action_sample_fn(action_rng)
         state = step_fn(state=state, action=action * 0)
-        print(state.observations["joint_position"])
-        print(state.observations["joint_velocity"])
-        print(state.observations["joint_actuator_force"])
-        print()
+        # print(state.observations["joint_position"])
+        # print(state.observations["joint_velocity"])
+        # print(state.observations["joint_actuator_force"])
+        # print()
         env.render(state=state)
 
     env.close()
