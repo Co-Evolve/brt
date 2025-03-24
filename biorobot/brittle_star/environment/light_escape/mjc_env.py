@@ -96,26 +96,45 @@ class BrittleStarLightEscapeMJCEnvironment(
         state: MJCEnvState, xy_positions: np.array
     ) -> np.array:
         arena_size = np.array(state.mj_model.geom("groundplane").size[:2])
-
+        light_map_size = np.array(state.info["_light_map"].shape)
+        
         shifted_xy_positions = xy_positions + arena_size
         normalized_xy_positions = shifted_xy_positions / (2 * arena_size)
 
         # Positive Y axis in light map and in world are inverted
         normalized_xy_positions[:, 1] = 1 - normalized_xy_positions[:, 1]
-        yx_light_map_positions = normalized_xy_positions[:, ::-1] * np.array(
-            [state.info["_light_map"].shape]
-        )
+        # x and y axes are swapped in the light map
+        light_map_coords = normalized_xy_positions[:, ::-1] * light_map_size 
 
-        # Just take the closest light map value (should be enough precision)
-        light_map_coords = np.round(yx_light_map_positions).T.astype(int)
-        y_coords = np.clip(
-            a=light_map_coords[0], a_min=0, a_max=state.info["_light_map"].shape[0] - 1
+        # Get integer (floor) coordinates of the four surrounding grid points
+        x_floor = np.clip(
+            np.floor(light_map_coords[:, 0]).astype(int), 0, light_map_size[0] - 1
         )
-        x_coords = np.clip(
-            a=light_map_coords[1], a_min=0, a_max=state.info["_light_map"].shape[1] - 1
+        y_floor = np.clip(
+            np.floor(light_map_coords[:, 1]).astype(int), 0, light_map_size[1] - 1
         )
-
-        return state.info["_light_map"][y_coords, x_coords]
+        x_ceil = np.clip(x_floor + 1, 0, light_map_size[0] - 1)
+        y_ceil = np.clip(y_floor + 1, 0, light_map_size[1] - 1)
+        
+        # Get the four neighboring light values
+        f00 = state.info["_light_map"][x_floor, y_floor]  # Top-left
+        f01 = state.info["_light_map"][x_floor, y_ceil]  # Top-right
+        f10 = state.info["_light_map"][x_ceil, y_floor]  # Bottom-left
+        f11 = state.info["_light_map"][x_ceil, y_ceil]  # Bottom-right
+       
+        # Get interpolation weights
+        x_frac = light_map_coords[:, 0] - x_floor
+        y_frac = light_map_coords[:, 1] - y_floor
+       
+        # Perform bilinear interpolation
+        light_values = (
+            f00 * (1 - x_frac) * (1 - y_frac)
+            + f01 * (1 - x_frac) * y_frac
+            + f10 * x_frac * (1 - y_frac)
+            + f11 * x_frac * y_frac
+        )
+        
+        return light_values
 
     def _get_light_per_segment(self, state: MJCEnvState) -> np.ndarray:
         segment_xy_positions = state.mj_data.geom_xpos[
@@ -299,7 +318,5 @@ class BrittleStarLightEscapeMJCEnvironment(
         )
 
         state = self._finish_reset(models_and_datas=(mj_model, mj_data), rng=rng)
-
-        state = self._update_light_map(state=state)
 
         return state

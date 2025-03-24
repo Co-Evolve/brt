@@ -13,7 +13,7 @@ class AquariumArenaConfiguration(ArenaConfiguration):
         name: str = "AquariumArena",
         size: Tuple[int, int] = (5, 3),
         sand_ground_color: bool = False,
-        light_map_resolution: int = 20,
+        light_map_resolution: int = 50,
         attach_target: bool = False,
         wall_height: float = 1.5,
         wall_thickness: float = 0.1,
