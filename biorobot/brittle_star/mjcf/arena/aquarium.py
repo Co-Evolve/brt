@@ -11,8 +11,9 @@ class AquariumArenaConfiguration(ArenaConfiguration):
     def __init__(
         self,
         name: str = "AquariumArena",
-        size: Tuple[int, int] = (10, 5),
+        size: Tuple[int, int] = (5, 3),
         sand_ground_color: bool = False,
+        light_map_resolution: int = 50,
         attach_target: bool = False,
         wall_height: float = 1.5,
         wall_thickness: float = 0.1,
@@ -20,6 +21,7 @@ class AquariumArenaConfiguration(ArenaConfiguration):
         super().__init__(name=name)
         self.size = size
         self.sand_ground_color = sand_ground_color
+        self.light_map_resolution = light_map_resolution
         self.attach_target = attach_target
         self.wall_height = wall_height
         self.wall_thickness = wall_thickness
@@ -75,14 +77,16 @@ class MJCFAquariumArena(MJCFArena):
 
     def _build_ground(self) -> None:
         if self.arena_configuration.sand_ground_color:
+            w, h = self.arena_configuration.size
+            resolution = self.arena_configuration.light_map_resolution
             ground_texture = self.mjcf_model.asset.add(
                 "texture",
                 type="2d",
                 builtin="flat",
                 name="groundplane",
                 rgb1=colors.rgba_sand[:3],
-                width=200,
-                height=200,
+                width=resolution * w,
+                height=resolution * h,
             )
             ground_material = self.mjcf_model.asset.add(
                 "material",
@@ -113,6 +117,7 @@ class MJCFAquariumArena(MJCFArena):
                 texture=ground_texture,
             )
             rgba = None
+
         # Build groundplane.
         self._ground_geom = self.mjcf_body.add(
             "geom",

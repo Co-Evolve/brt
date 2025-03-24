@@ -104,15 +104,43 @@ class BrittleStarLightEscapeMJXEnvironment(
 
         shifted_xy_positions = xy_positions + arena_size
         normalized_xy_positions = shifted_xy_positions / (2 * arena_size)
+
+        # Positive Y axis in light map and in world are inverted
         normalized_xy_positions = normalized_xy_positions.at[1].set(
             1 - normalized_xy_positions[1]
         )
-        yx_light_map_positions = normalized_xy_positions[::-1] * light_map_size
+        # x and y axes are swapped in the light map
+        light_map_coords = normalized_xy_positions[::-1] * light_map_size
 
-        light_map_coords = jnp.round(yx_light_map_positions).astype(int)
-        y_coord = jnp.clip(a=light_map_coords[0], a_min=0, a_max=light_map_size[0])
-        x_coord = jnp.clip(a=light_map_coords[1], a_min=0, a_max=light_map_size[1])
-        return state.info["_light_map"][y_coord, x_coord]
+        # Get integer (floor) coordinates of the four surrounding grid points
+        x_floor = jnp.clip(
+            jnp.floor(light_map_coords[0]).astype(int), 0, light_map_size[0] - 1
+        )
+        y_floor = jnp.clip(
+            jnp.floor(light_map_coords[1]).astype(int), 0, light_map_size[1] - 1
+        )
+        x_ceil = jnp.clip(x_floor + 1, 0, light_map_size[0] - 1)
+        y_ceil = jnp.clip(y_floor + 1, 0, light_map_size[1] - 1)
+
+        # Get the four neighboring light values
+        f00 = state.info["_light_map"][x_floor, y_floor]  # Top-left
+        f01 = state.info["_light_map"][x_floor, y_ceil]  # Top-right
+        f10 = state.info["_light_map"][x_ceil, y_floor]  # Bottom-left
+        f11 = state.info["_light_map"][x_ceil, y_ceil]  # Bottom-right
+
+        # Get interpolation weights
+        x_frac = light_map_coords[0] - x_floor
+        y_frac = light_map_coords[1] - y_floor
+
+        # Perform bilinear interpolation
+        light_values = (
+            f00 * (1 - x_frac) * (1 - y_frac)
+            + f01 * (1 - x_frac) * y_frac
+            + f10 * x_frac * (1 - y_frac)
+            + f11 * x_frac * y_frac
+        )
+
+        return light_values
 
     def _get_light_per_segment(self, state: MJXEnvState) -> jnp.ndarray:
         segment_xy_positions = state.mjx_data.geom_xpos[
@@ -146,7 +174,16 @@ class BrittleStarLightEscapeMJXEnvironment(
             high=np.ones(num_segments),
             retriever=lambda state: self._get_light_per_segment(state=state),
         )
-        return base_observables + [segment_light_intake_observable]
+        disk_light_intake_observable = MJXObservable(
+            name="disk_light_intake",
+            low=np.zeros(1),
+            high=np.ones(1),
+            retriever=lambda state: self._get_disk_light_income(state=state),
+        )
+        return base_observables + [
+            segment_light_intake_observable,
+            disk_light_intake_observable,
+        ]
 
     @staticmethod
     def _get_time(state: MJXEnvState) -> float:
