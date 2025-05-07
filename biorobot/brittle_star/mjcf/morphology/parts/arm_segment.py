@@ -65,6 +65,7 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
             euler=[0, np.pi / 2, 0],
             size=[radius, length / 2],
             rgba=colors.rgba_green,
+            density=self._segment_specification.density.value,
         )
 
     def _build_connector(self) -> None:
@@ -78,6 +79,7 @@ class MJCFBrittleStarArmSegment(MJCFMorphologyPart):
             rgba=colors.rgba_gray,
             contype=0,
             conaffinity=0,
+            mass=0,
         )
 
     @property
