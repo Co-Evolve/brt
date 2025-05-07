@@ -176,8 +176,8 @@ brittle star environment returns as observations (further discussed below).
 - Proprioception
     - Joint positions (two per segment, in-plane and out-of-plane, in radians)
     - Joint velocities (two per segment, in-plane and out-of-plane, in radians / second)
-    - Joint actuator force (i.e. the total actuator force acting on a joint, in Newton meters) (two per segment)
-    - Actuator force (the scalar actuator force, in Newtons) (four per segment in case of tendon transmission, otherwise
+    - Joint actuator force (i.e. the total of all actuator forces acting on a single joint, one per joint, in Newton meters) (two per segment)
+    - Actuator force (the scalar actuator force, one per actuator, in Newtons) (four per segment in case of tendon transmission, otherwise
       two)
     - Tendon position (in case tendon transmission is used, four per segment, in meters)
     - Tendon velocity (in case tendon transmission is used, four per segment, in meters / second)
