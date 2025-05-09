@@ -67,7 +67,7 @@ def create_env(
         time_scale=1,
         camera_ids=[0, 1],
         color_contacts=True,
-        random_initial_rotation=True
+        random_initial_rotation=True,
     )
     env = BrittleStarDirectedLocomotionEnvironment.from_morphology_and_arena(
         morphology=morphology, arena=arena, configuration=env_config, backend=backend

@@ -24,10 +24,10 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
     metadata = {"render_modes": ["human", "rgb_array"]}
 
     def __init__(
-            self,
-            mjcf_str: str,
-            mjcf_assets: Dict[str, Any],
-            configuration: BrittleStarDirectedLocomotionEnvironmentConfiguration,
+        self,
+        mjcf_str: str,
+        mjcf_assets: Dict[str, Any],
+        configuration: BrittleStarDirectedLocomotionEnvironmentConfiguration,
     ) -> None:
         BrittleStarDirectedLocomotionEnvironmentBase.__init__(self)
         MJCEnv.__init__(
@@ -40,16 +40,16 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
 
     @property
     def environment_configuration(
-            self,
+        self,
     ) -> BrittleStarDirectedLocomotionEnvironmentConfiguration:
         return super(MJCEnv, self).environment_configuration
 
     @classmethod
     def from_morphology_and_arena(
-            cls,
-            morphology: MJCFBrittleStarMorphology,
-            arena: MJCFAquariumArena,
-            configuration: BrittleStarDirectedLocomotionEnvironmentConfiguration,
+        cls,
+        morphology: MJCFBrittleStarMorphology,
+        arena: MJCFAquariumArena,
+        configuration: BrittleStarDirectedLocomotionEnvironmentConfiguration,
     ) -> BrittleStarDirectedLocomotionMJCEnvironment:
         assert arena.arena_configuration.attach_target, (
             f"Arena must have a target attached. Please set "
@@ -92,7 +92,7 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
             low=-np.ones(2),
             high=np.ones(2),
             retriever=lambda state: self._get_xy_direction_to_target(state)
-                                    / self._get_xy_distance_to_target(state=state),
+            / self._get_xy_distance_to_target(state=state),
         )
 
         # distance to target
@@ -115,7 +115,7 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
         return state.mj_data.time
 
     def _get_mj_models_and_datas_to_render(
-            self, state: MJCEnvState
+        self, state: MJCEnvState
     ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
         mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
         if self.environment_configuration.color_contacts:
@@ -125,7 +125,7 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
         return mj_models, mj_datas
 
     def _get_target_position(
-            self, rng: np.random.RandomState, target_position: np.ndarray | None = None
+        self, rng: np.random.RandomState, target_position: np.ndarray | None = None
     ) -> np.ndarray:
         if target_position is not None:
             position = np.array(target_position)
@@ -136,11 +136,11 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
         return position
 
     def reset(
-            self,
-            rng: np.random.RandomState,
-            target_position: np.ndarray | None = None,
-            *args,
-            **kwargs,
+        self,
+        rng: np.random.RandomState,
+        target_position: np.ndarray | None = None,
+        *args,
+        **kwargs,
     ) -> MJCEnvState:
         mj_model, mj_data = self._prepare_reset()
 
@@ -159,7 +159,7 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
         if self.environment_configuration.random_initial_rotation:
             z_axis_rotation = rng.uniform(-np.pi, np.pi)
             quat = euler2quat(0, 0, z_axis_rotation, axes="sxyz")
-            mj_data.qpos[morphology_qpos_adr + 3: morphology_qpos_adr + 7] = quat
+            mj_data.qpos[morphology_qpos_adr + 3 : morphology_qpos_adr + 7] = quat
 
         # Add noise to initial qpos and qvel of segment joints
         joint_qpos_adrs = self._get_segment_joints_qpos_adrs(mj_model=mj_model)

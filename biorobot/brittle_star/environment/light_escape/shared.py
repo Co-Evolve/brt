@@ -18,10 +18,10 @@ class BrittleStarLightEscapeEnvironmentConfiguration(
     BrittleStarEnvironmentBaseConfiguration
 ):
     def __init__(
-            self,
-            light_perlin_noise_scale: int = 0,
-            *args,
-            **kwargs,
+        self,
+        light_perlin_noise_scale: int = 0,
+        *args,
+        **kwargs,
     ) -> None:
         assert light_perlin_noise_scale == 0 or 200 % light_perlin_noise_scale == 0, (
             "Please only provide integer factors of 200 for the "
@@ -42,7 +42,7 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
         self._disk_area: float | None = None
 
     def _update_reward(
-            self, state: BaseEnvState, previous_state: BaseEnvState
+        self, state: BaseEnvState, previous_state: BaseEnvState
     ) -> BaseEnvState:
         previous_light_income = self._get_body_light_income(state=previous_state)
         current_light_income = self._get_body_light_income(state=state)
@@ -56,12 +56,12 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
         disk_light_value = self._get_disk_light_income(state=state)
 
         segment_light_values = (
-                segment_light_values * self._segment_capsule_areas
+            segment_light_values * self._segment_capsule_areas
         ).sum()
         disk_light_value = disk_light_value * self._disk_area
 
         body_light = (segment_light_values + disk_light_value) / (
-                self._segment_capsule_areas.sum() + self._disk_area
+            self._segment_capsule_areas.sum() + self._disk_area
         )
         return body_light
 
@@ -84,7 +84,7 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
 
     def _update_truncated(self, state: BaseEnvState) -> BaseEnvState:
         truncated = (
-                self._get_time(state=state) > self.environment_configuration.simulation_time
+            self._get_time(state=state) > self.environment_configuration.simulation_time
         )
 
         # noinspection PyUnresolvedReferences
@@ -92,7 +92,7 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
 
     @staticmethod
     def _update_mj_models_tex_data(
-            mj_models: List[mujoco.MjModel], state: BaseEnvState
+        mj_models: List[mujoco.MjModel], state: BaseEnvState
     ) -> None:
         if np.any(state.info["_light_map_has_changed"]):
             ground_texture = state.mj_model.texture("groundplane")
@@ -111,13 +111,13 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
                 coloured_light_map = 0.3 + 0.7 * np.array(light_map)
                 coloured_light_map = np.stack((coloured_light_map,) * 3, axis=-1)
                 coloured_light_map = coloured_light_map * colors.rgba_sand[:3]
-                mj_model.tex_data[adr: adr + size] = coloured_light_map.flatten() * 255
+                mj_model.tex_data[adr : adr + size] = coloured_light_map.flatten() * 255
 
     def _update_renderer_context(
-            self,
-            mj_model: mujoco.MjModel,
-            state: BaseEnvState,
-            renderer: Union[MujocoRenderer, mujoco.Renderer],
+        self,
+        mj_model: mujoco.MjModel,
+        state: BaseEnvState,
+        renderer: Union[MujocoRenderer, mujoco.Renderer],
     ) -> None:
         if np.any(state.info["_light_map_has_changed"]):
             ground_texture = mj_model.texture("groundplane")
@@ -132,7 +132,7 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
     @property
     @abc.abstractmethod
     def environment_configuration(
-            self,
+        self,
     ) -> BrittleStarLightEscapeEnvironmentConfiguration:
         raise NotImplementedError
 
@@ -149,7 +149,7 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
     @staticmethod
     @abc.abstractmethod
     def _get_light_value_at_xy_positions(
-            state: BaseEnvState, xy_positions: chex.Array
+        state: BaseEnvState, xy_positions: chex.Array
     ) -> float:
         raise NotImplementedError
 
@@ -163,6 +163,6 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
 
     @abc.abstractmethod
     def get_renderer_context(
-            self, renderer: Union[MujocoRenderer, mujoco.Renderer]
+        self, renderer: Union[MujocoRenderer, mujoco.Renderer]
     ) -> mujoco.MjrContext:
         raise NotImplementedError
