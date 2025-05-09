@@ -6,6 +6,7 @@ import chex
 import jax.random
 import mujoco
 from jax import numpy as jnp
+from jax._src.scipy.spatial.transform import Rotation
 from moojoco.environment.mjx_env import MJXEnv, MJXEnvState, MJXObservable
 
 from biorobot.brittle_star.environment.directed_locomotion.shared import (
@@ -177,6 +178,18 @@ class BrittleStarDirectedLocomotionMJXEnvironment(
         qpos = qpos.at[morphology_qpos_adr : morphology_qpos_adr + 3].set(
             morphology_pos
         )
+
+        if self.environment_configuration.random_initial_rotation:
+            rng, rotation_rng = jax.random.split(key=rng, num=2)
+            z_axis_rotation = jax.random.uniform(
+                key=rotation_rng, shape=(), minval=-jnp.pi, maxval=jnp.pi
+            )
+            quat = Rotation.from_euler(
+                seq="xyz", angles=jnp.array([0, 0, z_axis_rotation]), degrees=False
+            ).as_quat()
+            qpos = qpos.at[morphology_qpos_adr + 3 : morphology_qpos_adr + 7].set(
+                jnp.roll(quat, shift=1)
+            )
 
         # Add noise to initial qpos and qvel of segment joints
         joint_qpos_adrs = self._get_segment_joints_qpos_adrs(mj_model=mj_model)

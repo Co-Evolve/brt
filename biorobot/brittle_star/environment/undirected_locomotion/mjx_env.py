@@ -6,6 +6,7 @@ import chex
 import jax.random
 import mujoco
 from jax import numpy as jnp
+from jax._src.scipy.spatial.transform import Rotation
 from moojoco.environment.mjx_env import MJXEnv, MJXEnvState, MJXObservable
 
 from biorobot.brittle_star.environment.shared.observables import (
@@ -27,10 +28,10 @@ class BrittleStarUndirectedLocomotionMJXEnvironment(
     metadata = {"render_modes": ["human", "rgb_array"]}
 
     def __init__(
-        self,
-        mjcf_str: str,
-        mjcf_assets: Dict[str, Any],
-        configuration: BrittleStarUndirectedLocomotionEnvironmentConfiguration,
+            self,
+            mjcf_str: str,
+            mjcf_assets: Dict[str, Any],
+            configuration: BrittleStarUndirectedLocomotionEnvironmentConfiguration,
     ) -> None:
         BrittleStarUndirectedLocomotionEnvironmentBase.__init__(self)
         MJXEnv.__init__(
@@ -43,16 +44,16 @@ class BrittleStarUndirectedLocomotionMJXEnvironment(
 
     @property
     def environment_configuration(
-        self,
+            self,
     ) -> BrittleStarUndirectedLocomotionEnvironmentConfiguration:
         return super(MJXEnv, self).environment_configuration
 
     @classmethod
     def from_morphology_and_arena(
-        cls,
-        morphology: MJCFBrittleStarMorphology,
-        arena: MJCFAquariumArena,
-        configuration: BrittleStarUndirectedLocomotionEnvironmentConfiguration,
+            cls,
+            morphology: MJCFBrittleStarMorphology,
+            arena: MJCFAquariumArena,
+            configuration: BrittleStarUndirectedLocomotionEnvironmentConfiguration,
     ) -> BrittleStarUndirectedLocomotionMJXEnvironment:
         return super().from_morphology_and_arena(
             morphology=morphology, arena=arena, configuration=configuration
@@ -75,7 +76,7 @@ class BrittleStarUndirectedLocomotionMJXEnvironment(
         return jnp.linalg.norm(xy_disk_position)
 
     def _get_mj_models_and_datas_to_render(
-        self, state: MJXEnvState
+            self, state: MJXEnvState
     ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
         mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
         if self.environment_configuration.color_contacts:
@@ -97,9 +98,21 @@ class BrittleStarUndirectedLocomotionMJXEnvironment(
             "BrittleStarMorphology/freejoint/"
         ).qposadr[0]
         morphology_pos = jnp.array([0.0, 0.0, 0.11])
-        qpos = qpos.at[morphology_qpos_adr : morphology_qpos_adr + 3].set(
+        qpos = qpos.at[morphology_qpos_adr: morphology_qpos_adr + 3].set(
             morphology_pos
         )
+
+        if self.environment_configuration.random_initial_rotation:
+            rng, rotation_rng = jax.random.split(key=rng, num=2)
+            z_axis_rotation = jax.random.uniform(
+                key=rotation_rng, shape=(), minval=-jnp.pi, maxval=jnp.pi
+            )
+            quat = Rotation.from_euler(
+                seq="xyz", angles=jnp.array([0, 0, z_axis_rotation]), degrees=False
+            ).as_quat()
+            qpos = qpos.at[morphology_qpos_adr + 3: morphology_qpos_adr + 7].set(
+                jnp.roll(quat, shift=1)
+            )
 
         # Add noise to initial qpos and qvel of segment joints
         joint_qpos_adrs = self._get_segment_joints_qpos_adrs(mj_model=mj_model)
