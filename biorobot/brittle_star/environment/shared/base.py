@@ -16,6 +16,7 @@ class BrittleStarEnvironmentBaseConfiguration(MuJoCoEnvironmentConfiguration):
         color_contacts: bool = False,
         solver_iterations: int = 1,
         solver_ls_iterations: int = 5,
+        random_initial_rotation: bool = False,
         *args,
         **kwargs,
     ):
@@ -28,6 +29,7 @@ class BrittleStarEnvironmentBaseConfiguration(MuJoCoEnvironmentConfiguration):
         )
         self.joint_randomization_noise_scale = joint_randomization_noise_scale
         self.color_contacts = color_contacts
+        self.random_initial_rotation = random_initial_rotation
 
 
 class BrittleStarEnvironmentBase:

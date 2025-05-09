@@ -13,14 +13,10 @@ class BrittleStarUndirectedLocomotionEnvironmentConfiguration(
 ):
     def __init__(
         self,
-        joint_randomization_noise_scale: float = 0.0,
-        color_contacts: bool = False,
         *args,
         **kwargs,
     ) -> None:
         super().__init__(
-            joint_randomization_noise_scale=joint_randomization_noise_scale,
-            color_contacts=color_contacts,
             *args,
             **kwargs,
         )

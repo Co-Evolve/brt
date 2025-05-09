@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Tuple
 import mujoco
 import numpy as np
 from moojoco.environment.mjc_env import MJCEnv, MJCEnvState, MJCObservable
+from transforms3d.euler import euler2quat
 
 from biorobot.brittle_star.environment.directed_locomotion.shared import (
     BrittleStarDirectedLocomotionEnvironmentBase,
@@ -150,6 +151,15 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
 
         # Set morphology position
         mj_model.body("BrittleStarMorphology/central_disk").pos[2] = 0.11
+
+        morphology_qpos_adr = mj_model.joint(
+            "BrittleStarMorphology/freejoint/"
+        ).qposadr[0]
+
+        if self.environment_configuration.random_initial_rotation:
+            z_axis_rotation = rng.uniform(-np.pi, np.pi)
+            quat = euler2quat(0, 0, z_axis_rotation, axes="sxyz")
+            mj_data.qpos[morphology_qpos_adr + 3 : morphology_qpos_adr + 7] = quat
 
         # Add noise to initial qpos and qvel of segment joints
         joint_qpos_adrs = self._get_segment_joints_qpos_adrs(mj_model=mj_model)
