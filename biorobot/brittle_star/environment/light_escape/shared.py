@@ -20,9 +20,6 @@ class BrittleStarLightEscapeEnvironmentConfiguration(
     def __init__(
         self,
         light_perlin_noise_scale: int = 0,
-        joint_randomization_noise_scale: float = 0.0,
-        random_initial_rotation: bool = False,
-        color_contacts: bool = False,
         *args,
         **kwargs,
     ) -> None:
@@ -31,13 +28,10 @@ class BrittleStarLightEscapeEnvironmentConfiguration(
             "'light_perlin_noise_scale' parameter."
         )
         super().__init__(
-            joint_randomization_noise_scale=joint_randomization_noise_scale,
-            color_contacts=color_contacts,
             *args,
             **kwargs,
         )
         self.light_perlin_noise_scale = int(light_perlin_noise_scale)
-        self.random_initial_rotation = random_initial_rotation
 
 
 class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
