@@ -1,9 +1,9 @@
 chex==0.1.85
-dm_control==1.0.30
+dm_control==1.0.34
 fprs==1.0.0
 gymnasium==0.29.1
-mujoco==3.3.2
-mujoco_mjx==3.3.2
+mujoco==3.4.0
+mujoco_mjx==3.4.0
 moojoco==1.1.7
 numpy==1.26.3
 opencv_python==4.9.0.80
