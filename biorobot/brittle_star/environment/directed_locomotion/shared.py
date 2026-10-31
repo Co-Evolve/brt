@@ -16,14 +16,10 @@ class BrittleStarDirectedLocomotionEnvironmentConfiguration(
     def __init__(
         self,
         target_distance: float = 3,
-        joint_randomization_noise_scale: float = 0.0,
-        color_contacts: bool = False,
         *args,
         **kwargs,
     ) -> None:
         super().__init__(
-            joint_randomization_noise_scale=joint_randomization_noise_scale,
-            color_contacts=color_contacts,
             *args,
             **kwargs,
         )
@@ -46,10 +42,13 @@ class BrittleStarDirectedLocomotionEnvironmentBase(BrittleStarEnvironmentBase):
         return state.replace(reward=reward)
 
     def _update_info(self, state: BaseEnvState) -> BaseEnvState:
-        info = {
-            "time": self._get_time(state=state),
-            "xy_target_position": self._get_xy_target_position(state=state),
-        }
+        info = state.info
+        info.update(
+            {
+                "time": self._get_time(state=state),
+                "xy_target_position": self._get_xy_target_position(state=state),
+            }
+        )
 
         # noinspection PyUnresolvedReferences
         return state.replace(info=info)

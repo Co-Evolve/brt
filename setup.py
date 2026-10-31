@@ -11,7 +11,7 @@ with open('requirements.txt') as f:
 
 setup(
         name='biorobot',
-        version='0.2.0',
+        version='0.4.2',
         description='The Bio-inspired Robotics Testbed.',
         long_description=readme,
         url='https://github.com/Co-Evolve/brb',
@@ -19,3 +19,4 @@ setup(
         packages=find_packages(exclude=('tests', 'docs')),
         install_requires=required
         )
+3

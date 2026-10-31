@@ -5,13 +5,14 @@ from typing import Any, Dict, List, Tuple
 import mujoco
 import numpy as np
 from moojoco.environment.mjc_env import MJCEnv, MJCEnvState, MJCObservable
+from transforms3d.euler import euler2quat
 
 from biorobot.brittle_star.environment.directed_locomotion.shared import (
     BrittleStarDirectedLocomotionEnvironmentBase,
     BrittleStarDirectedLocomotionEnvironmentConfiguration,
 )
-from biorobot.brittle_star.environment.shared.mjc_observables import (
-    get_shared_brittle_star_mjc_observables,
+from biorobot.brittle_star.environment.shared.observables import (
+    get_base_brittle_star_observables,
 )
 from biorobot.brittle_star.mjcf.arena.aquarium import MJCFAquariumArena
 from biorobot.brittle_star.mjcf.morphology.morphology import MJCFBrittleStarMorphology
@@ -81,8 +82,8 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
         return np.array(state.mj_data.body("target").xpos[:2])
 
     def _create_observables(self) -> List[MJCObservable]:
-        base_observables = get_shared_brittle_star_mjc_observables(
-            mj_model=self.frozen_mj_model, mj_data=self.frozen_mj_data
+        base_observables = get_base_brittle_star_observables(
+            mj_model=self.frozen_mj_model, backend="mjc"
         )
 
         # direction to target
@@ -119,7 +120,7 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
         mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
         if self.environment_configuration.color_contacts:
             self._color_segment_capsule_contacts(
-                mj_models=mj_models, contact_bools=state.observations["segment_contact"]
+                mj_models=mj_models, contacts=state.observations["segment_contact"]
             )
         return mj_models, mj_datas
 
@@ -150,6 +151,15 @@ class BrittleStarDirectedLocomotionMJCEnvironment(
 
         # Set morphology position
         mj_model.body("BrittleStarMorphology/central_disk").pos[2] = 0.11
+
+        morphology_qpos_adr = mj_model.joint(
+            "BrittleStarMorphology/freejoint/"
+        ).qposadr[0]
+
+        if self.environment_configuration.random_initial_rotation:
+            z_axis_rotation = rng.uniform(-np.pi, np.pi)
+            quat = euler2quat(0, 0, z_axis_rotation, axes="sxyz")
+            mj_data.qpos[morphology_qpos_adr + 3 : morphology_qpos_adr + 7] = quat
 
         # Add noise to initial qpos and qvel of segment joints
         joint_qpos_adrs = self._get_segment_joints_qpos_adrs(mj_model=mj_model)

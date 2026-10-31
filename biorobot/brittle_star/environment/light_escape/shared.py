@@ -20,8 +20,6 @@ class BrittleStarLightEscapeEnvironmentConfiguration(
     def __init__(
         self,
         light_perlin_noise_scale: int = 0,
-        joint_randomization_noise_scale: float = 0.0,
-        color_contacts: bool = False,
         *args,
         **kwargs,
     ) -> None:
@@ -30,8 +28,6 @@ class BrittleStarLightEscapeEnvironmentConfiguration(
             "'light_perlin_noise_scale' parameter."
         )
         super().__init__(
-            joint_randomization_noise_scale=joint_randomization_noise_scale,
-            color_contacts=color_contacts,
             *args,
             **kwargs,
         )
@@ -42,17 +38,32 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
     def __init__(self) -> None:
         super().__init__()
 
+        self._segment_capsule_areas: chex.Array | None = None
+        self._disk_area: float | None = None
+
     def _update_reward(
         self, state: BaseEnvState, previous_state: BaseEnvState
     ) -> BaseEnvState:
-        previous_average_light_income = self._get_average_light_income(
-            state=previous_state
-        )
-        current_average_light_income = self._get_average_light_income(state=state)
-        reward = previous_average_light_income - current_average_light_income
+        previous_light_income = self._get_body_light_income(state=previous_state)
+        current_light_income = self._get_body_light_income(state=state)
+        reward = previous_light_income - current_light_income
 
         # noinspection PyUnresolvedReferences
         return state.replace(reward=reward)
+
+    def _get_body_light_income(self, state: BaseEnvState) -> float:
+        segment_light_values = self._get_light_per_segment(state=state)
+        disk_light_value = self._get_disk_light_income(state=state)
+
+        segment_light_values = (
+            segment_light_values * self._segment_capsule_areas
+        ).sum()
+        disk_light_value = disk_light_value * self._disk_area
+
+        body_light = (segment_light_values + disk_light_value) / (
+            self._segment_capsule_areas.sum() + self._disk_area
+        )
+        return body_light
 
     def _update_info(self, state: BaseEnvState) -> BaseEnvState:
         info = state.info
@@ -80,7 +91,7 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
         return state.replace(truncated=truncated)
 
     @staticmethod
-    def _update_mj_models_tex_rgb(
+    def _update_mj_models_tex_data(
         mj_models: List[mujoco.MjModel], state: BaseEnvState
     ) -> None:
         if np.any(state.info["_light_map_has_changed"]):
@@ -100,7 +111,7 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
                 coloured_light_map = 0.3 + 0.7 * np.array(light_map)
                 coloured_light_map = np.stack((coloured_light_map,) * 3, axis=-1)
                 coloured_light_map = coloured_light_map * colors.rgba_sand[:3]
-                mj_model.tex_rgb[adr : adr + size] = coloured_light_map.flatten() * 255
+                mj_model.tex_data[adr : adr + size] = coloured_light_map.flatten() * 255
 
     def _update_renderer_context(
         self,
@@ -135,12 +146,19 @@ class BrittleStarLightEscapeEnvironmentBase(BrittleStarEnvironmentBase):
     def _get_x_distance_from_start_position(state: BaseEnvState) -> float:
         raise NotImplementedError
 
+    @staticmethod
+    @abc.abstractmethod
+    def _get_light_value_at_xy_positions(
+        state: BaseEnvState, xy_positions: chex.Array
+    ) -> float:
+        raise NotImplementedError
+
     @abc.abstractmethod
     def _get_light_per_segment(self, state: BaseEnvState) -> chex.Array:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def _get_average_light_income(self, state: BaseEnvState) -> float:
+    def _get_disk_light_income(self, state: BaseEnvState) -> float:
         raise NotImplementedError
 
     @abc.abstractmethod

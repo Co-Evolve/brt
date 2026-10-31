@@ -8,6 +8,7 @@ import mujoco
 import numpy as np
 from gymnasium.core import RenderFrame
 from jax import numpy as jnp
+from jax.scipy.spatial.transform import Rotation
 from moojoco.environment.mjx_env import MJXEnv, MJXEnvState, MJXObservable
 from moojoco.environment.renderer import MujocoRenderer
 from mujoco import mjx
@@ -16,8 +17,8 @@ from biorobot.brittle_star.environment.light_escape.shared import (
     BrittleStarLightEscapeEnvironmentBase,
     BrittleStarLightEscapeEnvironmentConfiguration,
 )
-from biorobot.brittle_star.environment.shared.mjx_observables import (
-    get_shared_brittle_star_mjx_observables,
+from biorobot.brittle_star.environment.shared.observables import (
+    get_base_brittle_star_observables,
 )
 from biorobot.brittle_star.mjcf.arena.aquarium import MJCFAquariumArena
 from biorobot.brittle_star.mjcf.morphology.morphology import MJCFBrittleStarMorphology
@@ -43,6 +44,25 @@ class BrittleStarLightEscapeMJXEnvironment(
             configuration=configuration,
         )
         self._cache_references(mj_model=self.frozen_mj_model)
+        segment_capsule_geoms = [
+            self.frozen_mj_model.geom(geom_id)
+            for geom_id in self._get_segment_capsule_geom_ids(
+                mj_model=self.frozen_mj_model
+            )
+        ]
+        self._segment_capsule_areas = jnp.array(
+            [
+                (jnp.pi * geom.size[0] ** 2) + (2 * geom.size[0] * 2 * geom.size[1])
+                for geom in segment_capsule_geoms
+            ]
+        )
+        self._disk_area = (
+            jnp.pi
+            * self.frozen_mj_model.geom(
+                "BrittleStarMorphology/central_disk_pentagon_collider"
+            ).size[0]
+            ** 2
+        )
 
     @property
     def environment_configuration(
@@ -75,38 +95,74 @@ class BrittleStarLightEscapeMJXEnvironment(
         )
         return x_disk_position - start_x_position
 
-    def _get_light_per_segment(self, state: MJXEnvState) -> jnp.ndarray:
+    @staticmethod
+    def _get_light_value_at_xy_positions(
+        state: MJXEnvState, xy_positions: jax.Array
+    ) -> float:
         arena_size = jnp.array(state.mj_model.geom("groundplane").size[:2])
         light_map_size = jnp.array(state.info["_light_map"].shape)
 
-        def _get_light_of_segment(geom_id: int) -> float:
-            segment_xy_position = state.mjx_data.geom_xpos[geom_id, :2]
-            shifted_segment_xy_position = segment_xy_position + arena_size
-            normalized_segment_xy_position = shifted_segment_xy_position / (
-                2 * arena_size
-            )
-            normalized_segment_xy_position = normalized_segment_xy_position.at[1].set(
-                1 - normalized_segment_xy_position[1]
-            )
-            segment_yx_light_map_position = (
-                normalized_segment_xy_position[::-1] * light_map_size
-            )
+        shifted_xy_positions = xy_positions + arena_size
+        normalized_xy_positions = shifted_xy_positions / (2 * arena_size)
 
-            light_map_coords = jnp.round(segment_yx_light_map_position).astype(int)
-            y_coord = jnp.clip(a=light_map_coords[0], a_min=0, a_max=light_map_size[0])
-            x_coord = jnp.clip(a=light_map_coords[1], a_min=0, a_max=light_map_size[1])
-            return state.info["_light_map"][y_coord, x_coord]
+        # Positive Y axis in light map and in world are inverted
+        normalized_xy_positions = normalized_xy_positions.at[1].set(
+            1 - normalized_xy_positions[1]
+        )
+        # x and y axes are swapped in the light map
+        light_map_coords = normalized_xy_positions[::-1] * light_map_size
 
-        return jax.vmap(_get_light_of_segment)(
-            jnp.array(self._get_segment_capsule_geom_ids(mj_model=state.mj_model))
+        # Get integer (floor) coordinates of the four surrounding grid points
+        x_floor = jnp.clip(
+            jnp.floor(light_map_coords[0]).astype(int), 0, light_map_size[0] - 1
+        )
+        y_floor = jnp.clip(
+            jnp.floor(light_map_coords[1]).astype(int), 0, light_map_size[1] - 1
+        )
+        x_ceil = jnp.clip(x_floor + 1, 0, light_map_size[0] - 1)
+        y_ceil = jnp.clip(y_floor + 1, 0, light_map_size[1] - 1)
+
+        # Get the four neighboring light values
+        f00 = state.info["_light_map"][x_floor, y_floor]  # Top-left
+        f01 = state.info["_light_map"][x_floor, y_ceil]  # Top-right
+        f10 = state.info["_light_map"][x_ceil, y_floor]  # Bottom-left
+        f11 = state.info["_light_map"][x_ceil, y_ceil]  # Bottom-right
+
+        # Get interpolation weights
+        x_frac = light_map_coords[0] - x_floor
+        y_frac = light_map_coords[1] - y_floor
+
+        # Perform bilinear interpolation
+        light_values = (
+            f00 * (1 - x_frac) * (1 - y_frac)
+            + f01 * (1 - x_frac) * y_frac
+            + f10 * x_frac * (1 - y_frac)
+            + f11 * x_frac * y_frac
         )
 
-    def _get_average_light_income(self, state: MJXEnvState) -> jnp.ndarray:
-        return jnp.average(self._get_light_per_segment(state=state))
+        return light_values
+
+    def _get_light_per_segment(self, state: MJXEnvState) -> jnp.ndarray:
+        segment_xy_positions = state.mjx_data.geom_xpos[
+            self._get_segment_capsule_geom_ids(mj_model=state.mj_model), :2
+        ]
+        values = jax.vmap(self._get_light_value_at_xy_positions, in_axes=(None, 0))(
+            state, segment_xy_positions
+        )
+        return values
+
+    def _get_disk_light_income(self, state: MJXEnvState) -> float:
+        disk_xy_position = state.mjx_data.xpos[
+            state.mj_model.body("BrittleStarMorphology/central_disk").id
+        ][:2]
+        value = self._get_light_value_at_xy_positions(
+            state=state, xy_positions=disk_xy_position
+        )
+        return value
 
     def _create_observables(self) -> List[MJXObservable]:
-        base_observables = get_shared_brittle_star_mjx_observables(
-            mj_model=self.frozen_mj_model, mj_data=self.frozen_mj_data
+        base_observables = get_base_brittle_star_observables(
+            mj_model=self.frozen_mj_model, backend="mjx"
         )
 
         num_segments = len(
@@ -118,7 +174,16 @@ class BrittleStarLightEscapeMJXEnvironment(
             high=np.ones(num_segments),
             retriever=lambda state: self._get_light_per_segment(state=state),
         )
-        return base_observables + [segment_light_intake_observable]
+        disk_light_intake_observable = MJXObservable(
+            name="disk_light_intake",
+            low=np.zeros(1),
+            high=np.ones(1),
+            retriever=lambda state: self._get_disk_light_income(state=state),
+        )
+        return base_observables + [
+            segment_light_intake_observable,
+            disk_light_intake_observable,
+        ]
 
     @staticmethod
     def _get_time(state: MJXEnvState) -> float:
@@ -128,10 +193,10 @@ class BrittleStarLightEscapeMJXEnvironment(
         self, state: MJXEnvState
     ) -> Tuple[List[mujoco.MjModel], List[mujoco.MjData]]:
         mj_models, mj_datas = super()._get_mj_models_and_datas_to_render(state=state)
-        self._update_mj_models_tex_rgb(mj_models=mj_models, state=state)
+        self._update_mj_models_tex_data(mj_models=mj_models, state=state)
         if self.environment_configuration.color_contacts:
             self._color_segment_capsule_contacts(
-                mj_models=mj_models, contact_bools=state.observations["segment_contact"]
+                mj_models=mj_models, contacts=state.observations["segment_contact"]
             )
         return mj_models, mj_datas
 
@@ -231,25 +296,37 @@ class BrittleStarLightEscapeMJXEnvironment(
 
         rng, qpos_rng, qvel_rng = jax.random.split(key=rng, num=3)
 
+        qpos = jnp.copy(mjx_model.qpos0)
+        qvel = jnp.zeros(mjx_model.nv)
+
         # Set morphology position
-        disk_body_id = mj_model.body("BrittleStarMorphology/central_disk").id
+        morphology_qpos_adr = mj_model.joint(
+            "BrittleStarMorphology/freejoint/"
+        ).qposadr[0]
         morphology_pos = jnp.array(
             [
-                BrittleStarLightEscapeEnvironmentBase._get_x_start_position(
-                    mj_model=mj_model
-                ),
+                self._get_x_start_position(mj_model=mj_model),
                 0.0,
                 0.11,
             ]
         )
-        mjx_model = mjx_model.replace(
-            body_pos=mjx_model.body_pos.at[disk_body_id].set(morphology_pos)
+        qpos = qpos.at[morphology_qpos_adr : morphology_qpos_adr + 3].set(
+            morphology_pos
         )
 
-        # Add noise to initial qpos and qvel of segment joints
-        qpos = jnp.copy(mjx_model.qpos0)
-        qvel = jnp.zeros(mjx_model.nv)
+        if self.environment_configuration.random_initial_rotation:
+            rng, rotation_rng = jax.random.split(key=rng, num=2)
+            z_axis_rotation = jax.random.uniform(
+                key=rotation_rng, shape=(), minval=-jnp.pi, maxval=jnp.pi
+            )
+            quat = Rotation.from_euler(
+                seq="xyz", angles=jnp.array([0, 0, z_axis_rotation]), degrees=False
+            ).as_quat()
+            qpos = qpos.at[morphology_qpos_adr + 3 : morphology_qpos_adr + 7].set(
+                jnp.roll(quat, shift=1)
+            )
 
+        # Add noise to initial qpos and qvel of segment joints
         joint_qpos_adrs = self._get_segment_joints_qpos_adrs(mj_model=mj_model)
         joint_qvel_adrs = self._get_segment_joints_qvel_adrs(mj_model=mj_model)
         num_segment_joints = len(joint_qpos_adrs)

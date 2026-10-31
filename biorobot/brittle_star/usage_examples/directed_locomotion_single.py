@@ -49,7 +49,12 @@ def create_env(
     backend: str, render_mode: str
 ) -> BrittleStarDirectedLocomotionEnvironment:
     morphology_spec = default_brittle_star_morphology_specification(
-        num_arms=5, num_segments_per_arm=5, use_p_control=True
+        num_arms=5,
+        num_segments_per_arm=5,
+        use_p_control=False,
+        use_torque_control=True,
+        use_tendons=False,
+        num_contact_sensors_per_segment=2,
     )
     morphology = MJCFBrittleStarMorphology(morphology_spec)
     arena_config = AquariumArenaConfiguration(attach_target=True)
@@ -62,6 +67,7 @@ def create_env(
         time_scale=1,
         camera_ids=[0, 1],
         color_contacts=True,
+        random_initial_rotation=True,
     )
     env = BrittleStarDirectedLocomotionEnvironment.from_morphology_and_arena(
         morphology=morphology, arena=arena, configuration=env_config, backend=backend
@@ -70,7 +76,7 @@ def create_env(
 
 
 if __name__ == "__main__":
-    BACKEND = "MJX"
+    BACKEND = "MJC"
     RENDER_MODE = "human"
 
     env = create_env(backend=BACKEND, render_mode=RENDER_MODE)
@@ -88,19 +94,19 @@ if __name__ == "__main__":
 
         step_fn = jax.jit(env.step)
         reset_fn = jax.jit(env.reset)
+        reset_fn = env.reset
 
         def action_sample_fn(rng: chex.PRNGKey) -> Tuple[jnp.ndarray, chex.PRNGKey]:
             rng, sub_rng = jax.random.split(rng, 2)
             return env.action_space.sample(rng=sub_rng), rng
 
     state = reset_fn(env_rng, [-1.0, 0.0, 0.05])
+
     while True:
         action, action_rng = action_sample_fn(action_rng)
         state = step_fn(state=state, action=action)
-        print(state.observations["joint_actuator_force"])
-        print(state.observations["actuator_force"])
-        print()
         post_render(env.render(state=state), env.environment_configuration)
+        print(state.observations["segment_contact"])
         if state.terminated | state.truncated:
             state = reset_fn(env_rng)
     env.close()

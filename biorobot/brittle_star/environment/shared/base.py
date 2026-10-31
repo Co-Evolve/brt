@@ -3,6 +3,7 @@ from typing import List
 import chex
 import jax.numpy as jnp
 import mujoco
+import numpy as np
 from moojoco.environment.base import MuJoCoEnvironmentConfiguration
 
 from biorobot.utils import colors
@@ -15,6 +16,7 @@ class BrittleStarEnvironmentBaseConfiguration(MuJoCoEnvironmentConfiguration):
         color_contacts: bool = False,
         solver_iterations: int = 1,
         solver_ls_iterations: int = 5,
+        random_initial_rotation: bool = False,
         *args,
         **kwargs,
     ):
@@ -27,6 +29,7 @@ class BrittleStarEnvironmentBaseConfiguration(MuJoCoEnvironmentConfiguration):
         )
         self.joint_randomization_noise_scale = joint_randomization_noise_scale
         self.color_contacts = color_contacts
+        self.random_initial_rotation = random_initial_rotation
 
 
 class BrittleStarEnvironmentBase:
@@ -75,17 +78,18 @@ class BrittleStarEnvironmentBase:
         return self._segment_capsule_geom_ids
 
     def _color_segment_capsule_contacts(
-        self, mj_models: List[mujoco.MjModel], contact_bools: chex.Array
+        self, mj_models: List[mujoco.MjModel], contacts: chex.Array
     ) -> None:
         for i, mj_model in enumerate(mj_models):
-            if len(contact_bools.shape) > 1:
-                contacts = contact_bools[i]
+            if len(contacts.shape) > 1:
+                c = contacts[i]
             else:
-                contacts = contact_bools
+                c = contacts
 
-            for capsule_geom_id, contact in zip(
-                self._segment_capsule_geom_ids, contacts
-            ):
+            c = c.reshape((len(self._segment_capsule_geom_ids), -1)) > 0
+            c = np.any(c, axis=-1).flatten()
+
+            for capsule_geom_id, contact in zip(self._segment_capsule_geom_ids, c):
                 if contact:
                     mj_model.geom(capsule_geom_id).rgba = colors.rgba_red
                 else:

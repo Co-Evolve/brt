@@ -1,0 +1,157 @@
+<mujoco model="BrittleStarMorphology">
+  <compiler angle="radian"/>
+  <option density="1000" viscosity="0.00089999999999999998"/>
+  <visual>
+    <headlight ambient="0.40000000000000002 0.40000000000000002 0.40000000000000002" diffuse="0.80000000000000004 0.80000000000000004 0.80000000000000004" specular="0.10000000000000001 0.10000000000000001 0.10000000000000001"/>
+  </visual>
+  <default>
+    <default class="/">
+      <geom contype="1" conaffinity="0" condim="4" density="2000"/>
+    </default>
+  </default>
+  <worldbody>
+    <body name="central_disk" pos="0 0 0" euler="0 0 0">
+      <geom name="central_disk_pentagon_side_0" class="/" type="box" contype="0" conaffinity="0" size="0.050563562148434216 0.073473156536559142 0.025000000000000001" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0" pos="0.040906781074217108 0.029720516134223551 0" euler="0 0 0.62831853071795862"/>
+      <geom name="central_disk_pentagon_side_1" class="/" type="box" contype="0" conaffinity="0" size="0.050563562148434216 0.073473156536559142 0.025000000000000001" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0" pos="-0.015624999999999997 0.048088805268363337 0" euler="0 0 1.8849555921538759"/>
+      <geom name="central_disk_pentagon_side_2" class="/" type="box" contype="0" conaffinity="0" size="0.050563562148434216 0.073473156536559142 0.025000000000000001" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0" pos="-0.050563562148434216 6.1922504538568225e-18 0" euler="0 0 3.1415926535897931"/>
+      <geom name="central_disk_pentagon_side_3" class="/" type="box" contype="0" conaffinity="0" size="0.050563562148434216 0.073473156536559142 0.025000000000000001" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0" pos="-0.015625000000000007 -0.048088805268363337 0" euler="0 0 4.3982297150257104"/>
+      <geom name="central_disk_pentagon_side_4" class="/" type="box" contype="0" conaffinity="0" size="0.050563562148434216 0.073473156536559142 0.025000000000000001" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0" pos="0.040906781074217101 -0.029720516134223562 0" euler="0 0 5.6548667764616276"/>
+      <geom name="central_disk_pentagon_collider" class="/" type="cylinder" contype="1" conaffinity="0" size="0.125 0.025000000000000001" rgba="0 0 0 0" pos="0 0 0" euler="0 0 0"/>
+      <geom name="central_disk_arm_connector_0" class="/" type="box" contype="0" conaffinity="0" size="0.025000000000000001 0.025000000000000001 0.025000000000000001" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" pos="0.10000000000000001 0 0" euler="0 0 0"/>
+      <geom name="central_disk_arm_connector_1" class="/" type="box" contype="0" conaffinity="0" size="0.025000000000000001 0.025000000000000001 0.025000000000000001" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" pos="0.030901699437494747 0.095105651629515356 0" euler="0 0 1.2566370614359172"/>
+      <geom name="central_disk_arm_connector_2" class="/" type="box" contype="0" conaffinity="0" size="0.025000000000000001 0.025000000000000001 0.025000000000000001" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" pos="-0.080901699437494742 0.058778525229247328 0" euler="0 0 2.5132741228718345"/>
+      <geom name="central_disk_arm_connector_3" class="/" type="box" contype="0" conaffinity="0" size="0.025000000000000001 0.025000000000000001 0.025000000000000001" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" pos="-0.080901699437494756 -0.058778525229247307 0" euler="0 0 3.7699111843077517"/>
+      <geom name="central_disk_arm_connector_4" class="/" type="box" contype="0" conaffinity="0" size="0.025000000000000001 0.025000000000000001 0.025000000000000001" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" pos="0.030901699437494726 -0.09510565162951537 0" euler="0 0 5.026548245743669"/>
+      <body name="arm_0" pos="0.125 0 0" euler="0 0 0"/>
+      <body name="arm_1" pos="0.038627124296868431 0.11888206453689419 0" euler="0 0 1.2566370614359172">
+        <body name="arm_1_segment_0" pos="0 0 0" euler="0 0 0">
+          <geom name="arm_1_segment_0_capsule" class="/" type="capsule" size="0.025000000000000001 0.037499999999999999" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" pos="0.0625 0 0" euler="0 1.5707963267948966 0"/>
+          <geom name="arm_1_segment_0_connector" class="/" type="sphere" contype="0" conaffinity="0" size="0.012500000000000001" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" pos="0 0 0"/>
+          <joint name="arm_1_segment_0_in_plane_joint" class="/" type="hinge" axis="0 0 1" limited="true" stiffness="0.01" range="-0.52359877559829882 0.52359877559829882" armature="0.02" damping="0.10000000000000001"/>
+          <joint name="arm_1_segment_0_out_of_plane_joint" class="/" type="hinge" axis="0 -1 0" limited="true" stiffness="0.01" range="-0.52359877559829882 0.52359877559829882" armature="0.02" damping="0.10000000000000001"/>
+          <site name="arm_1_segment_0_contact_site" class="/" type="capsule" group="3" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 0.5" size="0.025250000000000002 0.037499999999999999" pos="0.0625 0 0" euler="0 1.5707963267948966 0"/>
+          <body name="arm_1_segment_1" pos="0.125 0 0" euler="0 0 0">
+            <geom name="arm_1_segment_1_capsule" class="/" type="capsule" size="0.020833333333333336 0.029166666666666667" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" pos="0.050000000000000003 0 0" euler="0 1.5707963267948966 0"/>
+            <geom name="arm_1_segment_1_connector" class="/" type="sphere" contype="0" conaffinity="0" size="0.010416666666666668" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" pos="0 0 0"/>
+            <joint name="arm_1_segment_1_in_plane_joint" class="/" type="hinge" axis="0 0 1" limited="true" stiffness="0.01" range="-0.52359877559829882 0.52359877559829882" armature="0.02" damping="0.10000000000000001"/>
+            <joint name="arm_1_segment_1_out_of_plane_joint" class="/" type="hinge" axis="0 -1 0" limited="true" stiffness="0.01" range="-0.52359877559829882 0.52359877559829882" armature="0.02" damping="0.10000000000000001"/>
+            <site name="arm_1_segment_1_contact_site" class="/" type="capsule" group="3" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 0.5" size="0.02104166666666667 0.029166666666666667" pos="0.050000000000000003 0 0" euler="0 1.5707963267948966 0"/>
+            <body name="arm_1_segment_2" pos="0.10000000000000001 0 0" euler="0 0 0">
+              <geom name="arm_1_segment_2_capsule" class="/" type="capsule" size="0.01666666666666667 0.020833333333333336" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" pos="0.037500000000000006 0 0" euler="0 1.5707963267948966 0"/>
+              <geom name="arm_1_segment_2_connector" class="/" type="sphere" contype="0" conaffinity="0" size="0.008333333333333335" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" pos="0 0 0"/>
+              <joint name="arm_1_segment_2_in_plane_joint" class="/" type="hinge" axis="0 0 1" limited="true" stiffness="0.01" range="-0.52359877559829882 0.52359877559829882" armature="0.02" damping="0.10000000000000001"/>
+              <joint name="arm_1_segment_2_out_of_plane_joint" class="/" type="hinge" axis="0 -1 0" limited="true" stiffness="0.01" range="-0.52359877559829882 0.52359877559829882" armature="0.02" damping="0.10000000000000001"/>
+              <site name="arm_1_segment_2_contact_site" class="/" type="capsule" group="3" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 0.5" size="0.016833333333333336 0.020833333333333336" pos="0.037500000000000006 0 0" euler="0 1.5707963267948966 0"/>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="arm_2" pos="-0.10112712429686842 0.073473156536559156 0" euler="0 0 2.5132741228718345"/>
+      <body name="arm_3" pos="-0.10112712429686843 -0.073473156536559128 0" euler="0 0 3.7699111843077517"/>
+      <body name="arm_4" pos="0.038627124296868404 -0.11888206453689421 0" euler="0 0 5.026548245743669">
+        <body name="arm_4_segment_0" pos="0 0 0" euler="0 0 0">
+          <geom name="arm_4_segment_0_capsule" class="/" type="capsule" size="0.025000000000000001 0.037499999999999999" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" pos="0.0625 0 0" euler="0 1.5707963267948966 0"/>
+          <geom name="arm_4_segment_0_connector" class="/" type="sphere" contype="0" conaffinity="0" size="0.012500000000000001" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" pos="0 0 0"/>
+          <joint name="arm_4_segment_0_in_plane_joint" class="/" type="hinge" axis="0 0 1" limited="true" stiffness="0.01" range="-0.52359877559829882 0.52359877559829882" armature="0.02" damping="0.10000000000000001"/>
+          <joint name="arm_4_segment_0_out_of_plane_joint" class="/" type="hinge" axis="0 -1 0" limited="true" stiffness="0.01" range="-0.52359877559829882 0.52359877559829882" armature="0.02" damping="0.10000000000000001"/>
+          <site name="arm_4_segment_0_contact_site" class="/" type="capsule" group="3" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 0.5" size="0.025250000000000002 0.037499999999999999" pos="0.0625 0 0" euler="0 1.5707963267948966 0"/>
+          <body name="arm_4_segment_1" pos="0.125 0 0" euler="0 0 0">
+            <geom name="arm_4_segment_1_capsule" class="/" type="capsule" size="0.020833333333333336 0.029166666666666667" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" pos="0.050000000000000003 0 0" euler="0 1.5707963267948966 0"/>
+            <geom name="arm_4_segment_1_connector" class="/" type="sphere" contype="0" conaffinity="0" size="0.010416666666666668" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" pos="0 0 0"/>
+            <joint name="arm_4_segment_1_in_plane_joint" class="/" type="hinge" axis="0 0 1" limited="true" stiffness="0.01" range="-0.52359877559829882 0.52359877559829882" armature="0.02" damping="0.10000000000000001"/>
+            <joint name="arm_4_segment_1_out_of_plane_joint" class="/" type="hinge" axis="0 -1 0" limited="true" stiffness="0.01" range="-0.52359877559829882 0.52359877559829882" armature="0.02" damping="0.10000000000000001"/>
+            <site name="arm_4_segment_1_contact_site" class="/" type="capsule" group="3" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 0.5" size="0.02104166666666667 0.029166666666666667" pos="0.050000000000000003 0 0" euler="0 1.5707963267948966 0"/>
+            <body name="arm_4_segment_2" pos="0.10000000000000001 0 0" euler="0 0 0">
+              <geom name="arm_4_segment_2_capsule" class="/" type="capsule" size="0.01666666666666667 0.020833333333333336" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" pos="0.037500000000000006 0 0" euler="0 1.5707963267948966 0"/>
+              <geom name="arm_4_segment_2_connector" class="/" type="sphere" contype="0" conaffinity="0" size="0.008333333333333335" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" pos="0 0 0"/>
+              <joint name="arm_4_segment_2_in_plane_joint" class="/" type="hinge" axis="0 0 1" limited="true" stiffness="0.01" range="-0.52359877559829882 0.52359877559829882" armature="0.02" damping="0.10000000000000001"/>
+              <joint name="arm_4_segment_2_out_of_plane_joint" class="/" type="hinge" axis="0 -1 0" limited="true" stiffness="0.01" range="-0.52359877559829882 0.52359877559829882" armature="0.02" damping="0.10000000000000001"/>
+              <site name="arm_4_segment_2_contact_site" class="/" type="capsule" group="3" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 0.5" size="0.016833333333333336 0.020833333333333336" pos="0.037500000000000006 0 0" euler="0 1.5707963267948966 0"/>
+            </body>
+          </body>
+        </body>
+      </body>
+      <camera name="side_camera" class="/" mode="track" pos="0 -2 2.5" quat="0.93969262078590843 0.34202014332566871 0 0"/>
+    </body>
+  </worldbody>
+  <actuator>
+    <position name="arm_1_segment_0_in_plane_joint_p_control" class="/" ctrllimited="true" forcelimited="true" ctrlrange="-0.52359877559829882 0.52359877559829882" forcerange="-5 5" joint="arm_1_segment_0_in_plane_joint" kp="50"/>
+    <position name="arm_1_segment_0_out_of_plane_joint_p_control" class="/" ctrllimited="true" forcelimited="true" ctrlrange="-0.52359877559829882 0.52359877559829882" forcerange="-5 5" joint="arm_1_segment_0_out_of_plane_joint" kp="50"/>
+    <position name="arm_1_segment_1_in_plane_joint_p_control" class="/" ctrllimited="true" forcelimited="true" ctrlrange="-0.52359877559829882 0.52359877559829882" forcerange="-4.166666666666667 4.166666666666667" joint="arm_1_segment_1_in_plane_joint" kp="50"/>
+    <position name="arm_1_segment_1_out_of_plane_joint_p_control" class="/" ctrllimited="true" forcelimited="true" ctrlrange="-0.52359877559829882 0.52359877559829882" forcerange="-4.166666666666667 4.166666666666667" joint="arm_1_segment_1_out_of_plane_joint" kp="50"/>
+    <position name="arm_1_segment_2_in_plane_joint_p_control" class="/" ctrllimited="true" forcelimited="true" ctrlrange="-0.52359877559829882 0.52359877559829882" forcerange="-3.3333333333333339 3.3333333333333339" joint="arm_1_segment_2_in_plane_joint" kp="50"/>
+    <position name="arm_1_segment_2_out_of_plane_joint_p_control" class="/" ctrllimited="true" forcelimited="true" ctrlrange="-0.52359877559829882 0.52359877559829882" forcerange="-3.3333333333333339 3.3333333333333339" joint="arm_1_segment_2_out_of_plane_joint" kp="50"/>
+    <position name="arm_4_segment_0_in_plane_joint_p_control" class="/" ctrllimited="true" forcelimited="true" ctrlrange="-0.52359877559829882 0.52359877559829882" forcerange="-5 5" joint="arm_4_segment_0_in_plane_joint" kp="50"/>
+    <position name="arm_4_segment_0_out_of_plane_joint_p_control" class="/" ctrllimited="true" forcelimited="true" ctrlrange="-0.52359877559829882 0.52359877559829882" forcerange="-5 5" joint="arm_4_segment_0_out_of_plane_joint" kp="50"/>
+    <position name="arm_4_segment_1_in_plane_joint_p_control" class="/" ctrllimited="true" forcelimited="true" ctrlrange="-0.52359877559829882 0.52359877559829882" forcerange="-4.166666666666667 4.166666666666667" joint="arm_4_segment_1_in_plane_joint" kp="50"/>
+    <position name="arm_4_segment_1_out_of_plane_joint_p_control" class="/" ctrllimited="true" forcelimited="true" ctrlrange="-0.52359877559829882 0.52359877559829882" forcerange="-4.166666666666667 4.166666666666667" joint="arm_4_segment_1_out_of_plane_joint" kp="50"/>
+    <position name="arm_4_segment_2_in_plane_joint_p_control" class="/" ctrllimited="true" forcelimited="true" ctrlrange="-0.52359877559829882 0.52359877559829882" forcerange="-3.3333333333333339 3.3333333333333339" joint="arm_4_segment_2_in_plane_joint" kp="50"/>
+    <position name="arm_4_segment_2_out_of_plane_joint_p_control" class="/" ctrllimited="true" forcelimited="true" ctrlrange="-0.52359877559829882 0.52359877559829882" forcerange="-3.3333333333333339 3.3333333333333339" joint="arm_4_segment_2_out_of_plane_joint" kp="50"/>
+  </actuator>
+  <sensor>
+    <framepos name="central_disk_framepos_sensor" objtype="xbody" objname="central_disk"/>
+    <framequat name="central_disk_framequat_sensor" objtype="xbody" objname="central_disk"/>
+    <framelinvel name="central_disk_framelinvel_sensor" objtype="xbody" objname="central_disk"/>
+    <frameangvel name="central_disk_frameangvel_sensor" objtype="xbody" objname="central_disk"/>
+    <framepos name="arm_1_segment_0_position_sensor" objtype="geom" objname="arm_1_segment_0_capsule"/>
+    <jointpos name="arm_1_segment_0_in_plane_joint_jointpos_sensor" joint="arm_1_segment_0_in_plane_joint"/>
+    <jointvel name="arm_1_segment_0_in_plane_joint_jointvel_sensor" joint="arm_1_segment_0_in_plane_joint"/>
+    <jointactuatorfrc name="arm_1_segment_0_in_plane_joint_actuatorfrc_sensor" joint="arm_1_segment_0_in_plane_joint"/>
+    <jointpos name="arm_1_segment_0_out_of_plane_joint_jointpos_sensor" joint="arm_1_segment_0_out_of_plane_joint"/>
+    <jointvel name="arm_1_segment_0_out_of_plane_joint_jointvel_sensor" joint="arm_1_segment_0_out_of_plane_joint"/>
+    <jointactuatorfrc name="arm_1_segment_0_out_of_plane_joint_actuatorfrc_sensor" joint="arm_1_segment_0_out_of_plane_joint"/>
+    <actuatorfrc name="arm_1_segment_0_in_plane_joint_p_control_actuatorfrc_sensor" actuator="arm_1_segment_0_in_plane_joint_p_control"/>
+    <actuatorfrc name="arm_1_segment_0_out_of_plane_joint_p_control_actuatorfrc_sensor" actuator="arm_1_segment_0_out_of_plane_joint_p_control"/>
+    <touch name="arm_1_segment_0_contact_site_contact_sensor" site="arm_1_segment_0_contact_site"/>
+    <framepos name="arm_1_segment_1_position_sensor" objtype="geom" objname="arm_1_segment_1_capsule"/>
+    <jointpos name="arm_1_segment_1_in_plane_joint_jointpos_sensor" joint="arm_1_segment_1_in_plane_joint"/>
+    <jointvel name="arm_1_segment_1_in_plane_joint_jointvel_sensor" joint="arm_1_segment_1_in_plane_joint"/>
+    <jointactuatorfrc name="arm_1_segment_1_in_plane_joint_actuatorfrc_sensor" joint="arm_1_segment_1_in_plane_joint"/>
+    <jointpos name="arm_1_segment_1_out_of_plane_joint_jointpos_sensor" joint="arm_1_segment_1_out_of_plane_joint"/>
+    <jointvel name="arm_1_segment_1_out_of_plane_joint_jointvel_sensor" joint="arm_1_segment_1_out_of_plane_joint"/>
+    <jointactuatorfrc name="arm_1_segment_1_out_of_plane_joint_actuatorfrc_sensor" joint="arm_1_segment_1_out_of_plane_joint"/>
+    <actuatorfrc name="arm_1_segment_1_in_plane_joint_p_control_actuatorfrc_sensor" actuator="arm_1_segment_1_in_plane_joint_p_control"/>
+    <actuatorfrc name="arm_1_segment_1_out_of_plane_joint_p_control_actuatorfrc_sensor" actuator="arm_1_segment_1_out_of_plane_joint_p_control"/>
+    <touch name="arm_1_segment_1_contact_site_contact_sensor" site="arm_1_segment_1_contact_site"/>
+    <framepos name="arm_1_segment_2_position_sensor" objtype="geom" objname="arm_1_segment_2_capsule"/>
+    <jointpos name="arm_1_segment_2_in_plane_joint_jointpos_sensor" joint="arm_1_segment_2_in_plane_joint"/>
+    <jointvel name="arm_1_segment_2_in_plane_joint_jointvel_sensor" joint="arm_1_segment_2_in_plane_joint"/>
+    <jointactuatorfrc name="arm_1_segment_2_in_plane_joint_actuatorfrc_sensor" joint="arm_1_segment_2_in_plane_joint"/>
+    <jointpos name="arm_1_segment_2_out_of_plane_joint_jointpos_sensor" joint="arm_1_segment_2_out_of_plane_joint"/>
+    <jointvel name="arm_1_segment_2_out_of_plane_joint_jointvel_sensor" joint="arm_1_segment_2_out_of_plane_joint"/>
+    <jointactuatorfrc name="arm_1_segment_2_out_of_plane_joint_actuatorfrc_sensor" joint="arm_1_segment_2_out_of_plane_joint"/>
+    <actuatorfrc name="arm_1_segment_2_in_plane_joint_p_control_actuatorfrc_sensor" actuator="arm_1_segment_2_in_plane_joint_p_control"/>
+    <actuatorfrc name="arm_1_segment_2_out_of_plane_joint_p_control_actuatorfrc_sensor" actuator="arm_1_segment_2_out_of_plane_joint_p_control"/>
+    <touch name="arm_1_segment_2_contact_site_contact_sensor" site="arm_1_segment_2_contact_site"/>
+    <framepos name="arm_4_segment_0_position_sensor" objtype="geom" objname="arm_4_segment_0_capsule"/>
+    <jointpos name="arm_4_segment_0_in_plane_joint_jointpos_sensor" joint="arm_4_segment_0_in_plane_joint"/>
+    <jointvel name="arm_4_segment_0_in_plane_joint_jointvel_sensor" joint="arm_4_segment_0_in_plane_joint"/>
+    <jointactuatorfrc name="arm_4_segment_0_in_plane_joint_actuatorfrc_sensor" joint="arm_4_segment_0_in_plane_joint"/>
+    <jointpos name="arm_4_segment_0_out_of_plane_joint_jointpos_sensor" joint="arm_4_segment_0_out_of_plane_joint"/>
+    <jointvel name="arm_4_segment_0_out_of_plane_joint_jointvel_sensor" joint="arm_4_segment_0_out_of_plane_joint"/>
+    <jointactuatorfrc name="arm_4_segment_0_out_of_plane_joint_actuatorfrc_sensor" joint="arm_4_segment_0_out_of_plane_joint"/>
+    <actuatorfrc name="arm_4_segment_0_in_plane_joint_p_control_actuatorfrc_sensor" actuator="arm_4_segment_0_in_plane_joint_p_control"/>
+    <actuatorfrc name="arm_4_segment_0_out_of_plane_joint_p_control_actuatorfrc_sensor" actuator="arm_4_segment_0_out_of_plane_joint_p_control"/>
+    <touch name="arm_4_segment_0_contact_site_contact_sensor" site="arm_4_segment_0_contact_site"/>
+    <framepos name="arm_4_segment_1_position_sensor" objtype="geom" objname="arm_4_segment_1_capsule"/>
+    <jointpos name="arm_4_segment_1_in_plane_joint_jointpos_sensor" joint="arm_4_segment_1_in_plane_joint"/>
+    <jointvel name="arm_4_segment_1_in_plane_joint_jointvel_sensor" joint="arm_4_segment_1_in_plane_joint"/>
+    <jointactuatorfrc name="arm_4_segment_1_in_plane_joint_actuatorfrc_sensor" joint="arm_4_segment_1_in_plane_joint"/>
+    <jointpos name="arm_4_segment_1_out_of_plane_joint_jointpos_sensor" joint="arm_4_segment_1_out_of_plane_joint"/>
+    <jointvel name="arm_4_segment_1_out_of_plane_joint_jointvel_sensor" joint="arm_4_segment_1_out_of_plane_joint"/>
+    <jointactuatorfrc name="arm_4_segment_1_out_of_plane_joint_actuatorfrc_sensor" joint="arm_4_segment_1_out_of_plane_joint"/>
+    <actuatorfrc name="arm_4_segment_1_in_plane_joint_p_control_actuatorfrc_sensor" actuator="arm_4_segment_1_in_plane_joint_p_control"/>
+    <actuatorfrc name="arm_4_segment_1_out_of_plane_joint_p_control_actuatorfrc_sensor" actuator="arm_4_segment_1_out_of_plane_joint_p_control"/>
+    <touch name="arm_4_segment_1_contact_site_contact_sensor" site="arm_4_segment_1_contact_site"/>
+    <framepos name="arm_4_segment_2_position_sensor" objtype="geom" objname="arm_4_segment_2_capsule"/>
+    <jointpos name="arm_4_segment_2_in_plane_joint_jointpos_sensor" joint="arm_4_segment_2_in_plane_joint"/>
+    <jointvel name="arm_4_segment_2_in_plane_joint_jointvel_sensor" joint="arm_4_segment_2_in_plane_joint"/>
+    <jointactuatorfrc name="arm_4_segment_2_in_plane_joint_actuatorfrc_sensor" joint="arm_4_segment_2_in_plane_joint"/>
+    <jointpos name="arm_4_segment_2_out_of_plane_joint_jointpos_sensor" joint="arm_4_segment_2_out_of_plane_joint"/>
+    <jointvel name="arm_4_segment_2_out_of_plane_joint_jointvel_sensor" joint="arm_4_segment_2_out_of_plane_joint"/>
+    <jointactuatorfrc name="arm_4_segment_2_out_of_plane_joint_actuatorfrc_sensor" joint="arm_4_segment_2_out_of_plane_joint"/>
+    <actuatorfrc name="arm_4_segment_2_in_plane_joint_p_control_actuatorfrc_sensor" actuator="arm_4_segment_2_in_plane_joint_p_control"/>
+    <actuatorfrc name="arm_4_segment_2_out_of_plane_joint_p_control_actuatorfrc_sensor" actuator="arm_4_segment_2_out_of_plane_joint_p_control"/>
+    <touch name="arm_4_segment_2_contact_site_contact_sensor" site="arm_4_segment_2_contact_site"/>
+  </sensor>
+</mujoco>

@@ -165,24 +165,36 @@ Two example in-silico brittle star morphologies.
 
 Every segment has two degrees of freedom (DoF), one for in-plane motion and one for out-of-plane motion.
 
+In terms of actuation, the morphology specification can be used to select either position based control, and torque
+based control.
+The morphology specification can also be used to use tendon-based transmission (but only with torque based control). In
+this case, four tendons will be added, similar to the muscle architecture of the brittle star as shown above.
+
 In terms of sensing, the following sensors are implemented. These sensors define the base set of observations that every
 brittle star environment returns as observations (further discussed below).
 
 - Proprioception
     - Joint positions (two per segment, in-plane and out-of-plane, in radians)
     - Joint velocities (two per segment, in-plane and out-of-plane, in radians / second)
-    - Joint actuator force (i.e. the total actuator force acting on a joint, in Newton meters) (two per segment)
-    - Actuator force (the scalar actuator force, in Newtons) (two per segment)
+    - Joint actuator force (i.e. the total of all actuator forces acting on a single joint, one per joint, in Newton
+      meters) (two per segment)
+    - Actuator force (the scalar actuator force, one per actuator, in Newtons) (four per segment in case of tendon
+      transmission, otherwise
+      two)
+    - Tendon position (in case tendon transmission is used, four per segment, in meters)
+    - Tendon velocity (in case tendon transmission is used, four per segment, in meters / second)
     - Central disk's position (w.r.t. world frame)
     - Central disk's rotation (w.r.t. world frame, in radians)
     - Central disk's velocity (w.r.t. world frame, in m/s)
     - Central disk's angular velocity (w.r.t. world frame, in radians/s)
 - Exteroception
-    - Touch (per segment, boolean)
+    - Contact (X continuous values per segment, in Newtons) (X is defined in the morphology specification)
 
 In terms of actuation, the following actuators are implemented (two per segment, one for the in-plane DoF and one for
-the out-of-plane DoF). The brittle star's morphology specification defines which if either position-based or torque-based control is used.
-The actuator force limits are scaled by the segment radii. Consequently, the maximum force applied by an actuator decreases along the arm. 
+the out-of-plane DoF). The brittle star's morphology specification defines which if either position-based or
+torque-based control is used.
+The actuator force limits are scaled by the segment radii. Consequently, the maximum force applied by an actuator
+decreases along the arm.
 
 ## Environment variants
 
@@ -201,20 +213,27 @@ difficulty:
     - Requires an aquarium with `attach_target=True`.
     - Target position can be specified using the `target_position` argument of
       the `reset` function.
-      If no target position is given, a target will be spawned randomly on a circle with a radius given by the `target_distance` argument of the [BrittleStarDirectedLocomotionEnvironmentConfiguration](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/environment/directed_locomotion/shared.py).
+      If no target position is given, a target will be spawned randomly on a circle with a radius given by the
+      `target_distance` argument of
+      the [BrittleStarDirectedLocomotionEnvironmentConfiguration](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/environment/directed_locomotion/shared.py).
     - Additional observations:
         - Unit direction on the horizontal XY plane from the central disk to the target.
         - The distance in XY plane from the central disk to the target.
 3. Light escape (hard): Move the brittle star towards darker spots in the environment.
-    - Reward per timestep: $light\\_income\\_previous\\_timestep - light\\_income\\_current\\_timestep$. The reward will thus
+    - Reward per timestep: $light\\_income\\_previous\\_timestep - light\\_income\\_current\\_timestep$. The reward will
+      thus
       be positive if the measured light income has decreased in the current timestep, and negative if the light income
-      has increased.
+      has increased. The light income at a given timestep is calculated as a weighted average over all body geoms (
+      weight scales with the surface area of the geom).
     - Requires an aquarium with `sand_ground_color=True`.
     - Additional observations:
         - The amount of light each segment takes in.
+        - The amount of light the disk takes in.
 
 All brittle star environments support visualising segment contacts (i.e., coloring a segment's capsule red upon contact)
 via the `color_contacts` argument of the environment configuration.
+Furthermore, all brittle star environment configurations accept an additional argument `random_initial_rotation`. This
+randomly rotates the brittle star around its z-axis upon environment resets.
 
 ![](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/assets/brittle_star_environments.png?raw=true)
 From left to right: the undirected locomotion, the targeted locomotion (target is the red sphere), and the light

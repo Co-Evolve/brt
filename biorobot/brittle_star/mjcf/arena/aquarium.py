@@ -11,8 +11,9 @@ class AquariumArenaConfiguration(ArenaConfiguration):
     def __init__(
         self,
         name: str = "AquariumArena",
-        size: Tuple[int, int] = (10, 5),
+        size: Tuple[int, int] = (5, 3),
         sand_ground_color: bool = False,
+        light_map_resolution: int = 50,
         attach_target: bool = False,
         wall_height: float = 1.5,
         wall_thickness: float = 0.1,
@@ -20,6 +21,7 @@ class AquariumArenaConfiguration(ArenaConfiguration):
         super().__init__(name=name)
         self.size = size
         self.sand_ground_color = sand_ground_color
+        self.light_map_resolution = light_map_resolution
         self.attach_target = attach_target
         self.wall_height = wall_height
         self.wall_thickness = wall_thickness
@@ -75,14 +77,16 @@ class MJCFAquariumArena(MJCFArena):
 
     def _build_ground(self) -> None:
         if self.arena_configuration.sand_ground_color:
+            w, h = self.arena_configuration.size
+            resolution = self.arena_configuration.light_map_resolution
             ground_texture = self.mjcf_model.asset.add(
                 "texture",
                 type="2d",
                 builtin="flat",
                 name="groundplane",
                 rgb1=colors.rgba_sand[:3],
-                width=200,
-                height=200,
+                width=resolution * w,
+                height=resolution * h,
             )
             ground_material = self.mjcf_model.asset.add(
                 "material",
@@ -113,6 +117,7 @@ class MJCFAquariumArena(MJCFArena):
                 texture=ground_texture,
             )
             rgba = None
+
         # Build groundplane.
         self._ground_geom = self.mjcf_body.add(
             "geom",
@@ -121,8 +126,7 @@ class MJCFAquariumArena(MJCFArena):
             material=ground_material,
             rgba=rgba,
             size=list(self.arena_configuration.size) + [0.25],
-            condim=6,
-            friction=[1, 0.5, 0.5],
+            condim=4,
             contype=0,
             conaffinity=1,
         )
@@ -130,84 +134,112 @@ class MJCFAquariumArena(MJCFArena):
     def _build_walls(self) -> None:
         wall_rgba = np.asarray([115, 147, 179, 50]) / 255
 
-        self.mjcf_model.worldbody.add(
-            "geom",
-            type="box",
-            name="north_wall",
-            size=[
-                self.arena_configuration.size[0],
-                self.arena_configuration.wall_thickness,
-                self.arena_configuration.wall_height,
-            ],
-            pos=[
-                0.0,
-                self.arena_configuration.size[1]
-                + self.arena_configuration.wall_thickness,
-                self.arena_configuration.wall_height,
-            ],
-            rgba=wall_rgba,
-            contype=0,
-            conaffinity=1,
+        walls = []
+        walls.append(
+            self.mjcf_model.worldbody.add(
+                "geom",
+                type="box",
+                name="north_wall",
+                size=[
+                    self.arena_configuration.size[0],
+                    self.arena_configuration.wall_thickness,
+                    self.arena_configuration.wall_height,
+                ],
+                pos=[
+                    0.0,
+                    self.arena_configuration.size[1]
+                    + self.arena_configuration.wall_thickness,
+                    self.arena_configuration.wall_height,
+                ],
+                rgba=wall_rgba,
+                contype=0,
+                conaffinity=0,
+            )
         )
-        self.mjcf_model.worldbody.add(
-            "geom",
-            type="box",
-            name="south_wall",
-            size=[
-                self.arena_configuration.size[0],
-                self.arena_configuration.wall_thickness,
-                self.arena_configuration.wall_height,
-            ],
-            pos=[
-                0.0,
-                -self.arena_configuration.size[1]
-                - self.arena_configuration.wall_thickness,
-                self.arena_configuration.wall_height,
-            ],
-            rgba=wall_rgba,
-            contype=0,
-            conaffinity=1,
+        walls.append(
+            self.mjcf_model.worldbody.add(
+                "geom",
+                type="box",
+                name="south_wall",
+                size=[
+                    self.arena_configuration.size[0],
+                    self.arena_configuration.wall_thickness,
+                    self.arena_configuration.wall_height,
+                ],
+                pos=[
+                    0.0,
+                    -self.arena_configuration.size[1]
+                    - self.arena_configuration.wall_thickness,
+                    self.arena_configuration.wall_height,
+                ],
+                rgba=wall_rgba,
+                contype=0,
+                conaffinity=0,
+            )
         )
-        self.mjcf_model.worldbody.add(
-            "geom",
-            type="box",
-            name="east_wall",
-            size=[
-                self.arena_configuration.wall_thickness,
-                self.arena_configuration.size[1]
-                + 2 * self.arena_configuration.wall_thickness,
-                self.arena_configuration.wall_height,
-            ],
-            pos=[
-                -self.arena_configuration.size[0]
-                - self.arena_configuration.wall_thickness,
-                0.0,
-                self.arena_configuration.wall_height,
-            ],
-            rgba=wall_rgba,
-            contype=0,
-            conaffinity=1,
+        walls.append(
+            self.mjcf_model.worldbody.add(
+                "geom",
+                type="box",
+                name="east_wall",
+                size=[
+                    self.arena_configuration.wall_thickness,
+                    self.arena_configuration.size[1]
+                    + 2 * self.arena_configuration.wall_thickness,
+                    self.arena_configuration.wall_height,
+                ],
+                pos=[
+                    -self.arena_configuration.size[0]
+                    - self.arena_configuration.wall_thickness,
+                    0.0,
+                    self.arena_configuration.wall_height,
+                ],
+                rgba=wall_rgba,
+                contype=0,
+                conaffinity=0,
+            )
         )
-        self.mjcf_model.worldbody.add(
-            "geom",
-            type="box",
-            name="west_wall",
-            size=[
-                self.arena_configuration.wall_thickness,
-                self.arena_configuration.size[1]
-                + 2 * self.arena_configuration.wall_thickness,
-                self.arena_configuration.wall_height,
-            ],
-            pos=[
-                self.arena_configuration.size[0]
-                + self.arena_configuration.wall_thickness,
-                0.0,
-                self.arena_configuration.wall_height,
-            ],
-            rgba=wall_rgba,
-            contype=0,
-            conaffinity=1,
+        walls.append(
+            self.mjcf_model.worldbody.add(
+                "geom",
+                type="box",
+                name="west_wall",
+                size=[
+                    self.arena_configuration.wall_thickness,
+                    self.arena_configuration.size[1]
+                    + 2 * self.arena_configuration.wall_thickness,
+                    self.arena_configuration.wall_height,
+                ],
+                pos=[
+                    self.arena_configuration.size[0]
+                    + self.arena_configuration.wall_thickness,
+                    0.0,
+                    self.arena_configuration.wall_height,
+                ],
+                rgba=wall_rgba,
+                contype=0,
+                conaffinity=0,
+            )
         )
+
+        eulers = [
+            [np.pi / 2, 0, 0],
+            [-np.pi / 2, 0, 0],
+            [0, np.pi / 2, 0],
+            [0, -np.pi / 2, 0],
+        ]
+        for wall, euler in zip(walls, eulers):
+            self.mjcf_model.worldbody.add(
+                "geom",
+                type="plane",
+                name=wall.name + "_collider",
+                pos=wall.pos,
+                size=wall.size,
+                euler=euler,
+                rgba=[0, 0, 0, 0],
+                contype=0,
+                conaffinity=1,
+            )
 
     def _build_target(self) -> None:
         if self.arena_configuration.attach_target:
