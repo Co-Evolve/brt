@@ -1,0 +1,603 @@
+<mujoco model="AquariumArena">
+  <compiler angle="radian"/>
+
+  <option density="1000" viscosity="0.0009" iterations="1" ls_iterations="5">
+    <flag eulerdamp="disable"/>
+  </option>
+
+  <size njmax="398" nconmax="58"/>
+
+  <visual>
+    <headlight ambient="0.4 0.4 0.4" diffuse="0.8 0.8 0.8" specular="0.1 0.1 0.1"/>
+  </visual>
+
+  <default>
+    <default class="BrittleStarMorphology/main">
+      <geom conaffinity="0" condim="4"/>
+    </default>
+  </default>
+
+  <asset>
+    <texture type="skybox" colorspace="auto" builtin="flat" rgb1="1 1 1" rgb2="1 1 1" width="200" height="1200"/>
+    <texture type="2d" colorspace="auto" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="200" height="200"/>
+    <material name="groundplane" texture="groundplane" texrepeat="2 2" texuniform="true" reflectance="0.2"/>
+  </asset>
+
+  <worldbody>
+    <geom name="groundplane" size="5 3 0.25" type="plane" contype="0" condim="4" material="groundplane"/>
+    <geom name="north_wall" size="5 0.1 1.5" pos="0 3.1 1.5" type="box" contype="0" conaffinity="0" rgba="0.45098 0.576471 0.701961 0.196078"/>
+    <geom name="south_wall" size="5 0.1 1.5" pos="0 -3.1 1.5" type="box" contype="0" conaffinity="0" rgba="0.45098 0.576471 0.701961 0.196078"/>
+    <geom name="east_wall" size="0.1 3.2 1.5" pos="-5.1 0 1.5" type="box" contype="0" conaffinity="0" rgba="0.45098 0.576471 0.701961 0.196078"/>
+    <geom name="west_wall" size="0.1 3.2 1.5" pos="5.1 0 1.5" type="box" contype="0" conaffinity="0" rgba="0.45098 0.576471 0.701961 0.196078"/>
+    <geom name="north_wall_collider" size="5 0.1 1.5" pos="0 3.1 1.5" quat="0.707107 0.707107 0 0" type="plane" contype="0" rgba="0 0 0 0"/>
+    <geom name="south_wall_collider" size="5 0.1 1.5" pos="0 -3.1 1.5" quat="0.707107 -0.707107 0 0" type="plane" contype="0" rgba="0 0 0 0"/>
+    <geom name="east_wall_collider" size="0.1 3.2 1.5" pos="-5.1 0 1.5" quat="0.707107 0 0.707107 0" type="plane" contype="0" rgba="0 0 0 0"/>
+    <geom name="west_wall_collider" size="0.1 3.2 1.5" pos="5.1 0 1.5" quat="0.707107 0 -0.707107 0" type="plane" contype="0" rgba="0 0 0 0"/>
+    <camera name="top_camera" pos="0 0 20"/>
+    <light castshadow="false" pos="-20 0 20" diffuse="0.1 0.1 0.1" type="directional"/>
+    <body name="BrittleStarMorphology/central_disk" pos="0 0 0.11">
+      <joint name="BrittleStarMorphology/freejoint" type="free"/>
+      <geom name="BrittleStarMorphology/central_disk_pentagon_side_0" size="0.0505636 0.0734732 0.025" pos="0.0409068 0.0297205 0" quat="0.951057 0 0 0.309017" type="box" contype="0" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" mass="0"/>
+      <geom name="BrittleStarMorphology/central_disk_pentagon_side_1" size="0.0505636 0.0734732 0.025" pos="-0.015625 0.0480888 0" quat="0.587785 0 0 0.809017" type="box" contype="0" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" mass="0"/>
+      <geom name="BrittleStarMorphology/central_disk_pentagon_side_2" size="0.0505636 0.0734732 0.025" pos="-0.0505636 0 0" quat="0 0 0 1" type="box" contype="0" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" mass="0"/>
+      <geom name="BrittleStarMorphology/central_disk_pentagon_side_3" size="0.0505636 0.0734732 0.025" pos="-0.015625 -0.0480888 0" quat="-0.587785 0 0 0.809017" type="box" contype="0" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" mass="0"/>
+      <geom name="BrittleStarMorphology/central_disk_pentagon_side_4" size="0.0505636 0.0734732 0.025" pos="0.0409068 -0.0297205 0" quat="-0.951057 0 0 0.309017" type="box" contype="0" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" mass="0"/>
+      <geom name="BrittleStarMorphology/central_disk_pentagon_collider" size="0.125 0.025" type="cylinder" conaffinity="0" condim="4" rgba="0 0 0 0" density="1270"/>
+      <geom name="BrittleStarMorphology/central_disk_arm_connector_0" size="0.025 0.025 0.025" pos="0.1 0 0" type="box" contype="0" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1"/>
+      <geom name="BrittleStarMorphology/central_disk_arm_connector_1" size="0.025 0.025 0.025" pos="0.0309017 0.0951057 0" quat="0.809017 0 0 0.587785" type="box" contype="0" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1"/>
+      <geom name="BrittleStarMorphology/central_disk_arm_connector_2" size="0.025 0.025 0.025" pos="-0.0809017 0.0587785 0" quat="0.309017 0 0 0.951057" type="box" contype="0" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1"/>
+      <geom name="BrittleStarMorphology/central_disk_arm_connector_3" size="0.025 0.025 0.025" pos="-0.0809017 -0.0587785 0" quat="-0.309017 0 0 0.951057" type="box" contype="0" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1"/>
+      <geom name="BrittleStarMorphology/central_disk_arm_connector_4" size="0.025 0.025 0.025" pos="0.0309017 -0.0951057 0" quat="-0.809017 0 0 0.587785" type="box" contype="0" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1"/>
+      <camera name="BrittleStarMorphology/side_camera" quat="0.939693 0.34202 0 0" pos="0 -2 2.5" mode="track"/>
+      <body name="BrittleStarMorphology/arm_0" pos="0.125 0 0">
+        <body name="BrittleStarMorphology/arm_0_segment_0">
+          <joint name="BrittleStarMorphology/arm_0_segment_0_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+          <joint name="BrittleStarMorphology/arm_0_segment_0_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+          <geom name="BrittleStarMorphology/arm_0_segment_0_capsule" size="0.025 0.0375" pos="0.0625 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+          <geom name="BrittleStarMorphology/arm_0_segment_0_connector" size="0.0125" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+          <site name="BrittleStarMorphology/arm_0_segment_0_contact_site" size="0.02525 0.0375" pos="0.0625 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+          <body name="BrittleStarMorphology/arm_0_segment_1" pos="0.125 0 0">
+            <joint name="BrittleStarMorphology/arm_0_segment_1_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+            <joint name="BrittleStarMorphology/arm_0_segment_1_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+            <geom name="BrittleStarMorphology/arm_0_segment_1_capsule" size="0.0225 0.0325" pos="0.055 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+            <geom name="BrittleStarMorphology/arm_0_segment_1_connector" size="0.01125" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+            <site name="BrittleStarMorphology/arm_0_segment_1_contact_site" size="0.022725 0.0325" pos="0.055 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+            <body name="BrittleStarMorphology/arm_0_segment_2" pos="0.11 0 0">
+              <joint name="BrittleStarMorphology/arm_0_segment_2_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+              <joint name="BrittleStarMorphology/arm_0_segment_2_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+              <geom name="BrittleStarMorphology/arm_0_segment_2_capsule" size="0.02 0.0275" pos="0.0475 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+              <geom name="BrittleStarMorphology/arm_0_segment_2_connector" size="0.01" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+              <site name="BrittleStarMorphology/arm_0_segment_2_contact_site" size="0.0202 0.0275" pos="0.0475 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+              <body name="BrittleStarMorphology/arm_0_segment_3" pos="0.095 0 0">
+                <joint name="BrittleStarMorphology/arm_0_segment_3_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+                <joint name="BrittleStarMorphology/arm_0_segment_3_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+                <geom name="BrittleStarMorphology/arm_0_segment_3_capsule" size="0.0175 0.0225" pos="0.04 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+                <geom name="BrittleStarMorphology/arm_0_segment_3_connector" size="0.00875" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+                <site name="BrittleStarMorphology/arm_0_segment_3_contact_site" size="0.017675 0.0225" pos="0.04 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+                <body name="BrittleStarMorphology/arm_0_segment_4" pos="0.08 0 0">
+                  <joint name="BrittleStarMorphology/arm_0_segment_4_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+                  <joint name="BrittleStarMorphology/arm_0_segment_4_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+                  <geom name="BrittleStarMorphology/arm_0_segment_4_capsule" size="0.015 0.0175" pos="0.0325 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+                  <geom name="BrittleStarMorphology/arm_0_segment_4_connector" size="0.0075" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+                  <site name="BrittleStarMorphology/arm_0_segment_4_contact_site" size="0.01515 0.0175" pos="0.0325 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="BrittleStarMorphology/arm_1" pos="0.0386271 0.118882 0" quat="0.809017 0 0 0.587785">
+        <body name="BrittleStarMorphology/arm_1_segment_0">
+          <joint name="BrittleStarMorphology/arm_1_segment_0_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+          <joint name="BrittleStarMorphology/arm_1_segment_0_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+          <geom name="BrittleStarMorphology/arm_1_segment_0_capsule" size="0.025 0.0375" pos="0.0625 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+          <geom name="BrittleStarMorphology/arm_1_segment_0_connector" size="0.0125" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+          <site name="BrittleStarMorphology/arm_1_segment_0_contact_site" size="0.02525 0.0375" pos="0.0625 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+          <body name="BrittleStarMorphology/arm_1_segment_1" pos="0.125 0 0">
+            <joint name="BrittleStarMorphology/arm_1_segment_1_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+            <joint name="BrittleStarMorphology/arm_1_segment_1_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+            <geom name="BrittleStarMorphology/arm_1_segment_1_capsule" size="0.0225 0.0325" pos="0.055 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+            <geom name="BrittleStarMorphology/arm_1_segment_1_connector" size="0.01125" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+            <site name="BrittleStarMorphology/arm_1_segment_1_contact_site" size="0.022725 0.0325" pos="0.055 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+            <body name="BrittleStarMorphology/arm_1_segment_2" pos="0.11 0 0">
+              <joint name="BrittleStarMorphology/arm_1_segment_2_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+              <joint name="BrittleStarMorphology/arm_1_segment_2_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+              <geom name="BrittleStarMorphology/arm_1_segment_2_capsule" size="0.02 0.0275" pos="0.0475 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+              <geom name="BrittleStarMorphology/arm_1_segment_2_connector" size="0.01" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+              <site name="BrittleStarMorphology/arm_1_segment_2_contact_site" size="0.0202 0.0275" pos="0.0475 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+              <body name="BrittleStarMorphology/arm_1_segment_3" pos="0.095 0 0">
+                <joint name="BrittleStarMorphology/arm_1_segment_3_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+                <joint name="BrittleStarMorphology/arm_1_segment_3_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+                <geom name="BrittleStarMorphology/arm_1_segment_3_capsule" size="0.0175 0.0225" pos="0.04 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+                <geom name="BrittleStarMorphology/arm_1_segment_3_connector" size="0.00875" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+                <site name="BrittleStarMorphology/arm_1_segment_3_contact_site" size="0.017675 0.0225" pos="0.04 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+                <body name="BrittleStarMorphology/arm_1_segment_4" pos="0.08 0 0">
+                  <joint name="BrittleStarMorphology/arm_1_segment_4_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+                  <joint name="BrittleStarMorphology/arm_1_segment_4_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+                  <geom name="BrittleStarMorphology/arm_1_segment_4_capsule" size="0.015 0.0175" pos="0.0325 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+                  <geom name="BrittleStarMorphology/arm_1_segment_4_connector" size="0.0075" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+                  <site name="BrittleStarMorphology/arm_1_segment_4_contact_site" size="0.01515 0.0175" pos="0.0325 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="BrittleStarMorphology/arm_2" pos="-0.101127 0.0734732 0" quat="0.309017 0 0 0.951057">
+        <body name="BrittleStarMorphology/arm_2_segment_0">
+          <joint name="BrittleStarMorphology/arm_2_segment_0_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+          <joint name="BrittleStarMorphology/arm_2_segment_0_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+          <geom name="BrittleStarMorphology/arm_2_segment_0_capsule" size="0.025 0.0375" pos="0.0625 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+          <geom name="BrittleStarMorphology/arm_2_segment_0_connector" size="0.0125" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+          <site name="BrittleStarMorphology/arm_2_segment_0_contact_site" size="0.02525 0.0375" pos="0.0625 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+          <body name="BrittleStarMorphology/arm_2_segment_1" pos="0.125 0 0">
+            <joint name="BrittleStarMorphology/arm_2_segment_1_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+            <joint name="BrittleStarMorphology/arm_2_segment_1_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+            <geom name="BrittleStarMorphology/arm_2_segment_1_capsule" size="0.0225 0.0325" pos="0.055 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+            <geom name="BrittleStarMorphology/arm_2_segment_1_connector" size="0.01125" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+            <site name="BrittleStarMorphology/arm_2_segment_1_contact_site" size="0.022725 0.0325" pos="0.055 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+            <body name="BrittleStarMorphology/arm_2_segment_2" pos="0.11 0 0">
+              <joint name="BrittleStarMorphology/arm_2_segment_2_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+              <joint name="BrittleStarMorphology/arm_2_segment_2_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+              <geom name="BrittleStarMorphology/arm_2_segment_2_capsule" size="0.02 0.0275" pos="0.0475 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+              <geom name="BrittleStarMorphology/arm_2_segment_2_connector" size="0.01" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+              <site name="BrittleStarMorphology/arm_2_segment_2_contact_site" size="0.0202 0.0275" pos="0.0475 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+              <body name="BrittleStarMorphology/arm_2_segment_3" pos="0.095 0 0">
+                <joint name="BrittleStarMorphology/arm_2_segment_3_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+                <joint name="BrittleStarMorphology/arm_2_segment_3_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+                <geom name="BrittleStarMorphology/arm_2_segment_3_capsule" size="0.0175 0.0225" pos="0.04 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+                <geom name="BrittleStarMorphology/arm_2_segment_3_connector" size="0.00875" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+                <site name="BrittleStarMorphology/arm_2_segment_3_contact_site" size="0.017675 0.0225" pos="0.04 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+                <body name="BrittleStarMorphology/arm_2_segment_4" pos="0.08 0 0">
+                  <joint name="BrittleStarMorphology/arm_2_segment_4_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+                  <joint name="BrittleStarMorphology/arm_2_segment_4_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+                  <geom name="BrittleStarMorphology/arm_2_segment_4_capsule" size="0.015 0.0175" pos="0.0325 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+                  <geom name="BrittleStarMorphology/arm_2_segment_4_connector" size="0.0075" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+                  <site name="BrittleStarMorphology/arm_2_segment_4_contact_site" size="0.01515 0.0175" pos="0.0325 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="BrittleStarMorphology/arm_3" pos="-0.101127 -0.0734732 0" quat="-0.309017 0 0 0.951057">
+        <body name="BrittleStarMorphology/arm_3_segment_0">
+          <joint name="BrittleStarMorphology/arm_3_segment_0_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+          <joint name="BrittleStarMorphology/arm_3_segment_0_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+          <geom name="BrittleStarMorphology/arm_3_segment_0_capsule" size="0.025 0.0375" pos="0.0625 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+          <geom name="BrittleStarMorphology/arm_3_segment_0_connector" size="0.0125" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+          <site name="BrittleStarMorphology/arm_3_segment_0_contact_site" size="0.02525 0.0375" pos="0.0625 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+          <body name="BrittleStarMorphology/arm_3_segment_1" pos="0.125 0 0">
+            <joint name="BrittleStarMorphology/arm_3_segment_1_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+            <joint name="BrittleStarMorphology/arm_3_segment_1_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+            <geom name="BrittleStarMorphology/arm_3_segment_1_capsule" size="0.0225 0.0325" pos="0.055 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+            <geom name="BrittleStarMorphology/arm_3_segment_1_connector" size="0.01125" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+            <site name="BrittleStarMorphology/arm_3_segment_1_contact_site" size="0.022725 0.0325" pos="0.055 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+            <body name="BrittleStarMorphology/arm_3_segment_2" pos="0.11 0 0">
+              <joint name="BrittleStarMorphology/arm_3_segment_2_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+              <joint name="BrittleStarMorphology/arm_3_segment_2_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+              <geom name="BrittleStarMorphology/arm_3_segment_2_capsule" size="0.02 0.0275" pos="0.0475 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+              <geom name="BrittleStarMorphology/arm_3_segment_2_connector" size="0.01" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+              <site name="BrittleStarMorphology/arm_3_segment_2_contact_site" size="0.0202 0.0275" pos="0.0475 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+              <body name="BrittleStarMorphology/arm_3_segment_3" pos="0.095 0 0">
+                <joint name="BrittleStarMorphology/arm_3_segment_3_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+                <joint name="BrittleStarMorphology/arm_3_segment_3_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+                <geom name="BrittleStarMorphology/arm_3_segment_3_capsule" size="0.0175 0.0225" pos="0.04 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+                <geom name="BrittleStarMorphology/arm_3_segment_3_connector" size="0.00875" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+                <site name="BrittleStarMorphology/arm_3_segment_3_contact_site" size="0.017675 0.0225" pos="0.04 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+                <body name="BrittleStarMorphology/arm_3_segment_4" pos="0.08 0 0">
+                  <joint name="BrittleStarMorphology/arm_3_segment_4_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+                  <joint name="BrittleStarMorphology/arm_3_segment_4_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+                  <geom name="BrittleStarMorphology/arm_3_segment_4_capsule" size="0.015 0.0175" pos="0.0325 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+                  <geom name="BrittleStarMorphology/arm_3_segment_4_connector" size="0.0075" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+                  <site name="BrittleStarMorphology/arm_3_segment_4_contact_site" size="0.01515 0.0175" pos="0.0325 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="BrittleStarMorphology/arm_4" pos="0.0386271 -0.118882 0" quat="-0.809017 0 0 0.587785">
+        <body name="BrittleStarMorphology/arm_4_segment_0">
+          <joint name="BrittleStarMorphology/arm_4_segment_0_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+          <joint name="BrittleStarMorphology/arm_4_segment_0_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+          <geom name="BrittleStarMorphology/arm_4_segment_0_capsule" size="0.025 0.0375" pos="0.0625 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+          <geom name="BrittleStarMorphology/arm_4_segment_0_connector" size="0.0125" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+          <site name="BrittleStarMorphology/arm_4_segment_0_contact_site" size="0.02525 0.0375" pos="0.0625 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+          <body name="BrittleStarMorphology/arm_4_segment_1" pos="0.125 0 0">
+            <joint name="BrittleStarMorphology/arm_4_segment_1_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+            <joint name="BrittleStarMorphology/arm_4_segment_1_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+            <geom name="BrittleStarMorphology/arm_4_segment_1_capsule" size="0.0225 0.0325" pos="0.055 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+            <geom name="BrittleStarMorphology/arm_4_segment_1_connector" size="0.01125" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+            <site name="BrittleStarMorphology/arm_4_segment_1_contact_site" size="0.022725 0.0325" pos="0.055 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+            <body name="BrittleStarMorphology/arm_4_segment_2" pos="0.11 0 0">
+              <joint name="BrittleStarMorphology/arm_4_segment_2_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+              <joint name="BrittleStarMorphology/arm_4_segment_2_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+              <geom name="BrittleStarMorphology/arm_4_segment_2_capsule" size="0.02 0.0275" pos="0.0475 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+              <geom name="BrittleStarMorphology/arm_4_segment_2_connector" size="0.01" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+              <site name="BrittleStarMorphology/arm_4_segment_2_contact_site" size="0.0202 0.0275" pos="0.0475 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+              <body name="BrittleStarMorphology/arm_4_segment_3" pos="0.095 0 0">
+                <joint name="BrittleStarMorphology/arm_4_segment_3_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+                <joint name="BrittleStarMorphology/arm_4_segment_3_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+                <geom name="BrittleStarMorphology/arm_4_segment_3_capsule" size="0.0175 0.0225" pos="0.04 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+                <geom name="BrittleStarMorphology/arm_4_segment_3_connector" size="0.00875" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+                <site name="BrittleStarMorphology/arm_4_segment_3_contact_site" size="0.017675 0.0225" pos="0.04 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+                <body name="BrittleStarMorphology/arm_4_segment_4" pos="0.08 0 0">
+                  <joint name="BrittleStarMorphology/arm_4_segment_4_in_plane_joint" stiffness="0.005" range="-0.785398 0.785398" armature="0.2" damping="1" limited="true"/>
+                  <joint name="BrittleStarMorphology/arm_4_segment_4_out_of_plane_joint" stiffness="0.005" range="-0.523599 0.523599" armature="0.2" damping="1" axis="0 -1 0" limited="true"/>
+                  <geom name="BrittleStarMorphology/arm_4_segment_4_capsule" size="0.015 0.0175" pos="0.0325 0 0" quat="0.707107 0 0.707107 0" type="capsule" conaffinity="0" condim="4" rgba="0.490196 0.709804 0.658824 1" density="1530"/>
+                  <geom name="BrittleStarMorphology/arm_4_segment_4_connector" size="0.0075" contype="0" conaffinity="0" condim="4" rgba="0.34902 0.34902 0.34902 1" mass="0"/>
+                  <site name="BrittleStarMorphology/arm_4_segment_4_contact_site" size="0.01515 0.0175" pos="0.0325 0 0" quat="0.707107 0 0.707107 0" type="capsule" group="3" rgba="0.717647 0.337255 0.34902 0.5"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <general name="BrittleStarMorphology/arm_0_segment_0_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_0_segment_0_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-5 5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_0_segment_0_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_0_segment_0_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-5 5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_0_segment_1_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_0_segment_1_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-4.5 4.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_0_segment_1_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_0_segment_1_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-4.5 4.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_0_segment_2_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_0_segment_2_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-4 4" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_0_segment_2_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_0_segment_2_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-4 4" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_0_segment_3_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_0_segment_3_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-3.5 3.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_0_segment_3_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_0_segment_3_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-3.5 3.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_0_segment_4_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_0_segment_4_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-3 3" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_0_segment_4_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_0_segment_4_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-3 3" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_1_segment_0_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_1_segment_0_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-5 5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_1_segment_0_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_1_segment_0_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-5 5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_1_segment_1_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_1_segment_1_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-4.5 4.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_1_segment_1_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_1_segment_1_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-4.5 4.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_1_segment_2_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_1_segment_2_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-4 4" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_1_segment_2_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_1_segment_2_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-4 4" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_1_segment_3_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_1_segment_3_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-3.5 3.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_1_segment_3_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_1_segment_3_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-3.5 3.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_1_segment_4_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_1_segment_4_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-3 3" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_1_segment_4_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_1_segment_4_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-3 3" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_2_segment_0_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_2_segment_0_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-5 5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_2_segment_0_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_2_segment_0_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-5 5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_2_segment_1_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_2_segment_1_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-4.5 4.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_2_segment_1_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_2_segment_1_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-4.5 4.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_2_segment_2_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_2_segment_2_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-4 4" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_2_segment_2_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_2_segment_2_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-4 4" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_2_segment_3_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_2_segment_3_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-3.5 3.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_2_segment_3_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_2_segment_3_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-3.5 3.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_2_segment_4_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_2_segment_4_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-3 3" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_2_segment_4_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_2_segment_4_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-3 3" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_3_segment_0_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_3_segment_0_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-5 5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_3_segment_0_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_3_segment_0_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-5 5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_3_segment_1_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_3_segment_1_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-4.5 4.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_3_segment_1_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_3_segment_1_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-4.5 4.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_3_segment_2_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_3_segment_2_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-4 4" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_3_segment_2_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_3_segment_2_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-4 4" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_3_segment_3_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_3_segment_3_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-3.5 3.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_3_segment_3_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_3_segment_3_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-3.5 3.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_3_segment_4_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_3_segment_4_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-3 3" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_3_segment_4_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_3_segment_4_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-3 3" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_4_segment_0_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_4_segment_0_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-5 5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_4_segment_0_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_4_segment_0_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-5 5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_4_segment_1_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_4_segment_1_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-4.5 4.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_4_segment_1_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_4_segment_1_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-4.5 4.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_4_segment_2_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_4_segment_2_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-4 4" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_4_segment_2_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_4_segment_2_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-4 4" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_4_segment_3_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_4_segment_3_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-3.5 3.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_4_segment_3_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_4_segment_3_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-3.5 3.5" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_4_segment_4_in_plane_joint_p_control" joint="BrittleStarMorphology/arm_4_segment_4_in_plane_joint" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-3 3" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+    <general name="BrittleStarMorphology/arm_4_segment_4_out_of_plane_joint_p_control" joint="BrittleStarMorphology/arm_4_segment_4_out_of_plane_joint" ctrlrange="-0.523599 0.523599" ctrllimited="true" forcelimited="true" forcerange="-3 3" input="pos" biastype="affine" gainprm="20" biasprm="0 -20"/>
+  </actuator>
+
+  <sensor>
+    <framepos objtype="xbody" objname="BrittleStarMorphology/central_disk" name="BrittleStarMorphology/central_disk_framepos_sensor"/>
+    <framequat objtype="xbody" objname="BrittleStarMorphology/central_disk" name="BrittleStarMorphology/central_disk_framequat_sensor"/>
+    <framelinvel objtype="xbody" objname="BrittleStarMorphology/central_disk" name="BrittleStarMorphology/central_disk_framelinvel_sensor"/>
+    <frameangvel objtype="xbody" objname="BrittleStarMorphology/central_disk" name="BrittleStarMorphology/central_disk_frameangvel_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_0_segment_0_capsule" name="BrittleStarMorphology/arm_0_segment_0_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_0_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_0_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_0_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_0_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_0_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_0_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_0_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_0_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_0_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_0_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_0_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_0_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_0_segment_0_in_plane_joint_p_control" name="BrittleStarMorphology/arm_0_segment_0_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_0_segment_0_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_0_segment_0_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_0_segment_0_contact_site" name="BrittleStarMorphology/arm_0_segment_0_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_0_segment_1_capsule" name="BrittleStarMorphology/arm_0_segment_1_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_0_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_1_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_0_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_1_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_0_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_1_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_0_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_1_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_0_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_1_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_0_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_1_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_0_segment_1_in_plane_joint_p_control" name="BrittleStarMorphology/arm_0_segment_1_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_0_segment_1_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_0_segment_1_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_0_segment_1_contact_site" name="BrittleStarMorphology/arm_0_segment_1_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_0_segment_2_capsule" name="BrittleStarMorphology/arm_0_segment_2_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_0_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_2_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_0_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_2_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_0_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_2_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_0_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_2_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_0_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_2_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_0_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_2_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_0_segment_2_in_plane_joint_p_control" name="BrittleStarMorphology/arm_0_segment_2_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_0_segment_2_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_0_segment_2_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_0_segment_2_contact_site" name="BrittleStarMorphology/arm_0_segment_2_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_0_segment_3_capsule" name="BrittleStarMorphology/arm_0_segment_3_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_0_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_3_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_0_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_3_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_0_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_3_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_0_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_3_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_0_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_3_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_0_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_3_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_0_segment_3_in_plane_joint_p_control" name="BrittleStarMorphology/arm_0_segment_3_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_0_segment_3_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_0_segment_3_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_0_segment_3_contact_site" name="BrittleStarMorphology/arm_0_segment_3_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_0_segment_4_capsule" name="BrittleStarMorphology/arm_0_segment_4_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_0_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_4_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_0_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_4_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_0_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_0_segment_4_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_0_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_4_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_0_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_4_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_0_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_0_segment_4_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_0_segment_4_in_plane_joint_p_control" name="BrittleStarMorphology/arm_0_segment_4_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_0_segment_4_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_0_segment_4_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_0_segment_4_contact_site" name="BrittleStarMorphology/arm_0_segment_4_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_1_segment_0_capsule" name="BrittleStarMorphology/arm_1_segment_0_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_1_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_0_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_1_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_0_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_1_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_0_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_1_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_0_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_1_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_0_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_1_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_0_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_1_segment_0_in_plane_joint_p_control" name="BrittleStarMorphology/arm_1_segment_0_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_1_segment_0_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_1_segment_0_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_1_segment_0_contact_site" name="BrittleStarMorphology/arm_1_segment_0_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_1_segment_1_capsule" name="BrittleStarMorphology/arm_1_segment_1_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_1_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_1_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_1_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_1_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_1_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_1_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_1_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_1_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_1_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_1_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_1_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_1_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_1_segment_1_in_plane_joint_p_control" name="BrittleStarMorphology/arm_1_segment_1_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_1_segment_1_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_1_segment_1_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_1_segment_1_contact_site" name="BrittleStarMorphology/arm_1_segment_1_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_1_segment_2_capsule" name="BrittleStarMorphology/arm_1_segment_2_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_1_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_2_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_1_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_2_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_1_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_2_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_1_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_2_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_1_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_2_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_1_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_2_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_1_segment_2_in_plane_joint_p_control" name="BrittleStarMorphology/arm_1_segment_2_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_1_segment_2_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_1_segment_2_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_1_segment_2_contact_site" name="BrittleStarMorphology/arm_1_segment_2_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_1_segment_3_capsule" name="BrittleStarMorphology/arm_1_segment_3_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_1_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_3_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_1_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_3_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_1_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_3_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_1_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_3_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_1_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_3_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_1_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_3_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_1_segment_3_in_plane_joint_p_control" name="BrittleStarMorphology/arm_1_segment_3_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_1_segment_3_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_1_segment_3_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_1_segment_3_contact_site" name="BrittleStarMorphology/arm_1_segment_3_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_1_segment_4_capsule" name="BrittleStarMorphology/arm_1_segment_4_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_1_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_4_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_1_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_4_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_1_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_1_segment_4_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_1_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_4_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_1_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_4_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_1_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_1_segment_4_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_1_segment_4_in_plane_joint_p_control" name="BrittleStarMorphology/arm_1_segment_4_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_1_segment_4_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_1_segment_4_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_1_segment_4_contact_site" name="BrittleStarMorphology/arm_1_segment_4_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_2_segment_0_capsule" name="BrittleStarMorphology/arm_2_segment_0_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_2_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_0_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_2_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_0_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_2_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_0_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_2_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_0_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_2_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_0_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_2_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_0_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_2_segment_0_in_plane_joint_p_control" name="BrittleStarMorphology/arm_2_segment_0_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_2_segment_0_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_2_segment_0_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_2_segment_0_contact_site" name="BrittleStarMorphology/arm_2_segment_0_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_2_segment_1_capsule" name="BrittleStarMorphology/arm_2_segment_1_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_2_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_1_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_2_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_1_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_2_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_1_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_2_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_1_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_2_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_1_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_2_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_1_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_2_segment_1_in_plane_joint_p_control" name="BrittleStarMorphology/arm_2_segment_1_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_2_segment_1_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_2_segment_1_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_2_segment_1_contact_site" name="BrittleStarMorphology/arm_2_segment_1_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_2_segment_2_capsule" name="BrittleStarMorphology/arm_2_segment_2_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_2_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_2_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_2_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_2_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_2_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_2_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_2_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_2_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_2_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_2_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_2_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_2_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_2_segment_2_in_plane_joint_p_control" name="BrittleStarMorphology/arm_2_segment_2_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_2_segment_2_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_2_segment_2_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_2_segment_2_contact_site" name="BrittleStarMorphology/arm_2_segment_2_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_2_segment_3_capsule" name="BrittleStarMorphology/arm_2_segment_3_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_2_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_3_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_2_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_3_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_2_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_3_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_2_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_3_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_2_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_3_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_2_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_3_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_2_segment_3_in_plane_joint_p_control" name="BrittleStarMorphology/arm_2_segment_3_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_2_segment_3_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_2_segment_3_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_2_segment_3_contact_site" name="BrittleStarMorphology/arm_2_segment_3_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_2_segment_4_capsule" name="BrittleStarMorphology/arm_2_segment_4_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_2_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_4_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_2_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_4_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_2_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_2_segment_4_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_2_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_4_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_2_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_4_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_2_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_2_segment_4_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_2_segment_4_in_plane_joint_p_control" name="BrittleStarMorphology/arm_2_segment_4_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_2_segment_4_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_2_segment_4_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_2_segment_4_contact_site" name="BrittleStarMorphology/arm_2_segment_4_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_3_segment_0_capsule" name="BrittleStarMorphology/arm_3_segment_0_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_3_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_0_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_3_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_0_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_3_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_0_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_3_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_0_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_3_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_0_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_3_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_0_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_3_segment_0_in_plane_joint_p_control" name="BrittleStarMorphology/arm_3_segment_0_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_3_segment_0_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_3_segment_0_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_3_segment_0_contact_site" name="BrittleStarMorphology/arm_3_segment_0_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_3_segment_1_capsule" name="BrittleStarMorphology/arm_3_segment_1_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_3_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_1_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_3_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_1_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_3_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_1_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_3_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_1_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_3_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_1_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_3_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_1_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_3_segment_1_in_plane_joint_p_control" name="BrittleStarMorphology/arm_3_segment_1_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_3_segment_1_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_3_segment_1_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_3_segment_1_contact_site" name="BrittleStarMorphology/arm_3_segment_1_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_3_segment_2_capsule" name="BrittleStarMorphology/arm_3_segment_2_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_3_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_2_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_3_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_2_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_3_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_2_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_3_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_2_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_3_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_2_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_3_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_2_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_3_segment_2_in_plane_joint_p_control" name="BrittleStarMorphology/arm_3_segment_2_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_3_segment_2_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_3_segment_2_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_3_segment_2_contact_site" name="BrittleStarMorphology/arm_3_segment_2_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_3_segment_3_capsule" name="BrittleStarMorphology/arm_3_segment_3_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_3_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_3_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_3_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_3_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_3_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_3_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_3_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_3_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_3_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_3_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_3_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_3_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_3_segment_3_in_plane_joint_p_control" name="BrittleStarMorphology/arm_3_segment_3_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_3_segment_3_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_3_segment_3_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_3_segment_3_contact_site" name="BrittleStarMorphology/arm_3_segment_3_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_3_segment_4_capsule" name="BrittleStarMorphology/arm_3_segment_4_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_3_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_4_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_3_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_4_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_3_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_3_segment_4_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_3_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_4_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_3_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_4_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_3_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_3_segment_4_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_3_segment_4_in_plane_joint_p_control" name="BrittleStarMorphology/arm_3_segment_4_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_3_segment_4_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_3_segment_4_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_3_segment_4_contact_site" name="BrittleStarMorphology/arm_3_segment_4_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_4_segment_0_capsule" name="BrittleStarMorphology/arm_4_segment_0_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_4_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_0_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_4_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_0_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_4_segment_0_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_0_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_4_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_0_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_4_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_0_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_4_segment_0_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_0_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_4_segment_0_in_plane_joint_p_control" name="BrittleStarMorphology/arm_4_segment_0_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_4_segment_0_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_4_segment_0_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_4_segment_0_contact_site" name="BrittleStarMorphology/arm_4_segment_0_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_4_segment_1_capsule" name="BrittleStarMorphology/arm_4_segment_1_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_4_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_1_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_4_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_1_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_4_segment_1_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_1_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_4_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_1_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_4_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_1_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_4_segment_1_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_1_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_4_segment_1_in_plane_joint_p_control" name="BrittleStarMorphology/arm_4_segment_1_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_4_segment_1_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_4_segment_1_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_4_segment_1_contact_site" name="BrittleStarMorphology/arm_4_segment_1_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_4_segment_2_capsule" name="BrittleStarMorphology/arm_4_segment_2_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_4_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_2_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_4_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_2_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_4_segment_2_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_2_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_4_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_2_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_4_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_2_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_4_segment_2_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_2_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_4_segment_2_in_plane_joint_p_control" name="BrittleStarMorphology/arm_4_segment_2_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_4_segment_2_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_4_segment_2_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_4_segment_2_contact_site" name="BrittleStarMorphology/arm_4_segment_2_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_4_segment_3_capsule" name="BrittleStarMorphology/arm_4_segment_3_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_4_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_3_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_4_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_3_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_4_segment_3_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_3_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_4_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_3_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_4_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_3_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_4_segment_3_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_3_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_4_segment_3_in_plane_joint_p_control" name="BrittleStarMorphology/arm_4_segment_3_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_4_segment_3_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_4_segment_3_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_4_segment_3_contact_site" name="BrittleStarMorphology/arm_4_segment_3_contact_site_contact_sensor"/>
+    <framepos objtype="geom" objname="BrittleStarMorphology/arm_4_segment_4_capsule" name="BrittleStarMorphology/arm_4_segment_4_position_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_4_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_4_in_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_4_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_4_in_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_4_segment_4_in_plane_joint" name="BrittleStarMorphology/arm_4_segment_4_in_plane_joint_actuatorfrc_sensor"/>
+    <jointpos joint="BrittleStarMorphology/arm_4_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_4_out_of_plane_joint_jointpos_sensor"/>
+    <jointvel joint="BrittleStarMorphology/arm_4_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_4_out_of_plane_joint_jointvel_sensor"/>
+    <jointactuatorfrc joint="BrittleStarMorphology/arm_4_segment_4_out_of_plane_joint" name="BrittleStarMorphology/arm_4_segment_4_out_of_plane_joint_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_4_segment_4_in_plane_joint_p_control" name="BrittleStarMorphology/arm_4_segment_4_in_plane_joint_p_control_actuatorfrc_sensor"/>
+
+    <actuatorfrc actuator="BrittleStarMorphology/arm_4_segment_4_out_of_plane_joint_p_control" name="BrittleStarMorphology/arm_4_segment_4_out_of_plane_joint_p_control_actuatorfrc_sensor"/>
+    <touch site="BrittleStarMorphology/arm_4_segment_4_contact_site" name="BrittleStarMorphology/arm_4_segment_4_contact_site_contact_sensor"/>
+  </sensor>
+
+  <custom>
+    <numeric name="brt_control_timestep" size="1" data="0.02"/>
+  </custom>
+</mujoco>

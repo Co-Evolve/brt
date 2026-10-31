@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Brittle Star Demo</title>
+    <meta name="description" content="Interactive MuJoCo simulation of the BRT brittle star, running in your browser." />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="modulepreload" href="js/viewer.js" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/",
+          "@mujoco/mujoco": "https://cdn.jsdelivr.net/npm/@mujoco/mujoco@3.17.0/mujoco.js"
+        }
+      }
+    </script>
+    <script type="module" src="js/viewer.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="./">BRT <span>Bio-Inspired Robotics Testbed</span></a>
+        <nav class="site-nav" aria-label="Main">
+          <a href="./#environments">Environments</a>
+          <a href="brittle-star.html" aria-current="page">Brittle star</a>
+          <a href="jumping-spider.html">Jumping spider</a>
+          <a href="https://github.com/Co-Evolve/brt">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero container" aria-labelledby="title">
+        <h1 id="title">Brittle star</h1>
+        <p class="lead">
+          Brittle stars (Ophiuroidea) crawl by coordinating five or more segmented arms, with no fixed front and a
+          decentralised nervous system. In BRT every arm segment has an in-plane and an out-of-plane joint, and the
+          number of arms and segments, their sizes and actuation are set in the morphology specification.
+        </p>
+        <div
+          data-mujoco-viewer
+          data-model="models/brittle_star.xml"
+          data-controller="js/controllers/brittle_star.js"
+          data-camera="0.9,-1.1,0.8" data-loop="20"
+        ></div>
+        <p class="viewer-hint">
+          Drag to orbit, right-drag or shift-drag to pan, scroll to zoom. Physics runs in your browser with the official
+          MuJoCo WebAssembly build.
+        </p>
+      </section>
+
+      <section class="container" aria-labelledby="about">
+        <div class="grid">
+          <article class="card">
+            <h2 id="about">What you are seeing</h2>
+            <p>
+          The default five-armed brittle star in the <code>brittle_star/undirected_locomotion</code> aquarium, rowing
+          with an open-loop gait: every segment traces an oval, the strokes are mirrored across arm 0, and a phase lag
+          along each arm makes a travelling wave. The disk moves about 2&nbsp;m in 10&nbsp;s, and the simulation
+          restarts every 20&nbsp;seconds. The controller is a fixed pattern, not a trained policy.
+            </p>
+          </article>
+          <article class="card">
+            <h2>Tasks</h2>
+            <ul>
+            <li><code>brittle_star/undirected_locomotion</code>: move away from the start as far as possible, in any direction.</li>
+            <li><code>brittle_star/directed_locomotion</code>: reach a target position on the floor.</li>
+            <li><code>brittle_star/light_escape</code>: move from light into shade, sensed by the arm segments.</li>
+            </ul>
+            <p>
+              Read the <a href="https://github.com/Co-Evolve/brt/tree/main/biorobot/brittle_star">brittle star README</a>
+              for the biology, the morphology specification and the observation and action spaces.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>Bio-Inspired Robotics Testbed &middot; MIT License</span>
+        <a href="https://github.com/Co-Evolve/brt">github.com/Co-Evolve/brt</a>
+      </div>
+    </footer>
+  </body>
+</html>

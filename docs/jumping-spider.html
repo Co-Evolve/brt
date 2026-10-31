@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jumping Spider Demo</title>
+    <meta name="description" content="Interactive MuJoCo simulation of the BRT jumping spider, running in your browser." />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="modulepreload" href="js/viewer.js" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/",
+          "@mujoco/mujoco": "https://cdn.jsdelivr.net/npm/@mujoco/mujoco@3.17.0/mujoco.js"
+        }
+      }
+    </script>
+    <script type="module" src="js/viewer.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="./">BRT <span>Bio-Inspired Robotics Testbed</span></a>
+        <nav class="site-nav" aria-label="Main">
+          <a href="./#environments">Environments</a>
+          <a href="brittle-star.html">Brittle star</a>
+          <a href="jumping-spider.html" aria-current="page">Jumping spider</a>
+          <a href="https://github.com/Co-Evolve/brt">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero container" aria-labelledby="title">
+        <h1 id="title">Jumping spider</h1>
+        <p class="lead">
+          Jumping spiders (Salticidae) leap several body lengths with remarkable accuracy, powered by fast leg extension
+          and steadied by a silk dragline. In BRT the spider has a cephalothorax, an abdomen and eight legs with seven
+          segments each; body and leg dimensions, joint ranges and the optional dragline are set in the morphology
+          specification.
+        </p>
+        <div
+          data-mujoco-viewer
+          data-model="models/jumping_spider.xml"
+          data-controller="js/controllers/jumping_spider.js"
+          data-target="0.25,0,0.08" data-camera="0.1,-0.9,0.22" data-loop="2"
+        ></div>
+        <p class="viewer-hint">
+          Drag to orbit, right-drag or shift-drag to pan, scroll to zoom. Physics runs in your browser with the official
+          MuJoCo WebAssembly build.
+        </p>
+      </section>
+
+      <section class="container" aria-labelledby="about">
+        <div class="grid">
+          <article class="card">
+            <h2 id="about">What you are seeing</h2>
+            <p>
+          The default spider (1:10 scale) on the <code>jumping_spider/long_jump</code> track, running the open-loop
+          jump from <code>examples/scripted_jump.py</code>: it crouches with its abdomen and front legs raised, pushes off
+          with legs III and IV, flies for about 0.4&nbsp;s with an apex of 0.23&nbsp;m, and lands upright about
+          0.47&nbsp;m (3.6 body lengths) further. The simulation restarts every two seconds. The controller is a fixed
+          script, not a trained policy.
+            </p>
+          </article>
+          <article class="card">
+            <h2>Tasks</h2>
+            <ul>
+            <li><code>jumping_spider/long_jump</code>: jump as far as possible along a track.</li>
+            <li><code>jumping_spider/directed_jump</code>: jump towards a target at a random distance and elevation.</li>
+            <li><code>jumping_spider/platform_jump</code>: jump across a gap of random width onto the end platform.</li>
+            </ul>
+            <p>
+              Read the <a href="https://github.com/Co-Evolve/brt/tree/main/biorobot/jumping_spider">jumping spider README</a>
+              for the biology, the morphology specification and the observation and action spaces.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>Bio-Inspired Robotics Testbed &middot; MIT License</span>
+        <a href="https://github.com/Co-Evolve/brt">github.com/Co-Evolve/brt</a>
+      </div>
+    </footer>
+  </body>
+</html>
