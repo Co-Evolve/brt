@@ -2,18 +2,18 @@ name: Lint
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  lint:
+  black:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Format code with Black
-        uses: psf/black@stable
+      - uses: actions/checkout@v7
+      # Keep this version equal to the black pin in pyproject.toml's `dev` extra.
+      - uses: psf/black@26.10.1
         with:
-          src: biorobot/
+          version: "26.10.1"
+          options: "--check --diff"
+          src: "biorobot tests scripts"

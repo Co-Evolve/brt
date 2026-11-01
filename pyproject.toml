@@ -1,44 +1,60 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "biorobot"
-version = "0.4.2"
+dynamic = ["version"]
 authors = [
     { name = "Dries Marzougui", email = "dries.marzougui@gmail.com" },
 ]
-description = "The Bio-inspired Robotics Testbed (BRT)."
+description = "The Bio-Inspired Robotics Testbed (BRT): MuJoCo, MJX and MuJoCo Warp simulation environments of animals."
 readme = { file = "README.md", content-type = "text/markdown" }
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["mujoco", "mjx", "jax", "reinforcement-learning", "robotics", "bio-inspired", "biology", "simulation"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Natural Language :: English",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 dependencies = [
-    "chex",
-    "dm-control",
-    "fprs",
-    "gymnasium",
-    "mujoco",
-    "mujoco-mjx",
-    "moojoco",
+    "gymnasium>=1.0",
+    "jax",
+    "mujoco>=3.17",
+    "mujoco-mjx>=3.17",
     "numpy",
     "opencv-python",
-    "pillow",
-    "transforms3d"
 ]
 
+[project.optional-dependencies]
+# MJX's Warp implementation (backend="warp") ships inside mujoco-mjx and needs NVIDIA Warp.
+warp = ["mujoco-mjx[warp]>=3.17"]
+cuda = ["jax[cuda12]"]
+dev = ["pytest", "black==26.10.1"]
+
 [project.urls]
-Homepage = "https://github.com/Co-Evolve/brt"
+Homepage = "https://co-evolve.github.io/brt/"
+Documentation = "https://github.com/Co-Evolve/brt#readme"
 Repository = "https://github.com/Co-Evolve/brt"
+Issues = "https://github.com/Co-Evolve/brt/issues"
+
+[tool.setuptools.dynamic]
+version = { attr = "biorobot.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["biorobot*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

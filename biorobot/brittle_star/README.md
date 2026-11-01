@@ -4,7 +4,7 @@
 > tenth part of a second, but are constantly twisting their long arms, as if they were indeed the serpents with which
 > Medusa’s head was surrounded.” -- J. G. Wood, 1898
 
-The Brittle Star Robot environment within the Bio-Inspired Robotics Benchmark (BRB) presents an intriguing case study,
+The brittle star environment within the Bio-Inspired Robotics Testbed (BRT) presents an intriguing case study,
 embodying the intersection of natural biological systems and robotic engineering. To introduce this environment, it's
 essential to first understand the biological entity that inspired it: the brittle star.
 
@@ -151,90 +151,176 @@ The brittle star presents an intriguing case study for robotics due to several k
 
 ## In-silico brittle star morphology
 
-The in-silico model of the brittle star morphology provides an abstract virtual twin. As discussed above, every
-morphology in the BRB is parameterized via [FPRS](https://github.com/Co-Evolve/fprs) and the brittle star's morphology
-specification can be
-found [here](https://github.com/Co-Evolve/brb/blob/new-framework/brb/brittle_star/mjcf/morphology/specification/specification.py).
-Default parameter values can be
-found [here](https://github.com/Co-Evolve/brb/blob/new-framework/brb/brittle_star/mjcf/morphology/specification/default.py).
-In our case, the most important configuration parameters are the number of arms, and the number of segments that each
-arm has.
+The in-silico brittle star is an abstract virtual twin, built with MuJoCo's `MjSpec` from a plain dataclass
+specification ([`specification.py`](specification.py)). The model itself is built in [`morphology.py`](morphology.py)
+and the aquarium it lives in in [`arena.py`](arena.py). The most important parameters are the number of arms and the
+number of segments per arm:
+
+```python
+from biorobot.brittle_star import BrittleStarMorphology, default_brittle_star_morphology_specification
+
+specification = default_brittle_star_morphology_specification(
+    num_arms=5,                          # at most 5; arms sit at multiples of 72 degrees
+    num_segments_per_arm=[3, 0, 4, 2, 0],  # one int for all arms, or one value per arm (0 removes an arm)
+    use_p_control=False,                 # position servos: actions are target joint angles (rad)
+    use_torque_control=True,             # motors: actions are joint torques (N m)
+    use_tendons=False,                   # four tendons per segment instead of joint motors (torque control only)
+    radius_to_strength_factor=150,       # actuator strength = factor * segment radius
+    num_contact_sensors_per_segment=1,   # 1 touch sensor around the whole capsule, or N around its circumference
+)
+morphology = BrittleStarMorphology(specification)
+morphology.export("brittle_star.xml")    # inspect with `python -m mujoco.viewer`
+```
+
+Every field of the specification (disk radius and density, per-segment radius, length and density, joint range,
+stiffness, damping and armature, ...) can also be edited directly before building the morphology. By default, arms
+taper linearly from a segment radius of 2.5 cm and length of 7.5 cm at the disk to 1.25 cm and 2.5 cm at the tip; the
+disk has a diameter of 25 cm. Densities (1530 kg/m³ for the arms, 1270 kg/m³ for the disk) come from
+[this paper](https://doi.org/10.1088/1748-3190/adbecb).
 
 ![](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/assets/brittle_stars_in_silico.png?raw=true)
 Two example in-silico brittle star morphologies.
 
-Every segment has two degrees of freedom (DoF), one for in-plane motion and one for out-of-plane motion.
+Every segment has two degrees of freedom (DoF), an in-plane joint (±45°) and an out-of-plane joint (±30°). In terms of
+actuation, the specification selects either position control (gain 20) or torque control. With torque control, it can
+also use tendon-based transmission: four tendons per segment, similar to the muscle architecture of the brittle star
+shown above. Tendons can only pull (actions in `[-strength, 0]`, with a gear of 15). Actuator strengths scale with the
+segment radius, so the maximum force of an actuator decreases along the arm.
 
-In terms of actuation, the morphology specification can be used to select either position based control, and torque
-based control.
-The morphology specification can also be used to use tendon-based transmission (but only with torque based control). In
-this case, four tendons will be added, similar to the muscle architecture of the brittle star as shown above.
+Once attached to an arena, all element names are prefixed with `BrittleStarMorphology/` (e.g.
+`BrittleStarMorphology/arm_0_segment_2_in_plane_joint`), and the central disk gets a free joint
+`BrittleStarMorphology/freejoint`. The actuators are ordered arm by arm, from the disk to the tip, with the in-plane
+actuator before the out-of-plane one (or the four tendons of a segment).
 
-In terms of sensing, the following sensors are implemented. These sensors define the base set of observations that every
-brittle star environment returns as observations (further discussed below).
+## The aquarium
 
-- Proprioception
-    - Joint positions (two per segment, in-plane and out-of-plane, in radians)
-    - Joint velocities (two per segment, in-plane and out-of-plane, in radians / second)
-    - Joint actuator force (i.e. the total of all actuator forces acting on a single joint, one per joint, in Newton
-      meters) (two per segment)
-    - Actuator force (the scalar actuator force, one per actuator, in Newtons) (four per segment in case of tendon
-      transmission, otherwise
-      two)
-    - Tendon position (in case tendon transmission is used, four per segment, in meters)
-    - Tendon velocity (in case tendon transmission is used, four per segment, in meters / second)
-    - Central disk's position (w.r.t. world frame)
-    - Central disk's rotation (w.r.t. world frame, in radians)
-    - Central disk's velocity (w.r.t. world frame, in m/s)
-    - Central disk's angular velocity (w.r.t. world frame, in radians/s)
-- Exteroception
-    - Contact (X continuous values per segment, in Newtons) (X is defined in the morphology specification)
+`AquariumArena(AquariumArenaConfiguration(...))` is a walled tank filled with water (density 1000 kg/m³, viscosity
+0.0009 Pa s, which enables MuJoCo's drag and buoyancy model). Its options: `size` (floor half-extents, default
+`(5, 3)` m), `sand_ground_color` (a flat sand-coloured floor that the light escape task paints its light map onto, with
+`light_map_resolution` texels per half-extent, i.e. per 2 m: 25 texels per metre and a 150 × 250 light map by
+default), `attach_target` (a red target sphere of radius 0.2 m, a mocap body so every
+episode can move it), `wall_height` and `wall_thickness`. Camera 0 (`top_camera`) looks down on the whole tank,
+camera 1 (`BrittleStarMorphology/side_camera`) follows the brittle star.
 
-In terms of actuation, the following actuators are implemented (two per segment, one for the in-plane DoF and one for
-the out-of-plane DoF). The brittle star's morphology specification defines which if either position-based or
-torque-based control is used.
-The actuator force limits are scaled by the segment radii. Consequently, the maximum force applied by an actuator
-decreases along the arm.
+## Environments
 
-## Environment variants
+The brittle star comes with three locomotion tasks that form a curriculum of increasing difficulty. Each one is
+registered with `biorobot.make` and runs on three backends:
 
-The brittle star environment comes with three locomotion-orientated tasks that provide a curriculum of increasing
-difficulty:
+- `"mjc"`: MuJoCo (C, CPU, numpy). `state.data` is a `mujoco.MjData`.
+- `"mjx"`: MuJoCo XLA (JAX): `jax.jit` and `jax.vmap` over `reset` and `step` work out of the box.
+- `"warp"`: MJX with the MuJoCo Warp implementation (NVIDIA GPUs).
 
-1. Undirected locomotion (simple): Move the brittle star away as far as possible from its starting position.
-    - Reward per timestep: $distance\\_current\\_timestep - distance\\_previous\\_timestep$. The reward will thus be
-      positive if the distance from its starting position has increased in the current timestep, and negative if this
-      distance has decreased.
+```python
+import jax
+import biorobot
 
-2. Directed locomotion (intermediate): Move the brittle star towards target.
-    - Reward per timestep: $distance\\_previous\\_timestep - distance\\_current\\_timestep$. The reward will thus be
-      positive if the distance to the target has decreased in the current timestep, and negative if this distance has
-      increased.
+env = biorobot.make("brittle_star/directed_locomotion", backend="mjx", simulation_time=10, render_mode="rgb_array")
+state = jax.jit(env.reset)(jax.random.PRNGKey(0), target_position=jax.numpy.array([2.0, 1.0, 0.05]))
+step = jax.jit(env.step)
+while not (state.terminated or state.truncated):
+    state = step(state, jax.numpy.zeros(env.action_space.shape))
+frames = env.render(state)  # top and side camera
+```
+
+To use your own morphology, arena or configuration, build them explicitly:
+
+```python
+from biorobot.brittle_star import (
+    AquariumArena,
+    AquariumArenaConfiguration,
+    LightEscapeEnv,
+    BrittleStarMorphology,
+    LightEscapeEnvConfig,
+    default_brittle_star_morphology_specification,
+)
+
+morphology = BrittleStarMorphology(
+    default_brittle_star_morphology_specification(num_arms=5, num_segments_per_arm=6, use_torque_control=True)
+)
+arena = AquariumArena(AquariumArenaConfiguration(sand_ground_color=True))
+config = LightEscapeEnvConfig(light_perlin_noise_scale=10, simulation_time=20, color_contacts=True)
+env = LightEscapeEnv.from_morphology_and_arena(morphology, arena, config, backend="mjc")
+
+state = env.reset(0)
+state = env.step(state, env.action_space.sample())
+```
+
+`biorobot.make(name, backend=..., morphology_specification=..., arena_configuration=..., config=..., **overrides)`
+does the same, with a 5-armed, 5-segment, position-controlled brittle star (`radius_to_strength_factor=200`) and a
+suitable aquarium by default; extra keyword arguments override config fields. With `"mjc"`,
+`biorobot.core.gym.GymnasiumEnv(env)` turns an environment into a regular `gymnasium.Env`.
+
+### Observations
+
+Every task returns a dictionary with (sizes for a brittle star with S segments in total):
+
+| Name | Size | Description |
+| --- | --- | --- |
+| `joint_position` | 2S | in-plane and out-of-plane joint angles (rad) |
+| `joint_velocity` | 2S | joint velocities (rad/s) |
+| `joint_actuator_force` | 2S | total actuator torque on each joint (N m) |
+| `actuator_force` | 2S or 4S | scalar force of each actuator (4 per segment with tendons) |
+| `disk_position` | 3 | position of the central disk in the world (m) |
+| `disk_rotation` | 3 | extrinsic xyz Euler angles of the central disk (rad) |
+| `disk_linear_velocity` | 3 | linear velocity of the central disk (m/s) |
+| `disk_angular_velocity` | 3 | angular velocity of the central disk (rad/s) |
+| `tendon_position` | 0 or 4S | tendon lengths (m), with tendon transmission only |
+| `tendon_velocity` | 0 or 4S | tendon length velocities (m/s), with tendon transmission only |
+| `segment_contact` | N·S | touch sensor values (N), N = `num_contact_sensors_per_segment` |
+
+### Tasks
+
+1. **Undirected locomotion** (`brittle_star/undirected_locomotion`, simple): move as far away from the origin as
+   possible.
+    - Reward per step: $d_{t} - d_{t-1}$, with $d$ the xy distance between the central disk and the origin.
+    - Info: `time`, `xy_distance_from_origin`.
+2. **Directed locomotion** (`brittle_star/directed_locomotion`, intermediate): move towards a target.
+    - Reward per step: $d_{t-1} - d_{t}$, with $d$ the xy distance between the central disk and the target. The
+      episode terminates when the disk is within the target's radius (0.2 m).
     - Requires an aquarium with `attach_target=True`.
-    - Target position can be specified using the `target_position` argument of
-      the `reset` function.
-      If no target position is given, a target will be spawned randomly on a circle with a radius given by the
-      `target_distance` argument of
-      the [BrittleStarDirectedLocomotionEnvironmentConfiguration](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/environment/directed_locomotion/shared.py).
-    - Additional observations:
-        - Unit direction on the horizontal XY plane from the central disk to the target.
-        - The distance in XY plane from the central disk to the target.
-3. Light escape (hard): Move the brittle star towards darker spots in the environment.
-    - Reward per timestep: $light\\_income\\_previous\\_timestep - light\\_income\\_current\\_timestep$. The reward will
-      thus
-      be positive if the measured light income has decreased in the current timestep, and negative if the light income
-      has increased. The light income at a given timestep is calculated as a weighted average over all body geoms (
-      weight scales with the surface area of the geom).
+    - Pass `target_position` (xyz) to `reset` to place the target. Without it (or with NaNs, which allows mixing
+      both within a vmapped batch), the target is placed at a random angle at `target_distance` (default 3 m) from the
+      origin, 5 cm above the floor.
+    - Extra observations: `unit_xy_direction_to_target` (2) and `xy_distance_to_target` (1, m).
+    - Info: `time`, `xy_target_position`.
+3. **Light escape** (`brittle_star/light_escape`, hard): move into the dark. The light decreases linearly from bright
+   (x = -5 m) to dark (x = +5 m); `light_perlin_noise_scale > 0` adds Perlin noise with that many periods along each
+   axis (it must divide the light map size, 150 x 250 for the default arena; the starting zone stays noise free). The
+   brittle star starts at x = -3.75 m.
+    - Reward per step: $L_{t-1} - L_{t}$, with $L$ the body light income: the mean light at the disk and at every
+      segment (bilinearly interpolated from the light map), weighted by their (projected) surface areas.
     - Requires an aquarium with `sand_ground_color=True`.
-    - Additional observations:
-        - The amount of light each segment takes in.
-        - The amount of light the disk takes in.
+    - Extra observations: `segment_light_intake` (S) and `disk_light_intake` (1), both in [0, 1].
+    - Info: `time`, `x_distance_travelled` (m) and `_light_map` (each episode has its own map, which is painted on
+      the floor when rendering).
 
-All brittle star environments support visualising segment contacts (i.e., coloring a segment's capsule red upon contact)
-via the `color_contacts` argument of the environment configuration.
-Furthermore, all brittle star environment configurations accept an additional argument `random_initial_rotation`. This
-randomly rotates the brittle star around its z-axis upon environment resets.
+### Configuration
+
+Besides the generic `EnvConfig` fields (`simulation_time`, `num_physics_steps_per_control_step`, `physics_timestep`,
+`render_mode`, `render_size`, `camera_ids`, ...), every brittle star configuration has:
+
+- `joint_randomization_noise_scale` (default 0): initial segment joint angles (rad) and velocities (rad/s) are sampled
+  uniformly from `[-scale, scale]`.
+- `random_initial_rotation` (default `False`): randomly rotate the brittle star around the z-axis on reset.
+- `color_contacts` (default `False`): colour segments that touch something red when rendering.
+- `solver_iterations=1`, `solver_ls_iterations=5`, `disable_eulerdamp=True`: fast solver settings that the tasks were
+  tuned with (raise the iterations for more accurate contacts).
+
+`DirectedLocomotionEnvConfig` adds `target_distance` and `LightEscapeEnvConfig` adds `light_perlin_noise_scale`.
 
 ![](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/assets/brittle_star_environments.png?raw=true)
-From left to right: the undirected locomotion, the targeted locomotion (target is the red sphere), and the light
+From left to right: the undirected locomotion, the directed locomotion (target is the red sphere), and the light
 escape (with light noise) environments.
+
+### Examples
+
+```shell
+python -m biorobot.brittle_star.examples.undirected_locomotion --backend mjc --render human
+python -m biorobot.brittle_star.examples.directed_locomotion --backend mjx --render human
+python -m biorobot.brittle_star.examples.light_escape --backend mjc --render human
+python -m biorobot.brittle_star.examples.rowing --backend mjc --render human        # open-loop two-armed rowing
+python -m biorobot.brittle_star.examples.vectorized --backend mjx --render human    # vmapped light escape
+```
+
+Every example accepts `--render none` and `--num-steps N` to run headless.

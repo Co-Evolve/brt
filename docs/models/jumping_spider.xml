@@ -1,0 +1,846 @@
+<mujoco model="LongJumpArena">
+  <compiler angle="radian"/>
+
+  <option timestep="0.001"/>
+
+  <size njmax="563" nconmax="116"/>
+
+  <visual>
+    <headlight ambient="0.4 0.4 0.4" diffuse="0.8 0.8 0.8" specular="0.1 0.1 0.1"/>
+  </visual>
+
+  <default>
+    <geom contype="0"/>
+    <default class="JumpingSpiderMorphology/main">
+      <geom contype="1" conaffinity="0"/>
+    </default>
+  </default>
+
+  <asset>
+    <texture type="skybox" colorspace="auto" name="sky" builtin="flat" rgb1="1 1 1" rgb2="1 1 1" width="64" height="384"/>
+    <texture type="2d" colorspace="auto" name="track" builtin="checker" mark="edge" rgb1="0.72 0.34 0.35" rgb2="0.612 0.289 0.2975" markrgb="1 1 1" width="64" height="64"/>
+    <material name="track" texture="track" texrepeat="10 10" texuniform="true" reflectance="0.1"/>
+  </asset>
+
+  <worldbody>
+    <geom name="track" size="1 0.2 0.05" pos="0.8 0 0" type="plane" material="track"/>
+    <site name="dragline_anchor" size="0.003" pos="-0.15 0 0" rgba="0.72 0.34 0.35 1"/>
+    <camera name="top_camera" pos="0.4 0 1.2"/>
+    <camera name="side_camera" quat="0.802293 0.596931 0 0" pos="0.4 -1.2 0.4"/>
+    <light castshadow="false" pos="0 0 2" diffuse="0.3 0.3 0.3" type="directional"/>
+    <body name="JumpingSpiderMorphology/cephalothorax" pos="0 0 0.0382549">
+      <joint name="JumpingSpiderMorphology/freejoint" type="free"/>
+      <geom name="JumpingSpiderMorphology/cephalothorax" size="0.03 0.03 0.025" type="ellipsoid" conaffinity="0" rgba="0.33 0.3 0.27 1"/>
+      <geom name="JumpingSpiderMorphology/cephalothorax_collision" size="0.025 0.005" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" group="3" friction="0.5" rgba="0.33 0.3 0.27 1" density="0"/>
+      <camera name="JumpingSpiderMorphology/side_camera" quat="0.831192 0.555986 0 0" pos="0 -0.6 0.25" mode="track"/>
+      <body name="JumpingSpiderMorphology/abdomen" pos="-0.03 0 0">
+        <joint name="JumpingSpiderMorphology/abdomen_in_plane" stiffness="0.005" range="-0.785398 0.785398" armature="2e-05" damping="0.002" limited="true"/>
+        <joint name="JumpingSpiderMorphology/abdomen_out_of_plane" stiffness="0.005" range="-0.785398 0.785398" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+        <geom name="JumpingSpiderMorphology/abdomen" size="0.04 0.033 0.028" pos="-0.032 0 0" type="ellipsoid" conaffinity="0" rgba="0.33 0.3 0.27 1"/>
+        <geom name="JumpingSpiderMorphology/abdomen_collision" size="0.028 0.012" pos="-0.032 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" group="3" friction="0.5" rgba="0.33 0.3 0.27 1" density="0"/>
+        <site name="JumpingSpiderMorphology/spinneret" size="0.002" pos="-0.066641 0 -0.014" rgba="0.72 0.34 0.35 1"/>
+      </body>
+      <body name="JumpingSpiderMorphology/leg_L1" pos="0.0199024 0.0114907 -0.0160697" quat="0.965926 0 0 0.258819">
+        <body name="JumpingSpiderMorphology/leg_L1_coxa" quat="0.983255 0 -0.182236 0">
+          <joint name="JumpingSpiderMorphology/leg_L1_coxa_in_plane" stiffness="0.005" range="-0.305433 0.305433" armature="2e-05" damping="0.002" limited="true"/>
+          <joint name="JumpingSpiderMorphology/leg_L1_coxa_out_of_plane" stiffness="0.005" range="-0.226893 0.680678" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+          <geom name="JumpingSpiderMorphology/leg_L1_coxa" size="0.00585 0.0058" pos="0.0058 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+          <body name="JumpingSpiderMorphology/leg_L1_trochanter" pos="0.0116 0 0">
+            <joint name="JumpingSpiderMorphology/leg_L1_trochanter_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" limited="true"/>
+            <joint name="JumpingSpiderMorphology/leg_L1_trochanter_out_of_plane" stiffness="0.005" range="0 1.0472" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+            <geom name="JumpingSpiderMorphology/leg_L1_trochanter" size="0.00415 0.0034" pos="0.0034 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+            <body name="JumpingSpiderMorphology/leg_L1_femur" pos="0.0068 0 0" quat="0.995396 0 -0.0958458 0">
+              <joint name="JumpingSpiderMorphology/leg_L1_femur_out_of_plane" stiffness="0.005" range="-0.802851 0.977384" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+              <geom name="JumpingSpiderMorphology/leg_L1_femur" size="0.00513 0.0123" pos="0.0123 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+              <body name="JumpingSpiderMorphology/leg_L1_patella" pos="0.0246 0 0" quat="0.939693 0 0.34202 0">
+                <joint name="JumpingSpiderMorphology/leg_L1_patella_out_of_plane" stiffness="0.005" range="-0.698132 1.8675" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                <geom name="JumpingSpiderMorphology/leg_L1_patella" size="0.00425 0.00635" pos="0.00635 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                <body name="JumpingSpiderMorphology/leg_L1_tibia" pos="0.0127 0 0" quat="0.882948 0 0.469472 0">
+                  <joint name="JumpingSpiderMorphology/leg_L1_tibia_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" limited="true"/>
+                  <joint name="JumpingSpiderMorphology/leg_L1_tibia_out_of_plane" stiffness="0.005" range="-0.349066 0" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                  <geom name="JumpingSpiderMorphology/leg_L1_tibia" size="0.0047 0.0088" pos="0.0088 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                  <body name="JumpingSpiderMorphology/leg_L1_metatarsus" pos="0.0176 0 0" quat="0.979925 0 0.199368 0">
+                    <joint name="JumpingSpiderMorphology/leg_L1_metatarsus_in_plane" stiffness="0.005" range="-0.1309 0.1309" armature="2e-05" damping="0.002" limited="true"/>
+                    <joint name="JumpingSpiderMorphology/leg_L1_metatarsus_out_of_plane" stiffness="0.005" range="-1.67552 0.471239" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                    <geom name="JumpingSpiderMorphology/leg_L1_metatarsus" size="0.00275 0.00715" pos="0.00715 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                    <body name="JumpingSpiderMorphology/leg_L1_tarsus" pos="0.0143 0 0" quat="0.894934 0 -0.446198 0">
+                      <joint name="JumpingSpiderMorphology/leg_L1_tarsus_in_plane" stiffness="0.005" range="-0.567232 0.567232" armature="2e-05" damping="0.002" limited="true"/>
+                      <joint name="JumpingSpiderMorphology/leg_L1_tarsus_out_of_plane" stiffness="0.005" range="-0.541052 1.58825" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                      <geom name="JumpingSpiderMorphology/leg_L1_tarsus" size="0.00285 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                      <site name="JumpingSpiderMorphology/leg_L1_tarsus_touch" size="0.00342 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0 0 0 0"/>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="JumpingSpiderMorphology/leg_R1" pos="0.0199024 -0.0114907 -0.0160697" quat="0.965926 0 0 -0.258819">
+        <body name="JumpingSpiderMorphology/leg_R1_coxa" quat="0.983255 0 -0.182236 0">
+          <joint name="JumpingSpiderMorphology/leg_R1_coxa_in_plane" stiffness="0.005" range="-0.305433 0.305433" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+          <joint name="JumpingSpiderMorphology/leg_R1_coxa_out_of_plane" stiffness="0.005" range="-0.226893 0.680678" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+          <geom name="JumpingSpiderMorphology/leg_R1_coxa" size="0.00585 0.0058" pos="0.0058 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+          <body name="JumpingSpiderMorphology/leg_R1_trochanter" pos="0.0116 0 0">
+            <joint name="JumpingSpiderMorphology/leg_R1_trochanter_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+            <joint name="JumpingSpiderMorphology/leg_R1_trochanter_out_of_plane" stiffness="0.005" range="0 1.0472" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+            <geom name="JumpingSpiderMorphology/leg_R1_trochanter" size="0.00415 0.0034" pos="0.0034 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+            <body name="JumpingSpiderMorphology/leg_R1_femur" pos="0.0068 0 0" quat="0.995396 0 -0.0958458 0">
+              <joint name="JumpingSpiderMorphology/leg_R1_femur_out_of_plane" stiffness="0.005" range="-0.802851 0.977384" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+              <geom name="JumpingSpiderMorphology/leg_R1_femur" size="0.00513 0.0123" pos="0.0123 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+              <body name="JumpingSpiderMorphology/leg_R1_patella" pos="0.0246 0 0" quat="0.939693 0 0.34202 0">
+                <joint name="JumpingSpiderMorphology/leg_R1_patella_out_of_plane" stiffness="0.005" range="-0.698132 1.8675" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                <geom name="JumpingSpiderMorphology/leg_R1_patella" size="0.00425 0.00635" pos="0.00635 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                <body name="JumpingSpiderMorphology/leg_R1_tibia" pos="0.0127 0 0" quat="0.882948 0 0.469472 0">
+                  <joint name="JumpingSpiderMorphology/leg_R1_tibia_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+                  <joint name="JumpingSpiderMorphology/leg_R1_tibia_out_of_plane" stiffness="0.005" range="-0.349066 0" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                  <geom name="JumpingSpiderMorphology/leg_R1_tibia" size="0.0047 0.0088" pos="0.0088 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                  <body name="JumpingSpiderMorphology/leg_R1_metatarsus" pos="0.0176 0 0" quat="0.979925 0 0.199368 0">
+                    <joint name="JumpingSpiderMorphology/leg_R1_metatarsus_in_plane" stiffness="0.005" range="-0.1309 0.1309" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+                    <joint name="JumpingSpiderMorphology/leg_R1_metatarsus_out_of_plane" stiffness="0.005" range="-1.67552 0.471239" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                    <geom name="JumpingSpiderMorphology/leg_R1_metatarsus" size="0.00275 0.00715" pos="0.00715 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                    <body name="JumpingSpiderMorphology/leg_R1_tarsus" pos="0.0143 0 0" quat="0.894934 0 -0.446198 0">
+                      <joint name="JumpingSpiderMorphology/leg_R1_tarsus_in_plane" stiffness="0.005" range="-0.567232 0.567232" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+                      <joint name="JumpingSpiderMorphology/leg_R1_tarsus_out_of_plane" stiffness="0.005" range="-0.541052 1.58825" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                      <geom name="JumpingSpiderMorphology/leg_R1_tarsus" size="0.00285 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                      <site name="JumpingSpiderMorphology/leg_R1_tarsus_touch" size="0.00342 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0 0 0 0"/>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="JumpingSpiderMorphology/leg_L2" pos="0.0103259 0.0205309 -0.0160697" quat="0.851269 0 0 0.524729">
+        <body name="JumpingSpiderMorphology/leg_L2_coxa" quat="0.983255 0 -0.182236 0">
+          <joint name="JumpingSpiderMorphology/leg_L2_coxa_in_plane" stiffness="0.005" range="-0.305433 0.305433" armature="2e-05" damping="0.002" limited="true"/>
+          <joint name="JumpingSpiderMorphology/leg_L2_coxa_out_of_plane" stiffness="0.005" range="-0.226893 0.680678" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+          <geom name="JumpingSpiderMorphology/leg_L2_coxa" size="0.00585 0.0058" pos="0.0058 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+          <body name="JumpingSpiderMorphology/leg_L2_trochanter" pos="0.0116 0 0">
+            <joint name="JumpingSpiderMorphology/leg_L2_trochanter_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" limited="true"/>
+            <joint name="JumpingSpiderMorphology/leg_L2_trochanter_out_of_plane" stiffness="0.005" range="0 1.0472" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+            <geom name="JumpingSpiderMorphology/leg_L2_trochanter" size="0.00415 0.0034" pos="0.0034 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+            <body name="JumpingSpiderMorphology/leg_L2_femur" pos="0.0068 0 0" quat="0.995396 0 -0.0958458 0">
+              <joint name="JumpingSpiderMorphology/leg_L2_femur_out_of_plane" stiffness="0.005" range="-0.802851 0.977384" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+              <geom name="JumpingSpiderMorphology/leg_L2_femur" size="0.00513 0.0123" pos="0.0123 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+              <body name="JumpingSpiderMorphology/leg_L2_patella" pos="0.0246 0 0" quat="0.939693 0 0.34202 0">
+                <joint name="JumpingSpiderMorphology/leg_L2_patella_out_of_plane" stiffness="0.005" range="-0.698132 1.8675" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                <geom name="JumpingSpiderMorphology/leg_L2_patella" size="0.00425 0.00635" pos="0.00635 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                <body name="JumpingSpiderMorphology/leg_L2_tibia" pos="0.0127 0 0" quat="0.882948 0 0.469472 0">
+                  <joint name="JumpingSpiderMorphology/leg_L2_tibia_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" limited="true"/>
+                  <joint name="JumpingSpiderMorphology/leg_L2_tibia_out_of_plane" stiffness="0.005" range="-0.349066 0" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                  <geom name="JumpingSpiderMorphology/leg_L2_tibia" size="0.0047 0.0088" pos="0.0088 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                  <body name="JumpingSpiderMorphology/leg_L2_metatarsus" pos="0.0176 0 0" quat="0.979925 0 0.199368 0">
+                    <joint name="JumpingSpiderMorphology/leg_L2_metatarsus_in_plane" stiffness="0.005" range="-0.1309 0.1309" armature="2e-05" damping="0.002" limited="true"/>
+                    <joint name="JumpingSpiderMorphology/leg_L2_metatarsus_out_of_plane" stiffness="0.005" range="-1.67552 0.471239" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                    <geom name="JumpingSpiderMorphology/leg_L2_metatarsus" size="0.00275 0.00715" pos="0.00715 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                    <body name="JumpingSpiderMorphology/leg_L2_tarsus" pos="0.0143 0 0" quat="0.894934 0 -0.446198 0">
+                      <joint name="JumpingSpiderMorphology/leg_L2_tarsus_in_plane" stiffness="0.005" range="-0.567232 0.567232" armature="2e-05" damping="0.002" limited="true"/>
+                      <joint name="JumpingSpiderMorphology/leg_L2_tarsus_out_of_plane" stiffness="0.005" range="-0.541052 1.58825" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                      <geom name="JumpingSpiderMorphology/leg_L2_tarsus" size="0.00285 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                      <site name="JumpingSpiderMorphology/leg_L2_tarsus_touch" size="0.00342 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0 0 0 0"/>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="JumpingSpiderMorphology/leg_R2" pos="0.0103259 -0.0205309 -0.0160697" quat="0.851269 0 0 -0.524729">
+        <body name="JumpingSpiderMorphology/leg_R2_coxa" quat="0.983255 0 -0.182236 0">
+          <joint name="JumpingSpiderMorphology/leg_R2_coxa_in_plane" stiffness="0.005" range="-0.305433 0.305433" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+          <joint name="JumpingSpiderMorphology/leg_R2_coxa_out_of_plane" stiffness="0.005" range="-0.226893 0.680678" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+          <geom name="JumpingSpiderMorphology/leg_R2_coxa" size="0.00585 0.0058" pos="0.0058 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+          <body name="JumpingSpiderMorphology/leg_R2_trochanter" pos="0.0116 0 0">
+            <joint name="JumpingSpiderMorphology/leg_R2_trochanter_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+            <joint name="JumpingSpiderMorphology/leg_R2_trochanter_out_of_plane" stiffness="0.005" range="0 1.0472" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+            <geom name="JumpingSpiderMorphology/leg_R2_trochanter" size="0.00415 0.0034" pos="0.0034 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+            <body name="JumpingSpiderMorphology/leg_R2_femur" pos="0.0068 0 0" quat="0.995396 0 -0.0958458 0">
+              <joint name="JumpingSpiderMorphology/leg_R2_femur_out_of_plane" stiffness="0.005" range="-0.802851 0.977384" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+              <geom name="JumpingSpiderMorphology/leg_R2_femur" size="0.00513 0.0123" pos="0.0123 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+              <body name="JumpingSpiderMorphology/leg_R2_patella" pos="0.0246 0 0" quat="0.939693 0 0.34202 0">
+                <joint name="JumpingSpiderMorphology/leg_R2_patella_out_of_plane" stiffness="0.005" range="-0.698132 1.8675" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                <geom name="JumpingSpiderMorphology/leg_R2_patella" size="0.00425 0.00635" pos="0.00635 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                <body name="JumpingSpiderMorphology/leg_R2_tibia" pos="0.0127 0 0" quat="0.882948 0 0.469472 0">
+                  <joint name="JumpingSpiderMorphology/leg_R2_tibia_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+                  <joint name="JumpingSpiderMorphology/leg_R2_tibia_out_of_plane" stiffness="0.005" range="-0.349066 0" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                  <geom name="JumpingSpiderMorphology/leg_R2_tibia" size="0.0047 0.0088" pos="0.0088 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                  <body name="JumpingSpiderMorphology/leg_R2_metatarsus" pos="0.0176 0 0" quat="0.979925 0 0.199368 0">
+                    <joint name="JumpingSpiderMorphology/leg_R2_metatarsus_in_plane" stiffness="0.005" range="-0.1309 0.1309" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+                    <joint name="JumpingSpiderMorphology/leg_R2_metatarsus_out_of_plane" stiffness="0.005" range="-1.67552 0.471239" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                    <geom name="JumpingSpiderMorphology/leg_R2_metatarsus" size="0.00275 0.00715" pos="0.00715 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                    <body name="JumpingSpiderMorphology/leg_R2_tarsus" pos="0.0143 0 0" quat="0.894934 0 -0.446198 0">
+                      <joint name="JumpingSpiderMorphology/leg_R2_tarsus_in_plane" stiffness="0.005" range="-0.567232 0.567232" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+                      <joint name="JumpingSpiderMorphology/leg_R2_tarsus_out_of_plane" stiffness="0.005" range="-0.541052 1.58825" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                      <geom name="JumpingSpiderMorphology/leg_R2_tarsus" size="0.00285 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                      <site name="JumpingSpiderMorphology/leg_R2_tarsus_touch" size="0.00342 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0 0 0 0"/>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="JumpingSpiderMorphology/leg_L3" pos="-0.00268125 0.0228244 -0.0160697" quat="0.664579 0 0 0.747218">
+        <body name="JumpingSpiderMorphology/leg_L3_coxa" quat="0.983255 0 -0.182236 0">
+          <joint name="JumpingSpiderMorphology/leg_L3_coxa_in_plane" stiffness="0.005" range="-0.305433 0.305433" armature="2e-05" damping="0.002" limited="true"/>
+          <joint name="JumpingSpiderMorphology/leg_L3_coxa_out_of_plane" stiffness="0.005" range="-0.226893 0.680678" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+          <geom name="JumpingSpiderMorphology/leg_L3_coxa" size="0.00585 0.0058" pos="0.0058 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+          <body name="JumpingSpiderMorphology/leg_L3_trochanter" pos="0.0116 0 0">
+            <joint name="JumpingSpiderMorphology/leg_L3_trochanter_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" limited="true"/>
+            <joint name="JumpingSpiderMorphology/leg_L3_trochanter_out_of_plane" stiffness="0.005" range="0 1.0472" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+            <geom name="JumpingSpiderMorphology/leg_L3_trochanter" size="0.00415 0.0034" pos="0.0034 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+            <body name="JumpingSpiderMorphology/leg_L3_femur" pos="0.0068 0 0" quat="0.995396 0 -0.0958458 0">
+              <joint name="JumpingSpiderMorphology/leg_L3_femur_out_of_plane" stiffness="0.005" range="-0.802851 0.977384" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+              <geom name="JumpingSpiderMorphology/leg_L3_femur" size="0.00513 0.0123" pos="0.0123 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+              <body name="JumpingSpiderMorphology/leg_L3_patella" pos="0.0246 0 0" quat="0.939693 0 0.34202 0">
+                <joint name="JumpingSpiderMorphology/leg_L3_patella_out_of_plane" stiffness="0.005" range="-0.698132 1.8675" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                <geom name="JumpingSpiderMorphology/leg_L3_patella" size="0.00425 0.00635" pos="0.00635 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                <body name="JumpingSpiderMorphology/leg_L3_tibia" pos="0.0127 0 0" quat="0.882948 0 0.469472 0">
+                  <joint name="JumpingSpiderMorphology/leg_L3_tibia_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" limited="true"/>
+                  <joint name="JumpingSpiderMorphology/leg_L3_tibia_out_of_plane" stiffness="0.005" range="-0.349066 0" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                  <geom name="JumpingSpiderMorphology/leg_L3_tibia" size="0.0047 0.0088" pos="0.0088 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                  <body name="JumpingSpiderMorphology/leg_L3_metatarsus" pos="0.0176 0 0" quat="0.979925 0 0.199368 0">
+                    <joint name="JumpingSpiderMorphology/leg_L3_metatarsus_in_plane" stiffness="0.005" range="-0.1309 0.1309" armature="2e-05" damping="0.002" limited="true"/>
+                    <joint name="JumpingSpiderMorphology/leg_L3_metatarsus_out_of_plane" stiffness="0.005" range="-1.67552 0.471239" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                    <geom name="JumpingSpiderMorphology/leg_L3_metatarsus" size="0.00275 0.00715" pos="0.00715 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                    <body name="JumpingSpiderMorphology/leg_L3_tarsus" pos="0.0143 0 0" quat="0.894934 0 -0.446198 0">
+                      <joint name="JumpingSpiderMorphology/leg_L3_tarsus_in_plane" stiffness="0.005" range="-0.567232 0.567232" armature="2e-05" damping="0.002" limited="true"/>
+                      <joint name="JumpingSpiderMorphology/leg_L3_tarsus_out_of_plane" stiffness="0.005" range="-0.541052 1.58825" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                      <geom name="JumpingSpiderMorphology/leg_L3_tarsus" size="0.00285 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                      <site name="JumpingSpiderMorphology/leg_L3_tarsus_touch" size="0.00342 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0 0 0 0"/>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="JumpingSpiderMorphology/leg_R3" pos="-0.00268125 -0.0228244 -0.0160697" quat="0.664579 0 0 -0.747218">
+        <body name="JumpingSpiderMorphology/leg_R3_coxa" quat="0.983255 0 -0.182236 0">
+          <joint name="JumpingSpiderMorphology/leg_R3_coxa_in_plane" stiffness="0.005" range="-0.305433 0.305433" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+          <joint name="JumpingSpiderMorphology/leg_R3_coxa_out_of_plane" stiffness="0.005" range="-0.226893 0.680678" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+          <geom name="JumpingSpiderMorphology/leg_R3_coxa" size="0.00585 0.0058" pos="0.0058 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+          <body name="JumpingSpiderMorphology/leg_R3_trochanter" pos="0.0116 0 0">
+            <joint name="JumpingSpiderMorphology/leg_R3_trochanter_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+            <joint name="JumpingSpiderMorphology/leg_R3_trochanter_out_of_plane" stiffness="0.005" range="0 1.0472" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+            <geom name="JumpingSpiderMorphology/leg_R3_trochanter" size="0.00415 0.0034" pos="0.0034 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+            <body name="JumpingSpiderMorphology/leg_R3_femur" pos="0.0068 0 0" quat="0.995396 0 -0.0958458 0">
+              <joint name="JumpingSpiderMorphology/leg_R3_femur_out_of_plane" stiffness="0.005" range="-0.802851 0.977384" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+              <geom name="JumpingSpiderMorphology/leg_R3_femur" size="0.00513 0.0123" pos="0.0123 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+              <body name="JumpingSpiderMorphology/leg_R3_patella" pos="0.0246 0 0" quat="0.939693 0 0.34202 0">
+                <joint name="JumpingSpiderMorphology/leg_R3_patella_out_of_plane" stiffness="0.005" range="-0.698132 1.8675" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                <geom name="JumpingSpiderMorphology/leg_R3_patella" size="0.00425 0.00635" pos="0.00635 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                <body name="JumpingSpiderMorphology/leg_R3_tibia" pos="0.0127 0 0" quat="0.882948 0 0.469472 0">
+                  <joint name="JumpingSpiderMorphology/leg_R3_tibia_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+                  <joint name="JumpingSpiderMorphology/leg_R3_tibia_out_of_plane" stiffness="0.005" range="-0.349066 0" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                  <geom name="JumpingSpiderMorphology/leg_R3_tibia" size="0.0047 0.0088" pos="0.0088 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                  <body name="JumpingSpiderMorphology/leg_R3_metatarsus" pos="0.0176 0 0" quat="0.979925 0 0.199368 0">
+                    <joint name="JumpingSpiderMorphology/leg_R3_metatarsus_in_plane" stiffness="0.005" range="-0.1309 0.1309" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+                    <joint name="JumpingSpiderMorphology/leg_R3_metatarsus_out_of_plane" stiffness="0.005" range="-1.67552 0.471239" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                    <geom name="JumpingSpiderMorphology/leg_R3_metatarsus" size="0.00275 0.00715" pos="0.00715 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                    <body name="JumpingSpiderMorphology/leg_R3_tarsus" pos="0.0143 0 0" quat="0.894934 0 -0.446198 0">
+                      <joint name="JumpingSpiderMorphology/leg_R3_tarsus_in_plane" stiffness="0.005" range="-0.567232 0.567232" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+                      <joint name="JumpingSpiderMorphology/leg_R3_tarsus_out_of_plane" stiffness="0.005" range="-0.541052 1.58825" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                      <geom name="JumpingSpiderMorphology/leg_R3_tarsus" size="0.00285 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                      <site name="JumpingSpiderMorphology/leg_R3_tarsus_touch" size="0.00342 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0 0 0 0"/>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="JumpingSpiderMorphology/leg_L4" pos="-0.0147721 0.0176047 -0.0160697" quat="0.422618 0 0 0.906308">
+        <body name="JumpingSpiderMorphology/leg_L4_coxa" quat="0.983255 0 -0.182236 0">
+          <joint name="JumpingSpiderMorphology/leg_L4_coxa_in_plane" stiffness="0.005" range="-0.305433 0.305433" armature="2e-05" damping="0.002" limited="true"/>
+          <joint name="JumpingSpiderMorphology/leg_L4_coxa_out_of_plane" stiffness="0.005" range="-0.226893 0.680678" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+          <geom name="JumpingSpiderMorphology/leg_L4_coxa" size="0.00585 0.0058" pos="0.0058 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+          <body name="JumpingSpiderMorphology/leg_L4_trochanter" pos="0.0116 0 0">
+            <joint name="JumpingSpiderMorphology/leg_L4_trochanter_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" limited="true"/>
+            <joint name="JumpingSpiderMorphology/leg_L4_trochanter_out_of_plane" stiffness="0.005" range="0 1.0472" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+            <geom name="JumpingSpiderMorphology/leg_L4_trochanter" size="0.00415 0.0034" pos="0.0034 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+            <body name="JumpingSpiderMorphology/leg_L4_femur" pos="0.0068 0 0" quat="0.995396 0 -0.0958458 0">
+              <joint name="JumpingSpiderMorphology/leg_L4_femur_out_of_plane" stiffness="0.005" range="-0.802851 0.977384" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+              <geom name="JumpingSpiderMorphology/leg_L4_femur" size="0.00513 0.0123" pos="0.0123 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+              <body name="JumpingSpiderMorphology/leg_L4_patella" pos="0.0246 0 0" quat="0.939693 0 0.34202 0">
+                <joint name="JumpingSpiderMorphology/leg_L4_patella_out_of_plane" stiffness="0.005" range="-0.698132 1.8675" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                <geom name="JumpingSpiderMorphology/leg_L4_patella" size="0.00425 0.00635" pos="0.00635 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                <body name="JumpingSpiderMorphology/leg_L4_tibia" pos="0.0127 0 0" quat="0.882948 0 0.469472 0">
+                  <joint name="JumpingSpiderMorphology/leg_L4_tibia_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" limited="true"/>
+                  <joint name="JumpingSpiderMorphology/leg_L4_tibia_out_of_plane" stiffness="0.005" range="-0.349066 0" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                  <geom name="JumpingSpiderMorphology/leg_L4_tibia" size="0.0047 0.0088" pos="0.0088 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                  <body name="JumpingSpiderMorphology/leg_L4_metatarsus" pos="0.0176 0 0" quat="0.979925 0 0.199368 0">
+                    <joint name="JumpingSpiderMorphology/leg_L4_metatarsus_in_plane" stiffness="0.005" range="-0.1309 0.1309" armature="2e-05" damping="0.002" limited="true"/>
+                    <joint name="JumpingSpiderMorphology/leg_L4_metatarsus_out_of_plane" stiffness="0.005" range="-1.67552 0.471239" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                    <geom name="JumpingSpiderMorphology/leg_L4_metatarsus" size="0.00275 0.00715" pos="0.00715 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                    <body name="JumpingSpiderMorphology/leg_L4_tarsus" pos="0.0143 0 0" quat="0.894934 0 -0.446198 0">
+                      <joint name="JumpingSpiderMorphology/leg_L4_tarsus_in_plane" stiffness="0.005" range="-0.567232 0.567232" armature="2e-05" damping="0.002" limited="true"/>
+                      <joint name="JumpingSpiderMorphology/leg_L4_tarsus_out_of_plane" stiffness="0.005" range="-0.541052 1.58825" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                      <geom name="JumpingSpiderMorphology/leg_L4_tarsus" size="0.00285 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                      <site name="JumpingSpiderMorphology/leg_L4_tarsus_touch" size="0.00342 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0 0 0 0"/>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="JumpingSpiderMorphology/leg_R4" pos="-0.0147721 -0.0176047 -0.0160697" quat="0.422618 0 0 -0.906308">
+        <body name="JumpingSpiderMorphology/leg_R4_coxa" quat="0.983255 0 -0.182236 0">
+          <joint name="JumpingSpiderMorphology/leg_R4_coxa_in_plane" stiffness="0.005" range="-0.305433 0.305433" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+          <joint name="JumpingSpiderMorphology/leg_R4_coxa_out_of_plane" stiffness="0.005" range="-0.226893 0.680678" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+          <geom name="JumpingSpiderMorphology/leg_R4_coxa" size="0.00585 0.0058" pos="0.0058 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+          <body name="JumpingSpiderMorphology/leg_R4_trochanter" pos="0.0116 0 0">
+            <joint name="JumpingSpiderMorphology/leg_R4_trochanter_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+            <joint name="JumpingSpiderMorphology/leg_R4_trochanter_out_of_plane" stiffness="0.005" range="0 1.0472" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+            <geom name="JumpingSpiderMorphology/leg_R4_trochanter" size="0.00415 0.0034" pos="0.0034 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+            <body name="JumpingSpiderMorphology/leg_R4_femur" pos="0.0068 0 0" quat="0.995396 0 -0.0958458 0">
+              <joint name="JumpingSpiderMorphology/leg_R4_femur_out_of_plane" stiffness="0.005" range="-0.802851 0.977384" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+              <geom name="JumpingSpiderMorphology/leg_R4_femur" size="0.00513 0.0123" pos="0.0123 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+              <body name="JumpingSpiderMorphology/leg_R4_patella" pos="0.0246 0 0" quat="0.939693 0 0.34202 0">
+                <joint name="JumpingSpiderMorphology/leg_R4_patella_out_of_plane" stiffness="0.005" range="-0.698132 1.8675" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                <geom name="JumpingSpiderMorphology/leg_R4_patella" size="0.00425 0.00635" pos="0.00635 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                <body name="JumpingSpiderMorphology/leg_R4_tibia" pos="0.0127 0 0" quat="0.882948 0 0.469472 0">
+                  <joint name="JumpingSpiderMorphology/leg_R4_tibia_in_plane" stiffness="0.005" range="-0.610865 0.610865" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+                  <joint name="JumpingSpiderMorphology/leg_R4_tibia_out_of_plane" stiffness="0.005" range="-0.349066 0" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                  <geom name="JumpingSpiderMorphology/leg_R4_tibia" size="0.0047 0.0088" pos="0.0088 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                  <body name="JumpingSpiderMorphology/leg_R4_metatarsus" pos="0.0176 0 0" quat="0.979925 0 0.199368 0">
+                    <joint name="JumpingSpiderMorphology/leg_R4_metatarsus_in_plane" stiffness="0.005" range="-0.1309 0.1309" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+                    <joint name="JumpingSpiderMorphology/leg_R4_metatarsus_out_of_plane" stiffness="0.005" range="-1.67552 0.471239" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                    <geom name="JumpingSpiderMorphology/leg_R4_metatarsus" size="0.00275 0.00715" pos="0.00715 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                    <body name="JumpingSpiderMorphology/leg_R4_tarsus" pos="0.0143 0 0" quat="0.894934 0 -0.446198 0">
+                      <joint name="JumpingSpiderMorphology/leg_R4_tarsus_in_plane" stiffness="0.005" range="-0.567232 0.567232" armature="2e-05" damping="0.002" axis="0 0 -1" limited="true"/>
+                      <joint name="JumpingSpiderMorphology/leg_R4_tarsus_out_of_plane" stiffness="0.005" range="-0.541052 1.58825" armature="2e-05" damping="0.002" axis="0 1 0" limited="true"/>
+                      <geom name="JumpingSpiderMorphology/leg_R4_tarsus" size="0.00285 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" contype="1" conaffinity="0" rgba="0.45 0.4 0.35 1"/>
+                      <site name="JumpingSpiderMorphology/leg_R4_tarsus_touch" size="0.00342 0.0059" pos="0.0059 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0 0 0 0"/>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <general name="JumpingSpiderMorphology/abdomen_in_plane" joint="JumpingSpiderMorphology/abdomen_in_plane" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-0.2 0.2" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.8" biasprm="0 -0.8 -0.0047492"/>
+    <general name="JumpingSpiderMorphology/abdomen_out_of_plane" joint="JumpingSpiderMorphology/abdomen_out_of_plane" ctrlrange="-0.785398 0.785398" ctrllimited="true" forcelimited="true" forcerange="-0.2 0.2" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.8" biasprm="0 -0.8 -0.00408464"/>
+    <general name="JumpingSpiderMorphology/leg_L1_coxa_in_plane" joint="JumpingSpiderMorphology/leg_L1_coxa_in_plane" ctrlrange="-0.305433 0.305433" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.005694"/>
+    <general name="JumpingSpiderMorphology/leg_L1_coxa_out_of_plane" joint="JumpingSpiderMorphology/leg_L1_coxa_out_of_plane" ctrlrange="-0.226893 0.680678" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00558396"/>
+    <general name="JumpingSpiderMorphology/leg_L1_trochanter_in_plane" joint="JumpingSpiderMorphology/leg_L1_trochanter_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00372817"/>
+    <general name="JumpingSpiderMorphology/leg_L1_trochanter_out_of_plane" joint="JumpingSpiderMorphology/leg_L1_trochanter_out_of_plane" ctrlrange="0 1.0472" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00370613"/>
+    <general name="JumpingSpiderMorphology/leg_L1_femur_out_of_plane" joint="JumpingSpiderMorphology/leg_L1_femur_out_of_plane" ctrlrange="-0.802851 0.977384" ctrllimited="true" forcelimited="true" forcerange="-0.615195 0.615195" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.46078" biasprm="0 -2.46078 -0.00447486"/>
+    <general name="JumpingSpiderMorphology/leg_L1_patella_out_of_plane" joint="JumpingSpiderMorphology/leg_L1_patella_out_of_plane" ctrlrange="-0.698132 1.8675" ctrllimited="true" forcelimited="true" forcerange="-0.422237 0.422237" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.68895" biasprm="0 -1.68895 -0.00360478"/>
+    <general name="JumpingSpiderMorphology/leg_L1_tibia_in_plane" joint="JumpingSpiderMorphology/leg_L1_tibia_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.00393209"/>
+    <general name="JumpingSpiderMorphology/leg_L1_tibia_out_of_plane" joint="JumpingSpiderMorphology/leg_L1_tibia_out_of_plane" ctrlrange="-0.349066 0" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.00393838"/>
+    <general name="JumpingSpiderMorphology/leg_L1_metatarsus_in_plane" joint="JumpingSpiderMorphology/leg_L1_metatarsus_in_plane" ctrlrange="-0.1309 0.1309" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.00226472"/>
+    <general name="JumpingSpiderMorphology/leg_L1_metatarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_L1_metatarsus_out_of_plane" ctrlrange="-1.67552 0.471239" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.0022655"/>
+    <general name="JumpingSpiderMorphology/leg_L1_tarsus_in_plane" joint="JumpingSpiderMorphology/leg_L1_tarsus_in_plane" ctrlrange="-0.567232 0.567232" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233973"/>
+    <general name="JumpingSpiderMorphology/leg_L1_tarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_L1_tarsus_out_of_plane" ctrlrange="-0.541052 1.58825" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233969"/>
+    <general name="JumpingSpiderMorphology/leg_R1_coxa_in_plane" joint="JumpingSpiderMorphology/leg_R1_coxa_in_plane" ctrlrange="-0.305433 0.305433" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.005694"/>
+    <general name="JumpingSpiderMorphology/leg_R1_coxa_out_of_plane" joint="JumpingSpiderMorphology/leg_R1_coxa_out_of_plane" ctrlrange="-0.226893 0.680678" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00558396"/>
+    <general name="JumpingSpiderMorphology/leg_R1_trochanter_in_plane" joint="JumpingSpiderMorphology/leg_R1_trochanter_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00372817"/>
+    <general name="JumpingSpiderMorphology/leg_R1_trochanter_out_of_plane" joint="JumpingSpiderMorphology/leg_R1_trochanter_out_of_plane" ctrlrange="0 1.0472" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00370613"/>
+    <general name="JumpingSpiderMorphology/leg_R1_femur_out_of_plane" joint="JumpingSpiderMorphology/leg_R1_femur_out_of_plane" ctrlrange="-0.802851 0.977384" ctrllimited="true" forcelimited="true" forcerange="-0.615195 0.615195" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.46078" biasprm="0 -2.46078 -0.00447486"/>
+    <general name="JumpingSpiderMorphology/leg_R1_patella_out_of_plane" joint="JumpingSpiderMorphology/leg_R1_patella_out_of_plane" ctrlrange="-0.698132 1.8675" ctrllimited="true" forcelimited="true" forcerange="-0.422237 0.422237" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.68895" biasprm="0 -1.68895 -0.00360478"/>
+    <general name="JumpingSpiderMorphology/leg_R1_tibia_in_plane" joint="JumpingSpiderMorphology/leg_R1_tibia_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.00393209"/>
+    <general name="JumpingSpiderMorphology/leg_R1_tibia_out_of_plane" joint="JumpingSpiderMorphology/leg_R1_tibia_out_of_plane" ctrlrange="-0.349066 0" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.00393838"/>
+    <general name="JumpingSpiderMorphology/leg_R1_metatarsus_in_plane" joint="JumpingSpiderMorphology/leg_R1_metatarsus_in_plane" ctrlrange="-0.1309 0.1309" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.00226472"/>
+    <general name="JumpingSpiderMorphology/leg_R1_metatarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_R1_metatarsus_out_of_plane" ctrlrange="-1.67552 0.471239" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.0022655"/>
+    <general name="JumpingSpiderMorphology/leg_R1_tarsus_in_plane" joint="JumpingSpiderMorphology/leg_R1_tarsus_in_plane" ctrlrange="-0.567232 0.567232" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233973"/>
+    <general name="JumpingSpiderMorphology/leg_R1_tarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_R1_tarsus_out_of_plane" ctrlrange="-0.541052 1.58825" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233969"/>
+    <general name="JumpingSpiderMorphology/leg_L2_coxa_in_plane" joint="JumpingSpiderMorphology/leg_L2_coxa_in_plane" ctrlrange="-0.305433 0.305433" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00570632"/>
+    <general name="JumpingSpiderMorphology/leg_L2_coxa_out_of_plane" joint="JumpingSpiderMorphology/leg_L2_coxa_out_of_plane" ctrlrange="-0.226893 0.680678" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00559672"/>
+    <general name="JumpingSpiderMorphology/leg_L2_trochanter_in_plane" joint="JumpingSpiderMorphology/leg_L2_trochanter_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00373106"/>
+    <general name="JumpingSpiderMorphology/leg_L2_trochanter_out_of_plane" joint="JumpingSpiderMorphology/leg_L2_trochanter_out_of_plane" ctrlrange="0 1.0472" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.0037096"/>
+    <general name="JumpingSpiderMorphology/leg_L2_femur_out_of_plane" joint="JumpingSpiderMorphology/leg_L2_femur_out_of_plane" ctrlrange="-0.802851 0.977384" ctrllimited="true" forcelimited="true" forcerange="-0.615195 0.615195" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.46078" biasprm="0 -2.46078 -0.00447732"/>
+    <general name="JumpingSpiderMorphology/leg_L2_patella_out_of_plane" joint="JumpingSpiderMorphology/leg_L2_patella_out_of_plane" ctrlrange="-0.698132 1.8675" ctrllimited="true" forcelimited="true" forcerange="-0.422237 0.422237" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.68895" biasprm="0 -1.68895 -0.00360497"/>
+    <general name="JumpingSpiderMorphology/leg_L2_tibia_in_plane" joint="JumpingSpiderMorphology/leg_L2_tibia_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.00393215"/>
+    <general name="JumpingSpiderMorphology/leg_L2_tibia_out_of_plane" joint="JumpingSpiderMorphology/leg_L2_tibia_out_of_plane" ctrlrange="-0.349066 0" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.00393832"/>
+    <general name="JumpingSpiderMorphology/leg_L2_metatarsus_in_plane" joint="JumpingSpiderMorphology/leg_L2_metatarsus_in_plane" ctrlrange="-0.1309 0.1309" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.00226472"/>
+    <general name="JumpingSpiderMorphology/leg_L2_metatarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_L2_metatarsus_out_of_plane" ctrlrange="-1.67552 0.471239" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.0022655"/>
+    <general name="JumpingSpiderMorphology/leg_L2_tarsus_in_plane" joint="JumpingSpiderMorphology/leg_L2_tarsus_in_plane" ctrlrange="-0.567232 0.567232" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233973"/>
+    <general name="JumpingSpiderMorphology/leg_L2_tarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_L2_tarsus_out_of_plane" ctrlrange="-0.541052 1.58825" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233969"/>
+    <general name="JumpingSpiderMorphology/leg_R2_coxa_in_plane" joint="JumpingSpiderMorphology/leg_R2_coxa_in_plane" ctrlrange="-0.305433 0.305433" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00570632"/>
+    <general name="JumpingSpiderMorphology/leg_R2_coxa_out_of_plane" joint="JumpingSpiderMorphology/leg_R2_coxa_out_of_plane" ctrlrange="-0.226893 0.680678" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00559672"/>
+    <general name="JumpingSpiderMorphology/leg_R2_trochanter_in_plane" joint="JumpingSpiderMorphology/leg_R2_trochanter_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00373106"/>
+    <general name="JumpingSpiderMorphology/leg_R2_trochanter_out_of_plane" joint="JumpingSpiderMorphology/leg_R2_trochanter_out_of_plane" ctrlrange="0 1.0472" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.0037096"/>
+    <general name="JumpingSpiderMorphology/leg_R2_femur_out_of_plane" joint="JumpingSpiderMorphology/leg_R2_femur_out_of_plane" ctrlrange="-0.802851 0.977384" ctrllimited="true" forcelimited="true" forcerange="-0.615195 0.615195" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.46078" biasprm="0 -2.46078 -0.00447732"/>
+    <general name="JumpingSpiderMorphology/leg_R2_patella_out_of_plane" joint="JumpingSpiderMorphology/leg_R2_patella_out_of_plane" ctrlrange="-0.698132 1.8675" ctrllimited="true" forcelimited="true" forcerange="-0.422237 0.422237" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.68895" biasprm="0 -1.68895 -0.00360497"/>
+    <general name="JumpingSpiderMorphology/leg_R2_tibia_in_plane" joint="JumpingSpiderMorphology/leg_R2_tibia_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.00393215"/>
+    <general name="JumpingSpiderMorphology/leg_R2_tibia_out_of_plane" joint="JumpingSpiderMorphology/leg_R2_tibia_out_of_plane" ctrlrange="-0.349066 0" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.00393832"/>
+    <general name="JumpingSpiderMorphology/leg_R2_metatarsus_in_plane" joint="JumpingSpiderMorphology/leg_R2_metatarsus_in_plane" ctrlrange="-0.1309 0.1309" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.00226472"/>
+    <general name="JumpingSpiderMorphology/leg_R2_metatarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_R2_metatarsus_out_of_plane" ctrlrange="-1.67552 0.471239" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.0022655"/>
+    <general name="JumpingSpiderMorphology/leg_R2_tarsus_in_plane" joint="JumpingSpiderMorphology/leg_R2_tarsus_in_plane" ctrlrange="-0.567232 0.567232" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233973"/>
+    <general name="JumpingSpiderMorphology/leg_R2_tarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_R2_tarsus_out_of_plane" ctrlrange="-0.541052 1.58825" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233969"/>
+    <general name="JumpingSpiderMorphology/leg_L3_coxa_in_plane" joint="JumpingSpiderMorphology/leg_L3_coxa_in_plane" ctrlrange="-0.305433 0.305433" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00571935"/>
+    <general name="JumpingSpiderMorphology/leg_L3_coxa_out_of_plane" joint="JumpingSpiderMorphology/leg_L3_coxa_out_of_plane" ctrlrange="-0.226893 0.680678" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00561091"/>
+    <general name="JumpingSpiderMorphology/leg_L3_trochanter_in_plane" joint="JumpingSpiderMorphology/leg_L3_trochanter_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00373418"/>
+    <general name="JumpingSpiderMorphology/leg_L3_trochanter_out_of_plane" joint="JumpingSpiderMorphology/leg_L3_trochanter_out_of_plane" ctrlrange="0 1.0472" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00371322"/>
+    <general name="JumpingSpiderMorphology/leg_L3_femur_out_of_plane" joint="JumpingSpiderMorphology/leg_L3_femur_out_of_plane" ctrlrange="-0.802851 0.977384" ctrllimited="true" forcelimited="true" forcerange="-0.615195 0.615195" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.46078" biasprm="0 -2.46078 -0.00447977"/>
+    <general name="JumpingSpiderMorphology/leg_L3_patella_out_of_plane" joint="JumpingSpiderMorphology/leg_L3_patella_out_of_plane" ctrlrange="-0.698132 1.8675" ctrllimited="true" forcelimited="true" forcerange="-0.422237 0.422237" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.68895" biasprm="0 -1.68895 -0.00360517"/>
+    <general name="JumpingSpiderMorphology/leg_L3_tibia_in_plane" joint="JumpingSpiderMorphology/leg_L3_tibia_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.00393222"/>
+    <general name="JumpingSpiderMorphology/leg_L3_tibia_out_of_plane" joint="JumpingSpiderMorphology/leg_L3_tibia_out_of_plane" ctrlrange="-0.349066 0" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.0039383"/>
+    <general name="JumpingSpiderMorphology/leg_L3_metatarsus_in_plane" joint="JumpingSpiderMorphology/leg_L3_metatarsus_in_plane" ctrlrange="-0.1309 0.1309" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.00226472"/>
+    <general name="JumpingSpiderMorphology/leg_L3_metatarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_L3_metatarsus_out_of_plane" ctrlrange="-1.67552 0.471239" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.0022655"/>
+    <general name="JumpingSpiderMorphology/leg_L3_tarsus_in_plane" joint="JumpingSpiderMorphology/leg_L3_tarsus_in_plane" ctrlrange="-0.567232 0.567232" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233973"/>
+    <general name="JumpingSpiderMorphology/leg_L3_tarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_L3_tarsus_out_of_plane" ctrlrange="-0.541052 1.58825" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233969"/>
+    <general name="JumpingSpiderMorphology/leg_R3_coxa_in_plane" joint="JumpingSpiderMorphology/leg_R3_coxa_in_plane" ctrlrange="-0.305433 0.305433" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00571935"/>
+    <general name="JumpingSpiderMorphology/leg_R3_coxa_out_of_plane" joint="JumpingSpiderMorphology/leg_R3_coxa_out_of_plane" ctrlrange="-0.226893 0.680678" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00561091"/>
+    <general name="JumpingSpiderMorphology/leg_R3_trochanter_in_plane" joint="JumpingSpiderMorphology/leg_R3_trochanter_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00373418"/>
+    <general name="JumpingSpiderMorphology/leg_R3_trochanter_out_of_plane" joint="JumpingSpiderMorphology/leg_R3_trochanter_out_of_plane" ctrlrange="0 1.0472" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00371322"/>
+    <general name="JumpingSpiderMorphology/leg_R3_femur_out_of_plane" joint="JumpingSpiderMorphology/leg_R3_femur_out_of_plane" ctrlrange="-0.802851 0.977384" ctrllimited="true" forcelimited="true" forcerange="-0.615195 0.615195" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.46078" biasprm="0 -2.46078 -0.00447977"/>
+    <general name="JumpingSpiderMorphology/leg_R3_patella_out_of_plane" joint="JumpingSpiderMorphology/leg_R3_patella_out_of_plane" ctrlrange="-0.698132 1.8675" ctrllimited="true" forcelimited="true" forcerange="-0.422237 0.422237" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.68895" biasprm="0 -1.68895 -0.00360517"/>
+    <general name="JumpingSpiderMorphology/leg_R3_tibia_in_plane" joint="JumpingSpiderMorphology/leg_R3_tibia_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.00393222"/>
+    <general name="JumpingSpiderMorphology/leg_R3_tibia_out_of_plane" joint="JumpingSpiderMorphology/leg_R3_tibia_out_of_plane" ctrlrange="-0.349066 0" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.0039383"/>
+    <general name="JumpingSpiderMorphology/leg_R3_metatarsus_in_plane" joint="JumpingSpiderMorphology/leg_R3_metatarsus_in_plane" ctrlrange="-0.1309 0.1309" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.00226472"/>
+    <general name="JumpingSpiderMorphology/leg_R3_metatarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_R3_metatarsus_out_of_plane" ctrlrange="-1.67552 0.471239" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.0022655"/>
+    <general name="JumpingSpiderMorphology/leg_R3_tarsus_in_plane" joint="JumpingSpiderMorphology/leg_R3_tarsus_in_plane" ctrlrange="-0.567232 0.567232" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233973"/>
+    <general name="JumpingSpiderMorphology/leg_R3_tarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_R3_tarsus_out_of_plane" ctrlrange="-0.541052 1.58825" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233969"/>
+    <general name="JumpingSpiderMorphology/leg_L4_coxa_in_plane" joint="JumpingSpiderMorphology/leg_L4_coxa_in_plane" ctrlrange="-0.305433 0.305433" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00572756"/>
+    <general name="JumpingSpiderMorphology/leg_L4_coxa_out_of_plane" joint="JumpingSpiderMorphology/leg_L4_coxa_out_of_plane" ctrlrange="-0.226893 0.680678" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00562078"/>
+    <general name="JumpingSpiderMorphology/leg_L4_trochanter_in_plane" joint="JumpingSpiderMorphology/leg_L4_trochanter_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00373622"/>
+    <general name="JumpingSpiderMorphology/leg_L4_trochanter_out_of_plane" joint="JumpingSpiderMorphology/leg_L4_trochanter_out_of_plane" ctrlrange="0 1.0472" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00371544"/>
+    <general name="JumpingSpiderMorphology/leg_L4_femur_out_of_plane" joint="JumpingSpiderMorphology/leg_L4_femur_out_of_plane" ctrlrange="-0.802851 0.977384" ctrllimited="true" forcelimited="true" forcerange="-0.615195 0.615195" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.46078" biasprm="0 -2.46078 -0.00448113"/>
+    <general name="JumpingSpiderMorphology/leg_L4_patella_out_of_plane" joint="JumpingSpiderMorphology/leg_L4_patella_out_of_plane" ctrlrange="-0.698132 1.8675" ctrllimited="true" forcelimited="true" forcerange="-0.422237 0.422237" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.68895" biasprm="0 -1.68895 -0.00360529"/>
+    <general name="JumpingSpiderMorphology/leg_L4_tibia_in_plane" joint="JumpingSpiderMorphology/leg_L4_tibia_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.0039323"/>
+    <general name="JumpingSpiderMorphology/leg_L4_tibia_out_of_plane" joint="JumpingSpiderMorphology/leg_L4_tibia_out_of_plane" ctrlrange="-0.349066 0" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.00393834"/>
+    <general name="JumpingSpiderMorphology/leg_L4_metatarsus_in_plane" joint="JumpingSpiderMorphology/leg_L4_metatarsus_in_plane" ctrlrange="-0.1309 0.1309" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.00226473"/>
+    <general name="JumpingSpiderMorphology/leg_L4_metatarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_L4_metatarsus_out_of_plane" ctrlrange="-1.67552 0.471239" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.0022655"/>
+    <general name="JumpingSpiderMorphology/leg_L4_tarsus_in_plane" joint="JumpingSpiderMorphology/leg_L4_tarsus_in_plane" ctrlrange="-0.567232 0.567232" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233973"/>
+    <general name="JumpingSpiderMorphology/leg_L4_tarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_L4_tarsus_out_of_plane" ctrlrange="-0.541052 1.58825" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233969"/>
+    <general name="JumpingSpiderMorphology/leg_R4_coxa_in_plane" joint="JumpingSpiderMorphology/leg_R4_coxa_in_plane" ctrlrange="-0.305433 0.305433" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00572756"/>
+    <general name="JumpingSpiderMorphology/leg_R4_coxa_out_of_plane" joint="JumpingSpiderMorphology/leg_R4_coxa_out_of_plane" ctrlrange="-0.226893 0.680678" ctrllimited="true" forcelimited="true" forcerange="-0.8 0.8" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="3.2" biasprm="0 -3.2 -0.00562078"/>
+    <general name="JumpingSpiderMorphology/leg_R4_trochanter_in_plane" joint="JumpingSpiderMorphology/leg_R4_trochanter_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00373622"/>
+    <general name="JumpingSpiderMorphology/leg_R4_trochanter_out_of_plane" joint="JumpingSpiderMorphology/leg_R4_trochanter_out_of_plane" ctrlrange="0 1.0472" ctrllimited="true" forcelimited="true" forcerange="-0.402601 0.402601" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.6104" biasprm="0 -1.6104 -0.00371544"/>
+    <general name="JumpingSpiderMorphology/leg_R4_femur_out_of_plane" joint="JumpingSpiderMorphology/leg_R4_femur_out_of_plane" ctrlrange="-0.802851 0.977384" ctrllimited="true" forcelimited="true" forcerange="-0.615195 0.615195" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.46078" biasprm="0 -2.46078 -0.00448113"/>
+    <general name="JumpingSpiderMorphology/leg_R4_patella_out_of_plane" joint="JumpingSpiderMorphology/leg_R4_patella_out_of_plane" ctrlrange="-0.698132 1.8675" ctrllimited="true" forcelimited="true" forcerange="-0.422237 0.422237" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="1.68895" biasprm="0 -1.68895 -0.00360529"/>
+    <general name="JumpingSpiderMorphology/leg_R4_tibia_in_plane" joint="JumpingSpiderMorphology/leg_R4_tibia_in_plane" ctrlrange="-0.610865 0.610865" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.0039323"/>
+    <general name="JumpingSpiderMorphology/leg_R4_tibia_out_of_plane" joint="JumpingSpiderMorphology/leg_R4_tibia_out_of_plane" ctrlrange="-0.349066 0" ctrllimited="true" forcelimited="true" forcerange="-0.516385 0.516385" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="2.06554" biasprm="0 -2.06554 -0.00393834"/>
+    <general name="JumpingSpiderMorphology/leg_R4_metatarsus_in_plane" joint="JumpingSpiderMorphology/leg_R4_metatarsus_in_plane" ctrlrange="-0.1309 0.1309" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.00226473"/>
+    <general name="JumpingSpiderMorphology/leg_R4_metatarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_R4_metatarsus_out_of_plane" ctrlrange="-1.67552 0.471239" ctrllimited="true" forcelimited="true" forcerange="-0.176784 0.176784" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.707137" biasprm="0 -0.707137 -0.0022655"/>
+    <general name="JumpingSpiderMorphology/leg_R4_tarsus_in_plane" joint="JumpingSpiderMorphology/leg_R4_tarsus_in_plane" ctrlrange="-0.567232 0.567232" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233973"/>
+    <general name="JumpingSpiderMorphology/leg_R4_tarsus_out_of_plane" joint="JumpingSpiderMorphology/leg_R4_tarsus_out_of_plane" ctrlrange="-0.541052 1.58825" ctrllimited="true" forcelimited="true" forcerange="-0.189875 0.189875" dyntype="filterexact" dynprm="0.01" input="pos" biastype="affine" gainprm="0.7595" biasprm="0 -0.7595 -0.00233969"/>
+  </actuator>
+
+  <sensor>
+    <framepos objtype="body" objname="JumpingSpiderMorphology/cephalothorax" name="JumpingSpiderMorphology/cephalothorax_framepos"/>
+    <framequat objtype="body" objname="JumpingSpiderMorphology/cephalothorax" name="JumpingSpiderMorphology/cephalothorax_framequat"/>
+    <framelinvel objtype="body" objname="JumpingSpiderMorphology/cephalothorax" name="JumpingSpiderMorphology/cephalothorax_framelinvel"/>
+    <frameangvel objtype="body" objname="JumpingSpiderMorphology/cephalothorax" name="JumpingSpiderMorphology/cephalothorax_frameangvel"/>
+    <jointpos joint="JumpingSpiderMorphology/abdomen_in_plane" name="JumpingSpiderMorphology/abdomen_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/abdomen_in_plane" name="JumpingSpiderMorphology/abdomen_in_plane_jointvel"/>
+    <jointpos joint="JumpingSpiderMorphology/abdomen_out_of_plane" name="JumpingSpiderMorphology/abdomen_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/abdomen_out_of_plane" name="JumpingSpiderMorphology/abdomen_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/abdomen_in_plane" name="JumpingSpiderMorphology/abdomen_in_plane_actuatorfrc"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/abdomen_out_of_plane" name="JumpingSpiderMorphology/abdomen_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L1_coxa_in_plane" name="JumpingSpiderMorphology/leg_L1_coxa_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L1_coxa_in_plane" name="JumpingSpiderMorphology/leg_L1_coxa_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L1_coxa_in_plane" name="JumpingSpiderMorphology/leg_L1_coxa_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L1_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_L1_coxa_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L1_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_L1_coxa_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L1_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_L1_coxa_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L1_trochanter_in_plane" name="JumpingSpiderMorphology/leg_L1_trochanter_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L1_trochanter_in_plane" name="JumpingSpiderMorphology/leg_L1_trochanter_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L1_trochanter_in_plane" name="JumpingSpiderMorphology/leg_L1_trochanter_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L1_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_L1_trochanter_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L1_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_L1_trochanter_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L1_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_L1_trochanter_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L1_femur_out_of_plane" name="JumpingSpiderMorphology/leg_L1_femur_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L1_femur_out_of_plane" name="JumpingSpiderMorphology/leg_L1_femur_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L1_femur_out_of_plane" name="JumpingSpiderMorphology/leg_L1_femur_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L1_patella_out_of_plane" name="JumpingSpiderMorphology/leg_L1_patella_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L1_patella_out_of_plane" name="JumpingSpiderMorphology/leg_L1_patella_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L1_patella_out_of_plane" name="JumpingSpiderMorphology/leg_L1_patella_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L1_tibia_in_plane" name="JumpingSpiderMorphology/leg_L1_tibia_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L1_tibia_in_plane" name="JumpingSpiderMorphology/leg_L1_tibia_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L1_tibia_in_plane" name="JumpingSpiderMorphology/leg_L1_tibia_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L1_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_L1_tibia_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L1_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_L1_tibia_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L1_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_L1_tibia_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L1_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_L1_metatarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L1_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_L1_metatarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L1_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_L1_metatarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L1_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L1_metatarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L1_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L1_metatarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L1_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L1_metatarsus_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L1_tarsus_in_plane" name="JumpingSpiderMorphology/leg_L1_tarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L1_tarsus_in_plane" name="JumpingSpiderMorphology/leg_L1_tarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L1_tarsus_in_plane" name="JumpingSpiderMorphology/leg_L1_tarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L1_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L1_tarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L1_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L1_tarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L1_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L1_tarsus_out_of_plane_actuatorfrc"/>
+    <touch site="JumpingSpiderMorphology/leg_L1_tarsus_touch" name="JumpingSpiderMorphology/leg_L1_tarsus_touch"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R1_coxa_in_plane" name="JumpingSpiderMorphology/leg_R1_coxa_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R1_coxa_in_plane" name="JumpingSpiderMorphology/leg_R1_coxa_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R1_coxa_in_plane" name="JumpingSpiderMorphology/leg_R1_coxa_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R1_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_R1_coxa_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R1_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_R1_coxa_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R1_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_R1_coxa_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R1_trochanter_in_plane" name="JumpingSpiderMorphology/leg_R1_trochanter_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R1_trochanter_in_plane" name="JumpingSpiderMorphology/leg_R1_trochanter_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R1_trochanter_in_plane" name="JumpingSpiderMorphology/leg_R1_trochanter_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R1_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_R1_trochanter_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R1_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_R1_trochanter_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R1_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_R1_trochanter_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R1_femur_out_of_plane" name="JumpingSpiderMorphology/leg_R1_femur_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R1_femur_out_of_plane" name="JumpingSpiderMorphology/leg_R1_femur_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R1_femur_out_of_plane" name="JumpingSpiderMorphology/leg_R1_femur_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R1_patella_out_of_plane" name="JumpingSpiderMorphology/leg_R1_patella_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R1_patella_out_of_plane" name="JumpingSpiderMorphology/leg_R1_patella_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R1_patella_out_of_plane" name="JumpingSpiderMorphology/leg_R1_patella_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R1_tibia_in_plane" name="JumpingSpiderMorphology/leg_R1_tibia_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R1_tibia_in_plane" name="JumpingSpiderMorphology/leg_R1_tibia_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R1_tibia_in_plane" name="JumpingSpiderMorphology/leg_R1_tibia_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R1_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_R1_tibia_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R1_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_R1_tibia_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R1_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_R1_tibia_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R1_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_R1_metatarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R1_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_R1_metatarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R1_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_R1_metatarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R1_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R1_metatarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R1_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R1_metatarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R1_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R1_metatarsus_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R1_tarsus_in_plane" name="JumpingSpiderMorphology/leg_R1_tarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R1_tarsus_in_plane" name="JumpingSpiderMorphology/leg_R1_tarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R1_tarsus_in_plane" name="JumpingSpiderMorphology/leg_R1_tarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R1_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R1_tarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R1_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R1_tarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R1_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R1_tarsus_out_of_plane_actuatorfrc"/>
+    <touch site="JumpingSpiderMorphology/leg_R1_tarsus_touch" name="JumpingSpiderMorphology/leg_R1_tarsus_touch"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L2_coxa_in_plane" name="JumpingSpiderMorphology/leg_L2_coxa_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L2_coxa_in_plane" name="JumpingSpiderMorphology/leg_L2_coxa_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L2_coxa_in_plane" name="JumpingSpiderMorphology/leg_L2_coxa_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L2_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_L2_coxa_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L2_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_L2_coxa_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L2_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_L2_coxa_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L2_trochanter_in_plane" name="JumpingSpiderMorphology/leg_L2_trochanter_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L2_trochanter_in_plane" name="JumpingSpiderMorphology/leg_L2_trochanter_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L2_trochanter_in_plane" name="JumpingSpiderMorphology/leg_L2_trochanter_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L2_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_L2_trochanter_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L2_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_L2_trochanter_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L2_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_L2_trochanter_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L2_femur_out_of_plane" name="JumpingSpiderMorphology/leg_L2_femur_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L2_femur_out_of_plane" name="JumpingSpiderMorphology/leg_L2_femur_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L2_femur_out_of_plane" name="JumpingSpiderMorphology/leg_L2_femur_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L2_patella_out_of_plane" name="JumpingSpiderMorphology/leg_L2_patella_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L2_patella_out_of_plane" name="JumpingSpiderMorphology/leg_L2_patella_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L2_patella_out_of_plane" name="JumpingSpiderMorphology/leg_L2_patella_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L2_tibia_in_plane" name="JumpingSpiderMorphology/leg_L2_tibia_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L2_tibia_in_plane" name="JumpingSpiderMorphology/leg_L2_tibia_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L2_tibia_in_plane" name="JumpingSpiderMorphology/leg_L2_tibia_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L2_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_L2_tibia_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L2_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_L2_tibia_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L2_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_L2_tibia_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L2_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_L2_metatarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L2_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_L2_metatarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L2_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_L2_metatarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L2_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L2_metatarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L2_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L2_metatarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L2_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L2_metatarsus_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L2_tarsus_in_plane" name="JumpingSpiderMorphology/leg_L2_tarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L2_tarsus_in_plane" name="JumpingSpiderMorphology/leg_L2_tarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L2_tarsus_in_plane" name="JumpingSpiderMorphology/leg_L2_tarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L2_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L2_tarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L2_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L2_tarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L2_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L2_tarsus_out_of_plane_actuatorfrc"/>
+    <touch site="JumpingSpiderMorphology/leg_L2_tarsus_touch" name="JumpingSpiderMorphology/leg_L2_tarsus_touch"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R2_coxa_in_plane" name="JumpingSpiderMorphology/leg_R2_coxa_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R2_coxa_in_plane" name="JumpingSpiderMorphology/leg_R2_coxa_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R2_coxa_in_plane" name="JumpingSpiderMorphology/leg_R2_coxa_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R2_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_R2_coxa_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R2_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_R2_coxa_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R2_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_R2_coxa_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R2_trochanter_in_plane" name="JumpingSpiderMorphology/leg_R2_trochanter_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R2_trochanter_in_plane" name="JumpingSpiderMorphology/leg_R2_trochanter_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R2_trochanter_in_plane" name="JumpingSpiderMorphology/leg_R2_trochanter_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R2_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_R2_trochanter_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R2_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_R2_trochanter_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R2_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_R2_trochanter_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R2_femur_out_of_plane" name="JumpingSpiderMorphology/leg_R2_femur_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R2_femur_out_of_plane" name="JumpingSpiderMorphology/leg_R2_femur_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R2_femur_out_of_plane" name="JumpingSpiderMorphology/leg_R2_femur_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R2_patella_out_of_plane" name="JumpingSpiderMorphology/leg_R2_patella_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R2_patella_out_of_plane" name="JumpingSpiderMorphology/leg_R2_patella_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R2_patella_out_of_plane" name="JumpingSpiderMorphology/leg_R2_patella_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R2_tibia_in_plane" name="JumpingSpiderMorphology/leg_R2_tibia_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R2_tibia_in_plane" name="JumpingSpiderMorphology/leg_R2_tibia_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R2_tibia_in_plane" name="JumpingSpiderMorphology/leg_R2_tibia_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R2_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_R2_tibia_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R2_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_R2_tibia_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R2_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_R2_tibia_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R2_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_R2_metatarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R2_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_R2_metatarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R2_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_R2_metatarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R2_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R2_metatarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R2_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R2_metatarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R2_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R2_metatarsus_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R2_tarsus_in_plane" name="JumpingSpiderMorphology/leg_R2_tarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R2_tarsus_in_plane" name="JumpingSpiderMorphology/leg_R2_tarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R2_tarsus_in_plane" name="JumpingSpiderMorphology/leg_R2_tarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R2_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R2_tarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R2_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R2_tarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R2_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R2_tarsus_out_of_plane_actuatorfrc"/>
+    <touch site="JumpingSpiderMorphology/leg_R2_tarsus_touch" name="JumpingSpiderMorphology/leg_R2_tarsus_touch"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L3_coxa_in_plane" name="JumpingSpiderMorphology/leg_L3_coxa_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L3_coxa_in_plane" name="JumpingSpiderMorphology/leg_L3_coxa_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L3_coxa_in_plane" name="JumpingSpiderMorphology/leg_L3_coxa_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L3_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_L3_coxa_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L3_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_L3_coxa_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L3_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_L3_coxa_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L3_trochanter_in_plane" name="JumpingSpiderMorphology/leg_L3_trochanter_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L3_trochanter_in_plane" name="JumpingSpiderMorphology/leg_L3_trochanter_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L3_trochanter_in_plane" name="JumpingSpiderMorphology/leg_L3_trochanter_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L3_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_L3_trochanter_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L3_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_L3_trochanter_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L3_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_L3_trochanter_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L3_femur_out_of_plane" name="JumpingSpiderMorphology/leg_L3_femur_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L3_femur_out_of_plane" name="JumpingSpiderMorphology/leg_L3_femur_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L3_femur_out_of_plane" name="JumpingSpiderMorphology/leg_L3_femur_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L3_patella_out_of_plane" name="JumpingSpiderMorphology/leg_L3_patella_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L3_patella_out_of_plane" name="JumpingSpiderMorphology/leg_L3_patella_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L3_patella_out_of_plane" name="JumpingSpiderMorphology/leg_L3_patella_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L3_tibia_in_plane" name="JumpingSpiderMorphology/leg_L3_tibia_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L3_tibia_in_plane" name="JumpingSpiderMorphology/leg_L3_tibia_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L3_tibia_in_plane" name="JumpingSpiderMorphology/leg_L3_tibia_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L3_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_L3_tibia_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L3_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_L3_tibia_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L3_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_L3_tibia_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L3_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_L3_metatarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L3_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_L3_metatarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L3_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_L3_metatarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L3_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L3_metatarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L3_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L3_metatarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L3_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L3_metatarsus_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L3_tarsus_in_plane" name="JumpingSpiderMorphology/leg_L3_tarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L3_tarsus_in_plane" name="JumpingSpiderMorphology/leg_L3_tarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L3_tarsus_in_plane" name="JumpingSpiderMorphology/leg_L3_tarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L3_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L3_tarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L3_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L3_tarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L3_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L3_tarsus_out_of_plane_actuatorfrc"/>
+    <touch site="JumpingSpiderMorphology/leg_L3_tarsus_touch" name="JumpingSpiderMorphology/leg_L3_tarsus_touch"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R3_coxa_in_plane" name="JumpingSpiderMorphology/leg_R3_coxa_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R3_coxa_in_plane" name="JumpingSpiderMorphology/leg_R3_coxa_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R3_coxa_in_plane" name="JumpingSpiderMorphology/leg_R3_coxa_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R3_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_R3_coxa_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R3_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_R3_coxa_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R3_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_R3_coxa_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R3_trochanter_in_plane" name="JumpingSpiderMorphology/leg_R3_trochanter_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R3_trochanter_in_plane" name="JumpingSpiderMorphology/leg_R3_trochanter_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R3_trochanter_in_plane" name="JumpingSpiderMorphology/leg_R3_trochanter_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R3_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_R3_trochanter_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R3_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_R3_trochanter_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R3_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_R3_trochanter_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R3_femur_out_of_plane" name="JumpingSpiderMorphology/leg_R3_femur_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R3_femur_out_of_plane" name="JumpingSpiderMorphology/leg_R3_femur_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R3_femur_out_of_plane" name="JumpingSpiderMorphology/leg_R3_femur_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R3_patella_out_of_plane" name="JumpingSpiderMorphology/leg_R3_patella_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R3_patella_out_of_plane" name="JumpingSpiderMorphology/leg_R3_patella_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R3_patella_out_of_plane" name="JumpingSpiderMorphology/leg_R3_patella_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R3_tibia_in_plane" name="JumpingSpiderMorphology/leg_R3_tibia_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R3_tibia_in_plane" name="JumpingSpiderMorphology/leg_R3_tibia_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R3_tibia_in_plane" name="JumpingSpiderMorphology/leg_R3_tibia_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R3_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_R3_tibia_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R3_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_R3_tibia_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R3_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_R3_tibia_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R3_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_R3_metatarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R3_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_R3_metatarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R3_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_R3_metatarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R3_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R3_metatarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R3_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R3_metatarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R3_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R3_metatarsus_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R3_tarsus_in_plane" name="JumpingSpiderMorphology/leg_R3_tarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R3_tarsus_in_plane" name="JumpingSpiderMorphology/leg_R3_tarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R3_tarsus_in_plane" name="JumpingSpiderMorphology/leg_R3_tarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R3_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R3_tarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R3_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R3_tarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R3_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R3_tarsus_out_of_plane_actuatorfrc"/>
+    <touch site="JumpingSpiderMorphology/leg_R3_tarsus_touch" name="JumpingSpiderMorphology/leg_R3_tarsus_touch"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L4_coxa_in_plane" name="JumpingSpiderMorphology/leg_L4_coxa_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L4_coxa_in_plane" name="JumpingSpiderMorphology/leg_L4_coxa_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L4_coxa_in_plane" name="JumpingSpiderMorphology/leg_L4_coxa_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L4_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_L4_coxa_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L4_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_L4_coxa_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L4_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_L4_coxa_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L4_trochanter_in_plane" name="JumpingSpiderMorphology/leg_L4_trochanter_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L4_trochanter_in_plane" name="JumpingSpiderMorphology/leg_L4_trochanter_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L4_trochanter_in_plane" name="JumpingSpiderMorphology/leg_L4_trochanter_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L4_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_L4_trochanter_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L4_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_L4_trochanter_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L4_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_L4_trochanter_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L4_femur_out_of_plane" name="JumpingSpiderMorphology/leg_L4_femur_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L4_femur_out_of_plane" name="JumpingSpiderMorphology/leg_L4_femur_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L4_femur_out_of_plane" name="JumpingSpiderMorphology/leg_L4_femur_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L4_patella_out_of_plane" name="JumpingSpiderMorphology/leg_L4_patella_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L4_patella_out_of_plane" name="JumpingSpiderMorphology/leg_L4_patella_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L4_patella_out_of_plane" name="JumpingSpiderMorphology/leg_L4_patella_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L4_tibia_in_plane" name="JumpingSpiderMorphology/leg_L4_tibia_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L4_tibia_in_plane" name="JumpingSpiderMorphology/leg_L4_tibia_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L4_tibia_in_plane" name="JumpingSpiderMorphology/leg_L4_tibia_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L4_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_L4_tibia_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L4_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_L4_tibia_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L4_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_L4_tibia_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L4_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_L4_metatarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L4_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_L4_metatarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L4_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_L4_metatarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L4_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L4_metatarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L4_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L4_metatarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L4_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L4_metatarsus_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L4_tarsus_in_plane" name="JumpingSpiderMorphology/leg_L4_tarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L4_tarsus_in_plane" name="JumpingSpiderMorphology/leg_L4_tarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L4_tarsus_in_plane" name="JumpingSpiderMorphology/leg_L4_tarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_L4_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L4_tarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_L4_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L4_tarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_L4_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_L4_tarsus_out_of_plane_actuatorfrc"/>
+    <touch site="JumpingSpiderMorphology/leg_L4_tarsus_touch" name="JumpingSpiderMorphology/leg_L4_tarsus_touch"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R4_coxa_in_plane" name="JumpingSpiderMorphology/leg_R4_coxa_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R4_coxa_in_plane" name="JumpingSpiderMorphology/leg_R4_coxa_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R4_coxa_in_plane" name="JumpingSpiderMorphology/leg_R4_coxa_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R4_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_R4_coxa_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R4_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_R4_coxa_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R4_coxa_out_of_plane" name="JumpingSpiderMorphology/leg_R4_coxa_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R4_trochanter_in_plane" name="JumpingSpiderMorphology/leg_R4_trochanter_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R4_trochanter_in_plane" name="JumpingSpiderMorphology/leg_R4_trochanter_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R4_trochanter_in_plane" name="JumpingSpiderMorphology/leg_R4_trochanter_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R4_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_R4_trochanter_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R4_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_R4_trochanter_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R4_trochanter_out_of_plane" name="JumpingSpiderMorphology/leg_R4_trochanter_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R4_femur_out_of_plane" name="JumpingSpiderMorphology/leg_R4_femur_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R4_femur_out_of_plane" name="JumpingSpiderMorphology/leg_R4_femur_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R4_femur_out_of_plane" name="JumpingSpiderMorphology/leg_R4_femur_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R4_patella_out_of_plane" name="JumpingSpiderMorphology/leg_R4_patella_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R4_patella_out_of_plane" name="JumpingSpiderMorphology/leg_R4_patella_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R4_patella_out_of_plane" name="JumpingSpiderMorphology/leg_R4_patella_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R4_tibia_in_plane" name="JumpingSpiderMorphology/leg_R4_tibia_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R4_tibia_in_plane" name="JumpingSpiderMorphology/leg_R4_tibia_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R4_tibia_in_plane" name="JumpingSpiderMorphology/leg_R4_tibia_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R4_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_R4_tibia_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R4_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_R4_tibia_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R4_tibia_out_of_plane" name="JumpingSpiderMorphology/leg_R4_tibia_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R4_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_R4_metatarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R4_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_R4_metatarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R4_metatarsus_in_plane" name="JumpingSpiderMorphology/leg_R4_metatarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R4_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R4_metatarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R4_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R4_metatarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R4_metatarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R4_metatarsus_out_of_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R4_tarsus_in_plane" name="JumpingSpiderMorphology/leg_R4_tarsus_in_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R4_tarsus_in_plane" name="JumpingSpiderMorphology/leg_R4_tarsus_in_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R4_tarsus_in_plane" name="JumpingSpiderMorphology/leg_R4_tarsus_in_plane_actuatorfrc"/>
+    <jointpos joint="JumpingSpiderMorphology/leg_R4_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R4_tarsus_out_of_plane_jointpos"/>
+    <jointvel joint="JumpingSpiderMorphology/leg_R4_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R4_tarsus_out_of_plane_jointvel"/>
+
+    <actuatorfrc actuator="JumpingSpiderMorphology/leg_R4_tarsus_out_of_plane" name="JumpingSpiderMorphology/leg_R4_tarsus_out_of_plane_actuatorfrc"/>
+    <touch site="JumpingSpiderMorphology/leg_R4_tarsus_touch" name="JumpingSpiderMorphology/leg_R4_tarsus_touch"/>
+    <contact name="spider_contacts"/>
+  </sensor>
+
+  <custom>
+    <numeric name="brt_control_timestep" size="1" data="0.01"/>
+  </custom>
+</mujoco>

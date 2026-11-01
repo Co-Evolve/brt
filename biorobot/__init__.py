@@ -1,23 +1,7 @@
-import atexit
-import shutil
-from pathlib import Path
+"""The Bio-inspired Robotics Testbed (BRT): MuJoCo environments of animals for robotics and biology."""
 
-brb_tmp_directory = ""
+__version__ = "1.0.0"
 
+from biorobot.registry import available, make, register
 
-def set_brb_tmp_directory(new_path: str) -> None:
-    global brb_tmp_directory
-    brb_tmp_directory = new_path
-    Path(brb_tmp_directory).mkdir(parents=True, exist_ok=True)
-
-
-set_brb_tmp_directory("/tmp/brb")
-
-
-def exit_handler():
-    global brb_tmp_directory
-    if Path(brb_tmp_directory).exists():
-        shutil.rmtree(brb_tmp_directory, ignore_errors=True)
-
-
-atexit.register(exit_handler)
+__all__ = ["available", "make", "register", "__version__"]

@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bio-Inspired Robotics Testbed</title>
+    <meta
+      name="description"
+      content="BRT: MuJoCo simulation environments of animals. Benchmarks for bio-inspired robot design and control, and robots as a comparative method for biology."
+    />
+    <meta property="og:title" content="Bio-Inspired Robotics Testbed (BRT)" />
+    <meta property="og:description" content="MuJoCo simulation environments of animals, on CPU and GPU." />
+    <meta property="og:image" content="https://co-evolve.github.io/brt/assets/banner.jpg" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="./">BRT <span>Bio-Inspired Robotics Testbed</span></a>
+        <nav class="site-nav" aria-label="Main">
+          <a href="#environments">Environments</a>
+          <a href="#quickstart">Quickstart</a>
+          <a href="#contribute">Contribute</a>
+          <a href="https://github.com/Co-Evolve/brt">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero container">
+        <h1>Bio-Inspired Robotics Testbed</h1>
+        <p class="lead">
+          BRT bridges robotics and biology with MuJoCo simulation environments of animals. One task implementation
+          runs on CPU with MuJoCo, and on accelerators with MJX or MuJoCo Warp, so you can go from a single interactive
+          rollout to thousands of parallel environments without changing your code.
+        </p>
+        <div class="button-row">
+          <a class="button primary" href="#environments">Try the environments</a>
+          <a class="button" href="https://github.com/Co-Evolve/brt">View on GitHub</a>
+        </div>
+        <img
+          src="assets/banner.jpg"
+          width="1600"
+          height="974"
+          alt="Illustration of animals, robots and a computer showing simulation plots."
+          fetchpriority="high"
+        />
+      </section>
+
+      <section class="container" aria-labelledby="goals">
+        <h2 id="goals">Two communities, one testbed</h2>
+        <div class="grid">
+          <article class="card">
+            <span class="eyebrow">For roboticists</span>
+            <h3>Benchmarks for bio-inspired design and control</h3>
+            <p>
+              Animal morphologies are parameterised by plain Python specifications, so the same task can benchmark
+              controllers, morphologies, or both at once. Environments expose standard observation and action spaces,
+              a Gymnasium adapter, and JAX-native batching for large-scale learning and co-design.
+            </p>
+          </article>
+          <article class="card">
+            <span class="eyebrow">For biologists</span>
+            <h3>Robots as a controlled comparative method</h3>
+            <p>
+              Simulated animals let you change one trait at a time, such as arm count, leg proportions, or sensing, and
+              measure the effect on behaviour. That makes hypotheses about behaviour, ecology and evolution testable in
+              ways that are hard or impossible with living animals.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="container" id="environments" aria-labelledby="environments-title">
+        <h2 id="environments-title">Environments</h2>
+        <p>Each animal comes with a parameterised morphology, arenas, and a set of tasks. Open a demo to run the model in your browser.</p>
+        <div class="grid">
+          <article class="card env-card">
+            <span class="eyebrow">Echinoderm</span>
+            <h3>Brittle star</h3>
+            <p>
+              A central disk with segmented arms, each segment actuated in and out of plane. Brittle stars move without a
+              fixed front, coordinating many arms through a decentralised nervous system.
+            </p>
+            <ul class="tasks" aria-label="Brittle star tasks">
+              <li>undirected_locomotion</li>
+              <li>directed_locomotion</li>
+              <li>light_escape</li>
+            </ul>
+            <div class="button-row">
+              <a class="button primary" href="brittle-star.html">Live demo</a>
+              <a class="button" href="https://github.com/Co-Evolve/brt/tree/main/biorobot/brittle_star">Docs</a>
+            </div>
+          </article>
+          <article class="card env-card">
+            <span class="eyebrow">Arachnid</span>
+            <h3>Jumping spider</h3>
+            <p>
+              A cephalothorax, abdomen and eight multi-segment legs. Jumping spiders leap many times their body length
+              with precise aim, combining leg extension with hydraulic pressure and a stabilising dragline.
+            </p>
+            <ul class="tasks" aria-label="Jumping spider tasks">
+              <li>long_jump</li>
+              <li>directed_jump</li>
+              <li>platform_jump</li>
+            </ul>
+            <div class="button-row">
+              <a class="button primary" href="jumping-spider.html">Live demo</a>
+              <a class="button" href="https://github.com/Co-Evolve/brt/tree/main/biorobot/jumping_spider">Docs</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="container" id="quickstart" aria-labelledby="quickstart-title">
+        <h2 id="quickstart-title">Quickstart</h2>
+        <p class="code-label">Install</p>
+        <pre><code>pip install biorobot</code></pre>
+
+        <p class="code-label">Run an episode on the CPU</p>
+        <pre><code>import biorobot
+
+env = biorobot.make("brittle_star/undirected_locomotion", backend="mjc")
+state = env.reset(0)
+while not (state.terminated or state.truncated):
+    action = env.action_space.sample()
+    state = env.step(state, action)
+print(state.reward, state.observations.keys())</code></pre>
+
+        <p class="code-label">Batch thousands of environments with JAX</p>
+        <pre><code>import jax
+import biorobot
+
+num_envs = 1024
+# With backend="warp", num_envs sizes MuJoCo Warp's contact buffer, which all environments share.
+env = biorobot.make("brittle_star/undirected_locomotion", backend="mjx", num_envs=num_envs)
+keys = jax.random.split(jax.random.PRNGKey(0), num_envs)
+reset = jax.jit(jax.vmap(env.reset))
+step = jax.jit(jax.vmap(env.step))
+
+states = reset(keys)
+actions = jax.numpy.zeros((num_envs, env.action_space.shape[0]))
+states = step(states, actions)</code></pre>
+
+        <h3>Backends</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Backend</th>
+                <th scope="col">Engine</th>
+                <th scope="col">Arrays</th>
+                <th scope="col">Use it for</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>mjc</code></td>
+                <td>MuJoCo (C)</td>
+                <td>NumPy</td>
+                <td>Debugging, interactive rendering, Gymnasium, CPU evolution strategies</td>
+              </tr>
+              <tr>
+                <td><code>mjx</code></td>
+                <td>MJX, JAX implementation</td>
+                <td>JAX</td>
+                <td><code>jax.jit</code> / <code>jax.vmap</code> on GPU or TPU</td>
+              </tr>
+              <tr>
+                <td><code>warp</code></td>
+                <td>MJX with MuJoCo Warp</td>
+                <td>JAX</td>
+                <td>Fast, contact-rich batched simulation on NVIDIA GPUs</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          The task logic is written once and shared by all three backends. Version 1.0 is a rewrite on native
+          <code>mujoco.MjSpec</code>; if you depend on the old API, pin <code>biorobot==0.4.*</code>.
+        </p>
+      </section>
+
+      <section class="container" id="contribute" aria-labelledby="contribute-title">
+        <h2 id="contribute-title">Contribute</h2>
+        <div class="card">
+          <p>
+            Would you like a model of your favourite animal? Tell us about it through the
+            <a href="https://forms.gle/h1xgnZA39h2qhX8k9">model request form</a>. Bug reports, new tasks and new animals
+            are welcome as issues and pull requests on <a href="https://github.com/Co-Evolve/brt">GitHub</a>.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>Bio-Inspired Robotics Testbed &middot; MIT License</span>
+        <a href="https://github.com/Co-Evolve/brt">github.com/Co-Evolve/brt</a>
+      </div>
+    </footer>
+  </body>
+</html>
