@@ -5,7 +5,7 @@
     <flag contact="disable"/>
   </option>
 
-  <size njmax="372"/>
+  <size njmax="60"/>
 
   <default>
     <default class="SeahorseMorphology/main"/>
@@ -255,8 +255,6 @@
                 <geom name="SeahorseMorphology/segment_1_vertebrae_connector_sinistral_geom" quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34902 0.34902 0.34902 1" mesh="SeahorseMorphology/connector_vertebrae"/>
               </body>
               <body name="SeahorseMorphology/segment_1_plate_0">
-                <joint name="SeahorseMorphology/segment_1_plate_0_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                <joint name="SeahorseMorphology/segment_1_plate_0_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                 <site name="SeahorseMorphology/segment_1_plate_0_intermediate_hm_tap_0_0" size="0.0005" pos="0.0260483 -0.0333183 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                 <site name="SeahorseMorphology/segment_1_plate_0_intermediate_hm_tap_0_1" size="0.0005" pos="0.0260483 -0.0333183 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                 <site name="SeahorseMorphology/segment_1_plate_0_intermediate_hm_tap_1_0" size="0.0005" pos="0.0260483 -0.0305883 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -287,8 +285,6 @@
                 </body>
               </body>
               <body name="SeahorseMorphology/segment_1_plate_1">
-                <joint name="SeahorseMorphology/segment_1_plate_1_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                <joint name="SeahorseMorphology/segment_1_plate_1_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                 <site name="SeahorseMorphology/segment_1_plate_1_intermediate_hm_tap_0_0" size="0.0005" pos="0.0261968 0.0334668 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                 <site name="SeahorseMorphology/segment_1_plate_1_intermediate_hm_tap_0_1" size="0.0005" pos="0.0261968 0.0334668 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                 <site name="SeahorseMorphology/segment_1_plate_1_intermediate_hm_tap_1_0" size="0.0005" pos="0.0261968 0.0307368 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -332,8 +328,6 @@
                 </body>
               </body>
               <body name="SeahorseMorphology/segment_1_plate_2">
-                <joint name="SeahorseMorphology/segment_1_plate_2_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                <joint name="SeahorseMorphology/segment_1_plate_2_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                 <site name="SeahorseMorphology/segment_1_plate_2_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                 <site name="SeahorseMorphology/segment_1_plate_2_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                 <site name="SeahorseMorphology/segment_1_plate_2_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -369,8 +363,6 @@
                 </body>
               </body>
               <body name="SeahorseMorphology/segment_1_plate_3">
-                <joint name="SeahorseMorphology/segment_1_plate_3_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                <joint name="SeahorseMorphology/segment_1_plate_3_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                 <site name="SeahorseMorphology/segment_1_plate_3_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 -0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                 <site name="SeahorseMorphology/segment_1_plate_3_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 -0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                 <site name="SeahorseMorphology/segment_1_plate_3_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 -0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -448,8 +440,6 @@
                     <geom name="SeahorseMorphology/segment_2_vertebrae_connector_sinistral_geom" quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34902 0.34902 0.34902 1" mesh="SeahorseMorphology/connector_vertebrae"/>
                   </body>
                   <body name="SeahorseMorphology/segment_2_plate_0">
-                    <joint name="SeahorseMorphology/segment_2_plate_0_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                    <joint name="SeahorseMorphology/segment_2_plate_0_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                     <site name="SeahorseMorphology/segment_2_plate_0_intermediate_hm_tap_0_0" size="0.0005" pos="0.0260483 -0.0333183 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                     <site name="SeahorseMorphology/segment_2_plate_0_intermediate_hm_tap_0_1" size="0.0005" pos="0.0260483 -0.0333183 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                     <site name="SeahorseMorphology/segment_2_plate_0_intermediate_hm_tap_1_0" size="0.0005" pos="0.0260483 -0.0305883 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -480,8 +470,6 @@
                     </body>
                   </body>
                   <body name="SeahorseMorphology/segment_2_plate_1">
-                    <joint name="SeahorseMorphology/segment_2_plate_1_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                    <joint name="SeahorseMorphology/segment_2_plate_1_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                     <site name="SeahorseMorphology/segment_2_plate_1_intermediate_hm_tap_0_0" size="0.0005" pos="0.0261968 0.0334668 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                     <site name="SeahorseMorphology/segment_2_plate_1_intermediate_hm_tap_0_1" size="0.0005" pos="0.0261968 0.0334668 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                     <site name="SeahorseMorphology/segment_2_plate_1_intermediate_hm_tap_1_0" size="0.0005" pos="0.0261968 0.0307368 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -525,8 +513,6 @@
                     </body>
                   </body>
                   <body name="SeahorseMorphology/segment_2_plate_2">
-                    <joint name="SeahorseMorphology/segment_2_plate_2_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                    <joint name="SeahorseMorphology/segment_2_plate_2_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                     <site name="SeahorseMorphology/segment_2_plate_2_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                     <site name="SeahorseMorphology/segment_2_plate_2_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                     <site name="SeahorseMorphology/segment_2_plate_2_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -571,8 +557,6 @@
                     </body>
                   </body>
                   <body name="SeahorseMorphology/segment_2_plate_3">
-                    <joint name="SeahorseMorphology/segment_2_plate_3_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                    <joint name="SeahorseMorphology/segment_2_plate_3_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                     <site name="SeahorseMorphology/segment_2_plate_3_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0263806 -0.0336506 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                     <site name="SeahorseMorphology/segment_2_plate_3_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0263806 -0.0336506 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                     <site name="SeahorseMorphology/segment_2_plate_3_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0263806 -0.0309206 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -641,8 +625,6 @@
                         <geom name="SeahorseMorphology/segment_3_vertebrae_connector_sinistral_geom" quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34902 0.34902 0.34902 1" mesh="SeahorseMorphology/connector_vertebrae"/>
                       </body>
                       <body name="SeahorseMorphology/segment_3_plate_0">
-                        <joint name="SeahorseMorphology/segment_3_plate_0_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                        <joint name="SeahorseMorphology/segment_3_plate_0_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                         <site name="SeahorseMorphology/segment_3_plate_0_intermediate_hm_tap_0_0" size="0.0005" pos="0.0260483 -0.0333183 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                         <site name="SeahorseMorphology/segment_3_plate_0_intermediate_hm_tap_0_1" size="0.0005" pos="0.0260483 -0.0333183 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                         <site name="SeahorseMorphology/segment_3_plate_0_intermediate_hm_tap_1_0" size="0.0005" pos="0.0260483 -0.0305883 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -673,8 +655,6 @@
                         </body>
                       </body>
                       <body name="SeahorseMorphology/segment_3_plate_1">
-                        <joint name="SeahorseMorphology/segment_3_plate_1_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                        <joint name="SeahorseMorphology/segment_3_plate_1_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                         <site name="SeahorseMorphology/segment_3_plate_1_intermediate_hm_tap_0_0" size="0.0005" pos="0.0261968 0.0334668 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                         <site name="SeahorseMorphology/segment_3_plate_1_intermediate_hm_tap_0_1" size="0.0005" pos="0.0261968 0.0334668 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                         <site name="SeahorseMorphology/segment_3_plate_1_intermediate_hm_tap_1_0" size="0.0005" pos="0.0261968 0.0307368 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -718,8 +698,6 @@
                         </body>
                       </body>
                       <body name="SeahorseMorphology/segment_3_plate_2">
-                        <joint name="SeahorseMorphology/segment_3_plate_2_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                        <joint name="SeahorseMorphology/segment_3_plate_2_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                         <site name="SeahorseMorphology/segment_3_plate_2_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                         <site name="SeahorseMorphology/segment_3_plate_2_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                         <site name="SeahorseMorphology/segment_3_plate_2_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -755,8 +733,6 @@
                         </body>
                       </body>
                       <body name="SeahorseMorphology/segment_3_plate_3">
-                        <joint name="SeahorseMorphology/segment_3_plate_3_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                        <joint name="SeahorseMorphology/segment_3_plate_3_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                         <site name="SeahorseMorphology/segment_3_plate_3_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 -0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                         <site name="SeahorseMorphology/segment_3_plate_3_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 -0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                         <site name="SeahorseMorphology/segment_3_plate_3_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 -0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -834,8 +810,6 @@
                             <geom name="SeahorseMorphology/segment_4_vertebrae_connector_sinistral_geom" quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34902 0.34902 0.34902 1" mesh="SeahorseMorphology/connector_vertebrae"/>
                           </body>
                           <body name="SeahorseMorphology/segment_4_plate_0">
-                            <joint name="SeahorseMorphology/segment_4_plate_0_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                            <joint name="SeahorseMorphology/segment_4_plate_0_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                             <site name="SeahorseMorphology/segment_4_plate_0_intermediate_hm_tap_0_0" size="0.0005" pos="0.0260483 -0.0333183 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                             <site name="SeahorseMorphology/segment_4_plate_0_intermediate_hm_tap_0_1" size="0.0005" pos="0.0260483 -0.0333183 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                             <site name="SeahorseMorphology/segment_4_plate_0_intermediate_hm_tap_1_0" size="0.0005" pos="0.0260483 -0.0305883 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -866,8 +840,6 @@
                             </body>
                           </body>
                           <body name="SeahorseMorphology/segment_4_plate_1">
-                            <joint name="SeahorseMorphology/segment_4_plate_1_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                            <joint name="SeahorseMorphology/segment_4_plate_1_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                             <site name="SeahorseMorphology/segment_4_plate_1_intermediate_hm_tap_0_0" size="0.0005" pos="0.0261968 0.0334668 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                             <site name="SeahorseMorphology/segment_4_plate_1_intermediate_hm_tap_0_1" size="0.0005" pos="0.0261968 0.0334668 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                             <site name="SeahorseMorphology/segment_4_plate_1_intermediate_hm_tap_1_0" size="0.0005" pos="0.0261968 0.0307368 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -911,8 +883,6 @@
                             </body>
                           </body>
                           <body name="SeahorseMorphology/segment_4_plate_2">
-                            <joint name="SeahorseMorphology/segment_4_plate_2_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                            <joint name="SeahorseMorphology/segment_4_plate_2_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                             <site name="SeahorseMorphology/segment_4_plate_2_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                             <site name="SeahorseMorphology/segment_4_plate_2_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                             <site name="SeahorseMorphology/segment_4_plate_2_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -957,8 +927,6 @@
                             </body>
                           </body>
                           <body name="SeahorseMorphology/segment_4_plate_3">
-                            <joint name="SeahorseMorphology/segment_4_plate_3_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                            <joint name="SeahorseMorphology/segment_4_plate_3_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                             <site name="SeahorseMorphology/segment_4_plate_3_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0263806 -0.0336506 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                             <site name="SeahorseMorphology/segment_4_plate_3_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0263806 -0.0336506 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                             <site name="SeahorseMorphology/segment_4_plate_3_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0263806 -0.0309206 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1027,8 +995,6 @@
                                 <geom name="SeahorseMorphology/segment_5_vertebrae_connector_sinistral_geom" quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34902 0.34902 0.34902 1" mesh="SeahorseMorphology/connector_vertebrae"/>
                               </body>
                               <body name="SeahorseMorphology/segment_5_plate_0">
-                                <joint name="SeahorseMorphology/segment_5_plate_0_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                <joint name="SeahorseMorphology/segment_5_plate_0_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                 <site name="SeahorseMorphology/segment_5_plate_0_intermediate_hm_tap_0_0" size="0.0005" pos="0.0260483 -0.0333183 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                 <site name="SeahorseMorphology/segment_5_plate_0_intermediate_hm_tap_0_1" size="0.0005" pos="0.0260483 -0.0333183 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                 <site name="SeahorseMorphology/segment_5_plate_0_intermediate_hm_tap_1_0" size="0.0005" pos="0.0260483 -0.0305883 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1059,8 +1025,6 @@
                                 </body>
                               </body>
                               <body name="SeahorseMorphology/segment_5_plate_1">
-                                <joint name="SeahorseMorphology/segment_5_plate_1_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                <joint name="SeahorseMorphology/segment_5_plate_1_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                 <site name="SeahorseMorphology/segment_5_plate_1_intermediate_hm_tap_0_0" size="0.0005" pos="0.0261968 0.0334668 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                 <site name="SeahorseMorphology/segment_5_plate_1_intermediate_hm_tap_0_1" size="0.0005" pos="0.0261968 0.0334668 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                 <site name="SeahorseMorphology/segment_5_plate_1_intermediate_hm_tap_1_0" size="0.0005" pos="0.0261968 0.0307368 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1104,8 +1068,6 @@
                                 </body>
                               </body>
                               <body name="SeahorseMorphology/segment_5_plate_2">
-                                <joint name="SeahorseMorphology/segment_5_plate_2_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                <joint name="SeahorseMorphology/segment_5_plate_2_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                 <site name="SeahorseMorphology/segment_5_plate_2_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                 <site name="SeahorseMorphology/segment_5_plate_2_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                 <site name="SeahorseMorphology/segment_5_plate_2_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1141,8 +1103,6 @@
                                 </body>
                               </body>
                               <body name="SeahorseMorphology/segment_5_plate_3">
-                                <joint name="SeahorseMorphology/segment_5_plate_3_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                <joint name="SeahorseMorphology/segment_5_plate_3_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                 <site name="SeahorseMorphology/segment_5_plate_3_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 -0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                 <site name="SeahorseMorphology/segment_5_plate_3_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 -0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                 <site name="SeahorseMorphology/segment_5_plate_3_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 -0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1220,8 +1180,6 @@
                                     <geom name="SeahorseMorphology/segment_6_vertebrae_connector_sinistral_geom" quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34902 0.34902 0.34902 1" mesh="SeahorseMorphology/connector_vertebrae"/>
                                   </body>
                                   <body name="SeahorseMorphology/segment_6_plate_0">
-                                    <joint name="SeahorseMorphology/segment_6_plate_0_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                    <joint name="SeahorseMorphology/segment_6_plate_0_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                     <site name="SeahorseMorphology/segment_6_plate_0_intermediate_hm_tap_0_0" size="0.0005" pos="0.0260483 -0.0333183 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                     <site name="SeahorseMorphology/segment_6_plate_0_intermediate_hm_tap_0_1" size="0.0005" pos="0.0260483 -0.0333183 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                     <site name="SeahorseMorphology/segment_6_plate_0_intermediate_hm_tap_1_0" size="0.0005" pos="0.0260483 -0.0305883 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1252,8 +1210,6 @@
                                     </body>
                                   </body>
                                   <body name="SeahorseMorphology/segment_6_plate_1">
-                                    <joint name="SeahorseMorphology/segment_6_plate_1_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                    <joint name="SeahorseMorphology/segment_6_plate_1_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                     <site name="SeahorseMorphology/segment_6_plate_1_intermediate_hm_tap_0_0" size="0.0005" pos="0.0261968 0.0334668 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                     <site name="SeahorseMorphology/segment_6_plate_1_intermediate_hm_tap_0_1" size="0.0005" pos="0.0261968 0.0334668 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                     <site name="SeahorseMorphology/segment_6_plate_1_intermediate_hm_tap_1_0" size="0.0005" pos="0.0261968 0.0307368 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1297,8 +1253,6 @@
                                     </body>
                                   </body>
                                   <body name="SeahorseMorphology/segment_6_plate_2">
-                                    <joint name="SeahorseMorphology/segment_6_plate_2_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                    <joint name="SeahorseMorphology/segment_6_plate_2_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                     <site name="SeahorseMorphology/segment_6_plate_2_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                     <site name="SeahorseMorphology/segment_6_plate_2_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                     <site name="SeahorseMorphology/segment_6_plate_2_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1343,8 +1297,6 @@
                                     </body>
                                   </body>
                                   <body name="SeahorseMorphology/segment_6_plate_3">
-                                    <joint name="SeahorseMorphology/segment_6_plate_3_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                    <joint name="SeahorseMorphology/segment_6_plate_3_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                     <site name="SeahorseMorphology/segment_6_plate_3_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0263806 -0.0336506 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                     <site name="SeahorseMorphology/segment_6_plate_3_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0263806 -0.0336506 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                     <site name="SeahorseMorphology/segment_6_plate_3_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0263806 -0.0309206 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1413,8 +1365,6 @@
                                         <geom name="SeahorseMorphology/segment_7_vertebrae_connector_sinistral_geom" quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34902 0.34902 0.34902 1" mesh="SeahorseMorphology/connector_vertebrae"/>
                                       </body>
                                       <body name="SeahorseMorphology/segment_7_plate_0">
-                                        <joint name="SeahorseMorphology/segment_7_plate_0_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                        <joint name="SeahorseMorphology/segment_7_plate_0_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                         <site name="SeahorseMorphology/segment_7_plate_0_intermediate_hm_tap_0_0" size="0.0005" pos="0.0260483 -0.0333183 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                         <site name="SeahorseMorphology/segment_7_plate_0_intermediate_hm_tap_0_1" size="0.0005" pos="0.0260483 -0.0333183 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                         <site name="SeahorseMorphology/segment_7_plate_0_intermediate_hm_tap_1_0" size="0.0005" pos="0.0260483 -0.0305883 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1445,8 +1395,6 @@
                                         </body>
                                       </body>
                                       <body name="SeahorseMorphology/segment_7_plate_1">
-                                        <joint name="SeahorseMorphology/segment_7_plate_1_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                        <joint name="SeahorseMorphology/segment_7_plate_1_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                         <site name="SeahorseMorphology/segment_7_plate_1_intermediate_hm_tap_0_0" size="0.0005" pos="0.0261968 0.0334668 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                         <site name="SeahorseMorphology/segment_7_plate_1_intermediate_hm_tap_0_1" size="0.0005" pos="0.0261968 0.0334668 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                         <site name="SeahorseMorphology/segment_7_plate_1_intermediate_hm_tap_1_0" size="0.0005" pos="0.0261968 0.0307368 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1490,8 +1438,6 @@
                                         </body>
                                       </body>
                                       <body name="SeahorseMorphology/segment_7_plate_2">
-                                        <joint name="SeahorseMorphology/segment_7_plate_2_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                        <joint name="SeahorseMorphology/segment_7_plate_2_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                         <site name="SeahorseMorphology/segment_7_plate_2_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                         <site name="SeahorseMorphology/segment_7_plate_2_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                         <site name="SeahorseMorphology/segment_7_plate_2_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1527,8 +1473,6 @@
                                         </body>
                                       </body>
                                       <body name="SeahorseMorphology/segment_7_plate_3">
-                                        <joint name="SeahorseMorphology/segment_7_plate_3_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                        <joint name="SeahorseMorphology/segment_7_plate_3_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                         <site name="SeahorseMorphology/segment_7_plate_3_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 -0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                         <site name="SeahorseMorphology/segment_7_plate_3_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 -0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                         <site name="SeahorseMorphology/segment_7_plate_3_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 -0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1606,8 +1550,6 @@
                                             <geom name="SeahorseMorphology/segment_8_vertebrae_connector_sinistral_geom" quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34902 0.34902 0.34902 1" mesh="SeahorseMorphology/connector_vertebrae"/>
                                           </body>
                                           <body name="SeahorseMorphology/segment_8_plate_0">
-                                            <joint name="SeahorseMorphology/segment_8_plate_0_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                            <joint name="SeahorseMorphology/segment_8_plate_0_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                             <site name="SeahorseMorphology/segment_8_plate_0_intermediate_hm_tap_0_0" size="0.0005" pos="0.0260483 -0.0333183 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                             <site name="SeahorseMorphology/segment_8_plate_0_intermediate_hm_tap_0_1" size="0.0005" pos="0.0260483 -0.0333183 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                             <site name="SeahorseMorphology/segment_8_plate_0_intermediate_hm_tap_1_0" size="0.0005" pos="0.0260483 -0.0305883 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1638,8 +1580,6 @@
                                             </body>
                                           </body>
                                           <body name="SeahorseMorphology/segment_8_plate_1">
-                                            <joint name="SeahorseMorphology/segment_8_plate_1_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                            <joint name="SeahorseMorphology/segment_8_plate_1_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                             <site name="SeahorseMorphology/segment_8_plate_1_intermediate_hm_tap_0_0" size="0.0005" pos="0.0261968 0.0334668 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                             <site name="SeahorseMorphology/segment_8_plate_1_intermediate_hm_tap_0_1" size="0.0005" pos="0.0261968 0.0334668 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                             <site name="SeahorseMorphology/segment_8_plate_1_intermediate_hm_tap_1_0" size="0.0005" pos="0.0261968 0.0307368 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1683,8 +1623,6 @@
                                             </body>
                                           </body>
                                           <body name="SeahorseMorphology/segment_8_plate_2">
-                                            <joint name="SeahorseMorphology/segment_8_plate_2_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                            <joint name="SeahorseMorphology/segment_8_plate_2_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                             <site name="SeahorseMorphology/segment_8_plate_2_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                             <site name="SeahorseMorphology/segment_8_plate_2_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                             <site name="SeahorseMorphology/segment_8_plate_2_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1729,8 +1667,6 @@
                                             </body>
                                           </body>
                                           <body name="SeahorseMorphology/segment_8_plate_3">
-                                            <joint name="SeahorseMorphology/segment_8_plate_3_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                            <joint name="SeahorseMorphology/segment_8_plate_3_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                             <site name="SeahorseMorphology/segment_8_plate_3_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0263806 -0.0336506 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                             <site name="SeahorseMorphology/segment_8_plate_3_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0263806 -0.0336506 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                             <site name="SeahorseMorphology/segment_8_plate_3_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0263806 -0.0309206 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1799,8 +1735,6 @@
                                                 <geom name="SeahorseMorphology/segment_9_vertebrae_connector_sinistral_geom" quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34902 0.34902 0.34902 1" mesh="SeahorseMorphology/connector_vertebrae"/>
                                               </body>
                                               <body name="SeahorseMorphology/segment_9_plate_0">
-                                                <joint name="SeahorseMorphology/segment_9_plate_0_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                                <joint name="SeahorseMorphology/segment_9_plate_0_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                                 <site name="SeahorseMorphology/segment_9_plate_0_intermediate_hm_tap_0_0" size="0.0005" pos="0.0260483 -0.0333183 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                                 <site name="SeahorseMorphology/segment_9_plate_0_intermediate_hm_tap_0_1" size="0.0005" pos="0.0260483 -0.0333183 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                                 <site name="SeahorseMorphology/segment_9_plate_0_intermediate_hm_tap_1_0" size="0.0005" pos="0.0260483 -0.0305883 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1831,8 +1765,6 @@
                                                 </body>
                                               </body>
                                               <body name="SeahorseMorphology/segment_9_plate_1">
-                                                <joint name="SeahorseMorphology/segment_9_plate_1_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                                <joint name="SeahorseMorphology/segment_9_plate_1_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                                 <site name="SeahorseMorphology/segment_9_plate_1_intermediate_hm_tap_0_0" size="0.0005" pos="0.0261968 0.0334668 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                                 <site name="SeahorseMorphology/segment_9_plate_1_intermediate_hm_tap_0_1" size="0.0005" pos="0.0261968 0.0334668 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                                 <site name="SeahorseMorphology/segment_9_plate_1_intermediate_hm_tap_1_0" size="0.0005" pos="0.0261968 0.0307368 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1876,8 +1808,6 @@
                                                 </body>
                                               </body>
                                               <body name="SeahorseMorphology/segment_9_plate_2">
-                                                <joint name="SeahorseMorphology/segment_9_plate_2_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                                <joint name="SeahorseMorphology/segment_9_plate_2_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                                 <site name="SeahorseMorphology/segment_9_plate_2_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                                 <site name="SeahorseMorphology/segment_9_plate_2_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                                 <site name="SeahorseMorphology/segment_9_plate_2_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1913,8 +1843,6 @@
                                                 </body>
                                               </body>
                                               <body name="SeahorseMorphology/segment_9_plate_3">
-                                                <joint name="SeahorseMorphology/segment_9_plate_3_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                                <joint name="SeahorseMorphology/segment_9_plate_3_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                                 <site name="SeahorseMorphology/segment_9_plate_3_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 -0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                                 <site name="SeahorseMorphology/segment_9_plate_3_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 -0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                                 <site name="SeahorseMorphology/segment_9_plate_3_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 -0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1992,8 +1920,6 @@
                                                     <geom name="SeahorseMorphology/segment_10_vertebrae_connector_sinistral_geom" quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34902 0.34902 0.34902 1" mesh="SeahorseMorphology/connector_vertebrae"/>
                                                   </body>
                                                   <body name="SeahorseMorphology/segment_10_plate_0">
-                                                    <joint name="SeahorseMorphology/segment_10_plate_0_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                                    <joint name="SeahorseMorphology/segment_10_plate_0_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                                     <site name="SeahorseMorphology/segment_10_plate_0_intermediate_hm_tap_0_0" size="0.0005" pos="0.0260483 -0.0333183 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                                     <site name="SeahorseMorphology/segment_10_plate_0_intermediate_hm_tap_0_1" size="0.0005" pos="0.0260483 -0.0333183 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                                     <site name="SeahorseMorphology/segment_10_plate_0_intermediate_hm_tap_1_0" size="0.0005" pos="0.0260483 -0.0305883 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -2024,8 +1950,6 @@
                                                     </body>
                                                   </body>
                                                   <body name="SeahorseMorphology/segment_10_plate_1">
-                                                    <joint name="SeahorseMorphology/segment_10_plate_1_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                                    <joint name="SeahorseMorphology/segment_10_plate_1_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                                     <site name="SeahorseMorphology/segment_10_plate_1_intermediate_hm_tap_0_0" size="0.0005" pos="0.0261968 0.0334668 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                                     <site name="SeahorseMorphology/segment_10_plate_1_intermediate_hm_tap_0_1" size="0.0005" pos="0.0261968 0.0334668 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                                     <site name="SeahorseMorphology/segment_10_plate_1_intermediate_hm_tap_1_0" size="0.0005" pos="0.0261968 0.0307368 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -2069,8 +1993,6 @@
                                                     </body>
                                                   </body>
                                                   <body name="SeahorseMorphology/segment_10_plate_2">
-                                                    <joint name="SeahorseMorphology/segment_10_plate_2_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                                    <joint name="SeahorseMorphology/segment_10_plate_2_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="-0.005 0" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                                     <site name="SeahorseMorphology/segment_10_plate_2_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0262039 0.0334739 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                                     <site name="SeahorseMorphology/segment_10_plate_2_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0262039 0.0334739 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                                     <site name="SeahorseMorphology/segment_10_plate_2_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0262039 0.0307439 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -2115,8 +2037,6 @@
                                                     </body>
                                                   </body>
                                                   <body name="SeahorseMorphology/segment_10_plate_3">
-                                                    <joint name="SeahorseMorphology/segment_10_plate_3_x_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="1 0 0" limited="true"/>
-                                                    <joint name="SeahorseMorphology/segment_10_plate_3_y_axis" type="slide" solimplimit="0.9 0.9999 0.001 0.1 6" stiffness="1" range="0 0.005" damping="1" frictionloss="0.3" axis="0 1 0" limited="true"/>
                                                     <site name="SeahorseMorphology/segment_10_plate_3_intermediate_hm_tap_0_0" size="0.0005" pos="-0.0263806 -0.0336506 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
                                                     <site name="SeahorseMorphology/segment_10_plate_3_intermediate_hm_tap_0_1" size="0.0005" pos="-0.0263806 -0.0336506 0.0018" rgba="0.717647 0.337255 0.34902 1"/>
                                                     <site name="SeahorseMorphology/segment_10_plate_3_intermediate_hm_tap_1_0" size="0.0005" pos="-0.0263806 -0.0309206 -0.0017" rgba="0.717647 0.337255 0.34902 1"/>
@@ -2570,161 +2490,6 @@
       <site site="SeahorseMorphology/segment_10_plate_1_mvm_tap_dextral_0"/>
     </spatial>
   </tendon>
-
-  <equality>
-    <joint joint1="SeahorseMorphology/segment_1_plate_0_x_axis" joint2="SeahorseMorphology/segment_1_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_0_y_axis" joint2="SeahorseMorphology/segment_1_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_2_x_axis" joint2="SeahorseMorphology/segment_1_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_2_y_axis" joint2="SeahorseMorphology/segment_1_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_0_x_axis" joint2="SeahorseMorphology/segment_1_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_0_y_axis" joint2="SeahorseMorphology/segment_1_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_1_x_axis" joint2="SeahorseMorphology/segment_1_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_1_y_axis" joint2="SeahorseMorphology/segment_1_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_0_x_axis" joint2="SeahorseMorphology/segment_2_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_0_y_axis" joint2="SeahorseMorphology/segment_2_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_2_x_axis" joint2="SeahorseMorphology/segment_2_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_2_y_axis" joint2="SeahorseMorphology/segment_2_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_0_x_axis" joint2="SeahorseMorphology/segment_2_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_0_y_axis" joint2="SeahorseMorphology/segment_2_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_1_x_axis" joint2="SeahorseMorphology/segment_2_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_1_y_axis" joint2="SeahorseMorphology/segment_2_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_0_x_axis" joint2="SeahorseMorphology/segment_3_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_0_y_axis" joint2="SeahorseMorphology/segment_3_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_2_x_axis" joint2="SeahorseMorphology/segment_3_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_2_y_axis" joint2="SeahorseMorphology/segment_3_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_0_x_axis" joint2="SeahorseMorphology/segment_3_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_0_y_axis" joint2="SeahorseMorphology/segment_3_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_1_x_axis" joint2="SeahorseMorphology/segment_3_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_1_y_axis" joint2="SeahorseMorphology/segment_3_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_0_x_axis" joint2="SeahorseMorphology/segment_4_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_0_y_axis" joint2="SeahorseMorphology/segment_4_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_2_x_axis" joint2="SeahorseMorphology/segment_4_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_2_y_axis" joint2="SeahorseMorphology/segment_4_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_0_x_axis" joint2="SeahorseMorphology/segment_4_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_0_y_axis" joint2="SeahorseMorphology/segment_4_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_1_x_axis" joint2="SeahorseMorphology/segment_4_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_1_y_axis" joint2="SeahorseMorphology/segment_4_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_0_x_axis" joint2="SeahorseMorphology/segment_5_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_0_y_axis" joint2="SeahorseMorphology/segment_5_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_2_x_axis" joint2="SeahorseMorphology/segment_5_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_2_y_axis" joint2="SeahorseMorphology/segment_5_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_0_x_axis" joint2="SeahorseMorphology/segment_5_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_0_y_axis" joint2="SeahorseMorphology/segment_5_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_1_x_axis" joint2="SeahorseMorphology/segment_5_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_1_y_axis" joint2="SeahorseMorphology/segment_5_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_0_x_axis" joint2="SeahorseMorphology/segment_6_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_0_y_axis" joint2="SeahorseMorphology/segment_6_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_2_x_axis" joint2="SeahorseMorphology/segment_6_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_2_y_axis" joint2="SeahorseMorphology/segment_6_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_0_x_axis" joint2="SeahorseMorphology/segment_6_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_0_y_axis" joint2="SeahorseMorphology/segment_6_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_1_x_axis" joint2="SeahorseMorphology/segment_6_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_1_y_axis" joint2="SeahorseMorphology/segment_6_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_0_x_axis" joint2="SeahorseMorphology/segment_7_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_0_y_axis" joint2="SeahorseMorphology/segment_7_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_2_x_axis" joint2="SeahorseMorphology/segment_7_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_2_y_axis" joint2="SeahorseMorphology/segment_7_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_0_x_axis" joint2="SeahorseMorphology/segment_7_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_0_y_axis" joint2="SeahorseMorphology/segment_7_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_1_x_axis" joint2="SeahorseMorphology/segment_7_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_1_y_axis" joint2="SeahorseMorphology/segment_7_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_0_x_axis" joint2="SeahorseMorphology/segment_8_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_0_y_axis" joint2="SeahorseMorphology/segment_8_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_2_x_axis" joint2="SeahorseMorphology/segment_8_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_2_y_axis" joint2="SeahorseMorphology/segment_8_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_0_x_axis" joint2="SeahorseMorphology/segment_8_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_0_y_axis" joint2="SeahorseMorphology/segment_8_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_1_x_axis" joint2="SeahorseMorphology/segment_8_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_1_y_axis" joint2="SeahorseMorphology/segment_8_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_0_x_axis" joint2="SeahorseMorphology/segment_9_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_0_y_axis" joint2="SeahorseMorphology/segment_9_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_2_x_axis" joint2="SeahorseMorphology/segment_9_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_2_y_axis" joint2="SeahorseMorphology/segment_9_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_0_x_axis" joint2="SeahorseMorphology/segment_9_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_0_y_axis" joint2="SeahorseMorphology/segment_9_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_1_x_axis" joint2="SeahorseMorphology/segment_9_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_1_y_axis" joint2="SeahorseMorphology/segment_9_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_10_plate_0_x_axis" joint2="SeahorseMorphology/segment_10_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_10_plate_0_y_axis" joint2="SeahorseMorphology/segment_10_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_10_plate_2_x_axis" joint2="SeahorseMorphology/segment_10_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_10_plate_2_y_axis" joint2="SeahorseMorphology/segment_10_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_10_plate_0_x_axis" joint2="SeahorseMorphology/segment_10_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_10_plate_0_y_axis" joint2="SeahorseMorphology/segment_10_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_10_plate_1_x_axis" joint2="SeahorseMorphology/segment_10_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
-    <joint joint1="SeahorseMorphology/segment_10_plate_1_y_axis" joint2="SeahorseMorphology/segment_10_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_0_x_axis" joint2="SeahorseMorphology/segment_2_plate_0_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_0_y_axis" joint2="SeahorseMorphology/segment_2_plate_0_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_1_x_axis" joint2="SeahorseMorphology/segment_2_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_1_y_axis" joint2="SeahorseMorphology/segment_2_plate_1_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_2_x_axis" joint2="SeahorseMorphology/segment_2_plate_2_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_2_y_axis" joint2="SeahorseMorphology/segment_2_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_3_x_axis" joint2="SeahorseMorphology/segment_2_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_1_plate_3_y_axis" joint2="SeahorseMorphology/segment_2_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_0_x_axis" joint2="SeahorseMorphology/segment_3_plate_0_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_0_y_axis" joint2="SeahorseMorphology/segment_3_plate_0_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_1_x_axis" joint2="SeahorseMorphology/segment_3_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_1_y_axis" joint2="SeahorseMorphology/segment_3_plate_1_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_2_x_axis" joint2="SeahorseMorphology/segment_3_plate_2_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_2_y_axis" joint2="SeahorseMorphology/segment_3_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_3_x_axis" joint2="SeahorseMorphology/segment_3_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_2_plate_3_y_axis" joint2="SeahorseMorphology/segment_3_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_0_x_axis" joint2="SeahorseMorphology/segment_4_plate_0_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_0_y_axis" joint2="SeahorseMorphology/segment_4_plate_0_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_1_x_axis" joint2="SeahorseMorphology/segment_4_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_1_y_axis" joint2="SeahorseMorphology/segment_4_plate_1_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_2_x_axis" joint2="SeahorseMorphology/segment_4_plate_2_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_2_y_axis" joint2="SeahorseMorphology/segment_4_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_3_x_axis" joint2="SeahorseMorphology/segment_4_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_3_plate_3_y_axis" joint2="SeahorseMorphology/segment_4_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_0_x_axis" joint2="SeahorseMorphology/segment_5_plate_0_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_0_y_axis" joint2="SeahorseMorphology/segment_5_plate_0_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_1_x_axis" joint2="SeahorseMorphology/segment_5_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_1_y_axis" joint2="SeahorseMorphology/segment_5_plate_1_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_2_x_axis" joint2="SeahorseMorphology/segment_5_plate_2_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_2_y_axis" joint2="SeahorseMorphology/segment_5_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_3_x_axis" joint2="SeahorseMorphology/segment_5_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_4_plate_3_y_axis" joint2="SeahorseMorphology/segment_5_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_0_x_axis" joint2="SeahorseMorphology/segment_6_plate_0_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_0_y_axis" joint2="SeahorseMorphology/segment_6_plate_0_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_1_x_axis" joint2="SeahorseMorphology/segment_6_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_1_y_axis" joint2="SeahorseMorphology/segment_6_plate_1_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_2_x_axis" joint2="SeahorseMorphology/segment_6_plate_2_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_2_y_axis" joint2="SeahorseMorphology/segment_6_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_3_x_axis" joint2="SeahorseMorphology/segment_6_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_5_plate_3_y_axis" joint2="SeahorseMorphology/segment_6_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_0_x_axis" joint2="SeahorseMorphology/segment_7_plate_0_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_0_y_axis" joint2="SeahorseMorphology/segment_7_plate_0_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_1_x_axis" joint2="SeahorseMorphology/segment_7_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_1_y_axis" joint2="SeahorseMorphology/segment_7_plate_1_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_2_x_axis" joint2="SeahorseMorphology/segment_7_plate_2_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_2_y_axis" joint2="SeahorseMorphology/segment_7_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_3_x_axis" joint2="SeahorseMorphology/segment_7_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_6_plate_3_y_axis" joint2="SeahorseMorphology/segment_7_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_0_x_axis" joint2="SeahorseMorphology/segment_8_plate_0_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_0_y_axis" joint2="SeahorseMorphology/segment_8_plate_0_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_1_x_axis" joint2="SeahorseMorphology/segment_8_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_1_y_axis" joint2="SeahorseMorphology/segment_8_plate_1_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_2_x_axis" joint2="SeahorseMorphology/segment_8_plate_2_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_2_y_axis" joint2="SeahorseMorphology/segment_8_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_3_x_axis" joint2="SeahorseMorphology/segment_8_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_7_plate_3_y_axis" joint2="SeahorseMorphology/segment_8_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_0_x_axis" joint2="SeahorseMorphology/segment_9_plate_0_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_0_y_axis" joint2="SeahorseMorphology/segment_9_plate_0_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_1_x_axis" joint2="SeahorseMorphology/segment_9_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_1_y_axis" joint2="SeahorseMorphology/segment_9_plate_1_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_2_x_axis" joint2="SeahorseMorphology/segment_9_plate_2_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_2_y_axis" joint2="SeahorseMorphology/segment_9_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_3_x_axis" joint2="SeahorseMorphology/segment_9_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_8_plate_3_y_axis" joint2="SeahorseMorphology/segment_9_plate_3_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_0_x_axis" joint2="SeahorseMorphology/segment_10_plate_0_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_0_y_axis" joint2="SeahorseMorphology/segment_10_plate_0_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_1_x_axis" joint2="SeahorseMorphology/segment_10_plate_1_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_1_y_axis" joint2="SeahorseMorphology/segment_10_plate_1_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_2_x_axis" joint2="SeahorseMorphology/segment_10_plate_2_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_2_y_axis" joint2="SeahorseMorphology/segment_10_plate_2_y_axis"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_3_x_axis" joint2="SeahorseMorphology/segment_10_plate_3_x_axis"/>
-    <joint joint1="SeahorseMorphology/segment_9_plate_3_y_axis" joint2="SeahorseMorphology/segment_10_plate_3_y_axis"/>
-  </equality>
 
   <actuator>
     <general name="SeahorseMorphology/hm_beam_ventral_dextral_10" tendon="SeahorseMorphology/hm_beam_ventral_dextral_10" ctrlrange="-1 0" ctrllimited="true" forcelimited="true" forcerange="-10 0" gear="10"/>

@@ -154,8 +154,9 @@ print(state.observations["vertebrae_pitch_joint_pos"])  # rad, base to tip
 ```
 
 The default tail (`default_tail_morphology_specification()`) has 11 segments, a pair of force-controlled ventral HM
-beams that span the whole tail, and 20 MVM beams. Pass `morphology_specification=...` for another architecture, e.g.
-the one built above:
+beams that span the whole tail, and 20 MVM beams. Its plates are fixed to their vertebrae: the gliding joints are
+disabled by default (`default_tail_morphology_specification(gliding_joints=True)` enables them). Pass
+`morphology_specification=...` for another architecture, e.g. the one built above:
 
 ```python
 env = biorobot.make("seahorse/tail", morphology_specification=specification)
@@ -194,7 +195,8 @@ Warp generates more contacts between the overlapping parts than MuJoCo C (~330 v
 drift apart (~0.05 rad within 1 s).
 
 - **MJX**: on an M1 Max CPU, MJX compiles the default tail in ~20 s and runs ~600 physics steps per second for a single
-  environment (2.4× real time). Its float32 joint angles match MuJoCo C to ~3e-3 rad (the gliding joints' dry friction amplifies round-off).
+  environment (2.4× real time). Its float32 results match MuJoCo C to ~1e-3 (~3e-3 rad with
+  gliding joints, whose dry friction amplifies round-off).
 - **MuJoCo Warp**: also works. On a CPU it takes ~74 ms per control step and matches MuJoCo C to ~1e-6.
 
 ### Examples

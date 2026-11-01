@@ -56,8 +56,20 @@ def ramp_action(env, step, num_steps):
 # ----------------------------------------------------------------------------------------------------------------------
 # Morphology
 # ----------------------------------------------------------------------------------------------------------------------
-def test_morphology_counts():
+def test_default_tail_has_no_gliding_joints():
     model = SeahorseMorphology(default_tail_morphology_specification()).compile()
+    # Only the 3 vertebral joints per segment but the first, and no gliding couplings.
+    assert model.njnt == 10 * 3
+    assert model.neq == 0
+    assert all(
+        model.jnt_type[j] == mujoco.mjtJoint.mjJNT_HINGE for j in range(model.njnt)
+    )
+
+
+def test_morphology_counts():
+    model = SeahorseMorphology(
+        default_tail_morphology_specification(gliding_joints=True)
+    ).compile()
     # 20 bodies per segment; 3 vertebral and 8 gliding joints per segment but the first.
     assert model.nbody == 1 + 11 * 20
     assert model.njnt == 10 * 11
@@ -75,7 +87,9 @@ def test_morphology_counts():
 
 def test_original_model_values():
     """Values of the original model (dm_control MJCF, MuJoCo 3.2.2)."""
-    model = SeahorseMorphology(default_tail_morphology_specification()).compile()
+    model = SeahorseMorphology(
+        default_tail_morphology_specification(gliding_joints=True)
+    ).compile()
     data = mujoco.MjData(model)
     mujoco.mj_forward(model, data)
     mass = lambda body: model.body(body).mass[0]

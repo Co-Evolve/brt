@@ -209,10 +209,13 @@ class SeahorseTailEnv(BRTEnv):
 
 
 def default_tail_morphology_specification(
-    p_control: bool = False, mvm_enabled: bool = True
+    p_control: bool = False, mvm_enabled: bool = True, gliding_joints: bool = False
 ) -> SeahorseMorphologySpecification:
     """The prototype's 11-segment tail with a pair of ventral HM beams that span the whole tail (the routing of the
     paper's HM experiment), force-controlled unless ``p_control``, plus MVM beams if ``mvm_enabled``.
+
+    Without ``gliding_joints`` (the default), the plates are fixed to their vertebra: the gliding joints and their
+    equality constraints are left out (a joint range of 0 removes a joint).
     """
     specification = default_seahorse_morphology_specification(
         num_segments=11,
@@ -223,6 +226,11 @@ def default_tail_morphology_specification(
     specification.beam_actuation_specification.hm_beam_actuation_specification.routing_specifications = [
         default_hm_routing_specification(num_segments=11, segment_span=10)
     ]
+    if not gliding_joints:
+        for segment in specification.segment_specifications:
+            for plate in segment.plate_specifications:
+                plate.x_axis_gliding_joint_specification.range = 0
+                plate.y_axis_gliding_joint_specification.range = 0
     return specification
 
 
