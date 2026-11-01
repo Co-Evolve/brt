@@ -193,6 +193,23 @@ Interested in having a model developed? Please fill in this [form](https://forms
 and pull requests are welcome on [GitHub](https://github.com/Co-Evolve/brt). Run `pytest -m "not slow"` and
 `black biorobot tests scripts` before opening a pull request.
 
+## Publications
+
+Papers that use BRT's animals (the animal READMEs have the BibTeX):
+
+- **Brittle star**:
+  - *Decentralized neural dynamics and sensory constraints shape brittle star locomotion*, Marzougui, Adriaens and
+    wyffels, Journal of the Royal Society Interface ([2026](https://doi.org/10.1098/rsif.2025.1347))
+  - *Stability-Driven CPG Design for More Effective Quality-Diversity in Evolutionary Robotics*, Pex, Marzougui and
+    wyffels, GECCO ([2026](https://doi.org/10.1145/3795095.3805096))
+- **Seahorse tail**:
+  - *Exploring the evolutionary adaptations of the unique seahorse tail's muscle architecture through in silico
+    modelling and robotic prototyping*, Marzougui, Das, Mazzolai, Adriaens and wyffels, Journal of the Royal Society
+    Interface ([2025](https://doi.org/10.1098/rsif.2024.0876)); try its
+    [muscle playground](https://co-evolve.github.io/seahorse-muscle-architecture/)
+
+Using BRT in a paper? Open a pull request to add it here.
+
 ## Citation
 
 If you use BRT in your research, please cite this repository:

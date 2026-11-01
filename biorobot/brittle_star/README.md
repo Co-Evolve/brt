@@ -324,3 +324,43 @@ python -m biorobot.brittle_star.examples.vectorized --backend mjx --render human
 ```
 
 Every example accepts `--render none` and `--num-steps N` to run headless.
+
+## Publications
+
+Papers that use the in-silico brittle star:
+
+- **Decentralized neural dynamics and sensory constraints shape brittle star locomotion** (Marzougui et al.,
+  [2026](https://doi.org/10.1098/rsif.2025.1347)): an in-silico brittle star with an artificial neural network that
+  mirrors the arm-level ganglia shows how the ganglia act as distributed oscillators and how their coupling through the
+  nerve ring synchronises the arms, much like central pattern generators. The code is at
+  [Co-Evolve/brittle-star](https://github.com/Co-Evolve/brittle-star).
+- **Stability-Driven CPG Design for More Effective Quality-Diversity in Evolutionary Robotics** (Pex et al.,
+  [2026](https://doi.org/10.1145/3795095.3805096)): central pattern generator design for quality-diversity optimisation,
+  with the brittle star as a test morphology.
+
+## Citation
+
+If you use the brittle star, please cite the paper that fits your use (and BRT, see the
+[main README](https://github.com/Co-Evolve/brt#citation)):
+
+```bibtex
+@article{marzougui2026brittlestar,
+  title = {Decentralized neural dynamics and sensory constraints shape brittle star locomotion},
+  author = {Marzougui, Dries and Adriaens, Dominique and wyffels, Francis},
+  journal = {Journal of The Royal Society Interface},
+  volume = {23},
+  number = {239},
+  year = {2026},
+  doi = {10.1098/rsif.2025.1347}
+}
+
+@inproceedings{pex2026cpg,
+  title = {Stability-Driven {CPG} Design for More Effective Quality-Diversity in Evolutionary Robotics},
+  author = {Pex, Matthias and Marzougui, Dries and wyffels, Francis},
+  booktitle = {Proceedings of the Genetic and Evolutionary Computation Conference (GECCO '26)},
+  pages = {115--124},
+  publisher = {ACM},
+  year = {2026},
+  doi = {10.1145/3795095.3805096}
+}
+```
