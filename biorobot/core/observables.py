@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Callable, List, Optional, Sequence
+from typing import Callable, List, Optional, Sequence, Tuple
 
 import mujoco
 import numpy as np
@@ -40,6 +40,18 @@ def sensordata_indices(
         for i in sensor_ids
     ]
     return np.concatenate(indices).astype(int) if indices else np.zeros(0, dtype=int)
+
+
+def float32_bounds(low: np.ndarray, high: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    """The tightest float32 values within ``[low, high]``, to clip observations to.
+
+    Clipping a float32 observation (MJX/Warp) to ``low``/``high`` themselves rounds them to the nearest float32, which
+    can lie just outside the (float64) observation space.
+    """
+    low32, high32 = np.float32(low), np.float32(high)
+    low32 = np.where(low32 < low, np.nextafter(low32, np.float32(np.inf)), low32)
+    high32 = np.where(high32 > high, np.nextafter(high32, np.float32(-np.inf)), high32)
+    return low32.astype(np.float32), high32.astype(np.float32)
 
 
 def sensor_observable(

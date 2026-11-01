@@ -6,8 +6,8 @@ two communities:
 - **Roboticists** get benchmarks for the *design and control* of bio-inspired robots: parameterised morphologies,
   tasks with rewards, and fast, vectorised simulation on CPU or GPU.
 - **Biologists** get robots as a *controlled comparative method*: change one trait of an in-silico animal (arm count,
-  leg strength, a dragline, ...) while keeping everything else fixed, and study its effect on behaviour, ecology and
-  evolution.
+  leg strength, a dragline, the span of a tail muscle, ...) while keeping everything else fixed, and study its effect
+  on behaviour, ecology and evolution.
 
 **Live demos** of every animal run in your browser at **https://co-evolve.github.io/brt/**.
 
@@ -17,9 +17,13 @@ two communities:
 |---|---|---|
 | Brittle star | `brittle_star/undirected_locomotion`, `brittle_star/directed_locomotion`, `brittle_star/light_escape` | [README](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/README.md) |
 | Jumping spider | `jumping_spider/long_jump`, `jumping_spider/platform_jump`, `jumping_spider/directed_jump` | [README](https://github.com/Co-Evolve/brt/blob/main/biorobot/jumping_spider/README.md) |
+| Seahorse tail | `seahorse/tail` (no task: a muscle-architecture playground for open-loop control) | [README](https://github.com/Co-Evolve/brt/blob/main/biorobot/seahorse/README.md) |
 
 Each animal's README covers its biology, the in-silico morphology, the observations, rewards and configuration of
-each task, and runnable examples.
+each task, and runnable examples. The seahorse tail (Marzougui et al., [2025](https://doi.org/10.1098/rsif.2024.0876))
+has no task: its reward is always 0, and you study muscle architectures by configuring its morphology and driving it
+open-loop. To get a feel for it first, try the
+[seahorse muscle playground](https://co-evolve.github.io/seahorse-muscle-architecture/).
 
 ## Installation
 
@@ -144,7 +148,9 @@ print(env.mj_model.nu)  # 48 actuators: 3 arms x 8 segments x 2 joints
 2. Create `biorobot/<animal>/` with `specification.py` (dataclasses and a `default_..._specification`),
    `morphology.py` and `arena.py` (`MjSpec` builders), and `environment/` with one module per task that registers a
    factory with `@biorobot.register("<animal>/<task>")`. Add the package to `_ANIMAL_PACKAGES` in
-   `biorobot/registry.py`. The brittle star and jumping spider packages are complete examples.
+   `biorobot/registry.py`. The brittle star and jumping spider packages are complete examples. Put mesh or other
+   data files under `biorobot/<animal>/assets/` and add them to `[tool.setuptools.package-data]` in `pyproject.toml`
+   and to `MANIFEST.in` (like the seahorse's meshes), otherwise they are missing from the wheel.
 3. Two rules keep a task correct on every backend: write it with `self.xp` and without Python branching on simulated
    values (use `xp.where`), and compute rewards from `previous_state.observations` or `previous_state.info`, never from
    `previous_state.data` (with `"mjc"` the data is updated in place).
@@ -175,6 +181,7 @@ Every animal has runnable examples, e.g.
 ```bash
 python -m biorobot.brittle_star.examples.light_escape --backend mjx --render human
 python -m biorobot.jumping_spider.examples.scripted_jump
+python -m biorobot.seahorse.examples.open_loop
 ```
 
 The Jupyter notebooks of the [SEL3 course](https://github.com/Co-Evolve/SEL3-2024) use BRT 0.4.x

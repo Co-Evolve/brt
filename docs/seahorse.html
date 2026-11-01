@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Seahorse Tail Demo</title>
+    <meta name="description" content="Interactive MuJoCo simulation of the BRT seahorse tail: contract its muscles in your browser." />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="modulepreload" href="js/viewer.js" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/",
+          "@mujoco/mujoco": "https://cdn.jsdelivr.net/npm/@mujoco/mujoco@3.17.0/mujoco.js"
+        }
+      }
+    </script>
+    <script type="module" src="js/viewer.js"></script>
+    <script type="module">
+      import { settings } from "./js/controllers/seahorse.js";
+
+      for (const input of document.querySelectorAll("[data-setting]")) {
+        const key = input.dataset.setting;
+        const output = document.querySelector(`output[for="${input.id}"]`);
+        const show = () => {
+          if (output) output.textContent = `${Math.round(100 * Number(input.value))}%`;
+        };
+        if (input.type === "checkbox") input.checked = settings[key];
+        else input.value = settings[key];
+        show();
+        input.addEventListener("input", () => {
+          settings[key] = input.type === "checkbox" ? input.checked : Number(input.value);
+          show();
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="./">BRT <span>Bio-Inspired Robotics Testbed</span></a>
+        <nav class="site-nav" aria-label="Main">
+          <a href="./#environments">Environments</a>
+          <a href="brittle-star.html">Brittle star</a>
+          <a href="jumping-spider.html">Jumping spider</a>
+          <a href="seahorse.html" aria-current="page">Seahorse</a>
+          <a href="https://github.com/Co-Evolve/brt">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero container" aria-labelledby="title">
+        <h1 id="title">Seahorse tail</h1>
+        <p class="lead">
+          Seahorses grasp seagrass and corals with a prehensile tail. Its hypaxial myomeres (HM) form long muscle-tendon
+          sheets that can span up to eleven vertebral segments, next to short median ventral muscles (MVM) between
+          neighbouring segments. The BRT seahorse is the in-silico tail of
+          <a href="https://doi.org/10.1098/rsif.2024.0876">Marzougui et al. (2025)</a>, a digital twin of a 3D-printed
+          prototype. It has no task: it is a playground for muscle architectures, driven with open-loop controls.
+        </p>
+        <div
+          id="seahorse-viewer"
+          data-mujoco-viewer
+          data-model="models/seahorse.xml"
+          data-controller="js/controllers/seahorse.js"
+          data-target="0.06,0,-0.15" data-camera="0.22,-0.52,0.08"
+        ></div>
+        <form class="muscle-controls" aria-label="Muscle contraction" onsubmit="return false">
+          <div class="muscle-control">
+            <label for="hm-dextral">HM, ventral dextral</label>
+            <input id="hm-dextral" type="range" min="0" max="1" step="0.01" data-setting="hmDextral" />
+            <output for="hm-dextral"></output>
+          </div>
+          <div class="muscle-control">
+            <label for="hm-sinistral">HM, ventral sinistral</label>
+            <input id="hm-sinistral" type="range" min="0" max="1" step="0.01" data-setting="hmSinistral" />
+            <output for="hm-sinistral"></output>
+          </div>
+          <div class="muscle-control">
+            <label for="mvm">MVM, all segments</label>
+            <input id="mvm" type="range" min="0" max="1" step="0.01" data-setting="mvm" />
+            <output for="mvm"></output>
+          </div>
+          <label class="muscle-toggle">
+            <input id="cycle" type="checkbox" data-setting="cycle" />
+            Contract and relax (4&nbsp;s cycle)
+          </label>
+        </form>
+        <p class="viewer-hint">
+          Sliders set how strongly each muscle group contracts (HM: fraction of the maximum force, MVM: fraction of the
+          beam's length it pulls in). Muscles light up red as they pull. Drag to orbit, right-drag or shift-drag to pan,
+          scroll to zoom. The meshes are a 3.4&nbsp;MB download.
+        </p>
+      </section>
+
+      <section class="container" aria-labelledby="about">
+        <div class="grid">
+          <article class="card">
+            <h2 id="about">What you are seeing</h2>
+            <p>
+              The default <code>seahorse/tail</code> environment: 11 segments, each a vertebra inside four overlapping
+              plates, hanging from a fixed base with its ventral side to the right. Two force-controlled HM beams run
+              along the ventral side from the base to the tip, and every pair of neighbouring segments has two
+              position-controlled MVM beams. Contracting both HM beams curls the whole tail ventrally; contracting one
+              bends it sideways as well. The MVMs bend the tail locally. Contacts are off, as in the original model.
+              Gravity is switched on in this demo (it is off by default in Python) so that the tail hangs straight
+              again when its muscles relax.
+            </p>
+          </article>
+          <article class="card">
+            <h2>Your own muscle architecture</h2>
+            <p>
+              In Python, the morphology specification sets the number of segments, which segments each HM beam spans
+              and which attachment points it passes, whether the MVM beams exist, and position or force control. The
+              reward is always 0 and episodes never terminate, so you drive the tail with your own open-loop controls.
+            </p>
+            <p>
+              Read the <a href="https://github.com/Co-Evolve/brt/tree/main/biorobot/seahorse">seahorse README</a>, the
+              <a href="https://doi.org/10.1098/rsif.2024.0876">paper</a> (J.&nbsp;R. Soc. Interface 22: 20240876), or
+              try the <a href="https://co-evolve.github.io/seahorse-muscle-architecture/">seahorse muscle playground</a>
+              from the paper's repository.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>Bio-Inspired Robotics Testbed &middot; MIT License</span>
+        <a href="https://github.com/Co-Evolve/brt">github.com/Co-Evolve/brt</a>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -447,6 +447,53 @@ th {
   margin-top: 0.6rem;
 }
 
+/* Open-loop control panel under a viewer (seahorse demo). */
+.muscle-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem 1.5rem;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.muscle-control {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.15rem 0.75rem;
+  font-size: 0.92rem;
+}
+
+.muscle-control input {
+  grid-column: 1 / -1;
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.muscle-control output {
+  grid-row: 1;
+  grid-column: 2;
+  color: var(--muted);
+  font: 500 0.85rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.muscle-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.92rem;
+}
+
+.muscle-toggle input {
+  accent-color: var(--accent);
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
 /* ------------------------------------------------------------------ footer */
 
 .site-footer {
