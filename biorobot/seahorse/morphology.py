@@ -420,6 +420,8 @@ class SeahorseMorphology(Morphology[SeahorseMorphologySpecification]):
                 range=joint_range,
                 damping=joint_specification.damping,
                 stiffness=joint_specification.stiffness,
+                frictionloss=joint_specification.friction_loss,
+                armature=joint_specification.armature,
                 solimp_limit=_GLIDING_SOLIMPLIMIT,
             )
             plate.joints[axis_name] = joint.name

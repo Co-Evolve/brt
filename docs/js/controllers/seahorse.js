@@ -7,7 +7,7 @@
  * upper end of its ctrlrange (relaxed) to the lower end (fully contracted): a larger pulling force for force-controlled
  * beams, a shorter target length for position-controlled ones.
  *
- * The demo model has gravity enabled (scripts/export_web_models.py), so the hanging tail straightens again when its
+ * Gravity is on (the `seahorse/tail` default), so the hanging tail straightens again when its
  * muscles relax. The HM beams curl the tail more the harder they pull (at the default 0.4 of their maximum force, by
  * ~90 degrees in total); the MVM beams, which pull in a fraction of their rest length, curl it fully from ~0.4.
  *

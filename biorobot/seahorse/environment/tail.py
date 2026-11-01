@@ -36,8 +36,9 @@ PREFIX = f"{MORPHOLOGY_NAME}/"
 class SeahorseTailEnvConfig(EnvConfig):
     """Configuration of the seahorse tail playground.
 
-    The defaults are those of the original model: a 4 ms physics timestep (MuJoCo's default 2 ms with a time scale of
-    2), 40 ms control steps, 5 s episodes, and neither gravity nor contacts.
+    The defaults follow the original model: a 4 ms physics timestep (MuJoCo's default 2 ms with a time scale of 2),
+    40 ms control steps, 5 s episodes and no contacts. Unlike the original, gravity is on, so the hanging tail
+    straightens again when its muscles relax.
 
     Position-controlled HM beams (``p_control=True``; stiff 1000 N/m actuators with forces up to 1000 N) can diverge
     at 4 ms, e.g. long spans under target jumps or ramps that saturate the beams. Use a 1 ms timestep with them
@@ -56,7 +57,7 @@ class SeahorseTailEnvConfig(EnvConfig):
     physics_timestep: float = 0.004
     num_physics_steps_per_control_step: int = 10
     enable_contacts: bool = False
-    enable_gravity: bool = False
+    enable_gravity: bool = True
 
 
 class SeahorseTailEnv(BRTEnv):

@@ -33,13 +33,11 @@ import biorobot
 from biorobot.core.env import BRTEnv
 
 MODELS_DIR = Path(__file__).resolve().parents[1] / "docs" / "models"
-#: Demo file name -> registered environment that defines its model, and its config overrides. The seahorse demo
-#: enables gravity (off by default, as in the original model): without it, nothing straightens the tail when its
-#: muscles relax, so the page's contract/relax cycle would leave it curled.
+#: Demo file name -> registered environment that defines its model, and its config overrides.
 DEMOS: Dict[str, Tuple[str, Dict[str, Any]]] = {
     "brittle_star.xml": ("brittle_star/undirected_locomotion", {}),
     "jumping_spider.xml": ("jumping_spider/long_jump", {}),
-    "seahorse.xml": ("seahorse/tail", {"enable_gravity": True}),
+    "seahorse.xml": ("seahorse/tail", {}),
 }
 CONTROL_TIMESTEP_NUMERIC = "brt_control_timestep"
 #: Control steps compared between the environment and the exported XML, with random actions.

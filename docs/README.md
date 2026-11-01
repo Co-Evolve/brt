@@ -137,10 +137,7 @@ that the files reproduce the compiled meshes, `env.reset` and 50 random-action `
 |----------------------|--------------------------------------|-----------------------|
 | `brittle_star.xml`   | `brittle_star/undirected_locomotion` |                       |
 | `jumping_spider.xml` | `jumping_spider/long_jump`           |                       |
-| `seahorse.xml`       | `seahorse/tail`                      | `enable_gravity=True` |
-
-The seahorse demo enables gravity (off by default, as in the original model) because the tail has almost no
-restoring stiffness: without gravity, it stays curled after its muscles relax.
+| `seahorse.xml`       | `seahorse/tail`                      |                       |
 
 ```sh
 python scripts/export_web_models.py          # regenerate docs/models/

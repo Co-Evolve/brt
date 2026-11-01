@@ -168,8 +168,8 @@ class SeahorsePlateSpecification:
             point.
         mvm_tap_x_offset: Unused by the model (kept from the original specification).
         mvm_tap_z_offset: Unused by the model (kept from the original specification).
-        x_axis_gliding_joint_specification: Gliding joint along x with the previous segment's plate (only its
-            ``range``, ``stiffness`` and ``damping`` are used, as in the original model).
+        x_axis_gliding_joint_specification: Gliding joint along x with the previous segment's plate (the
+            original model ignored its ``friction_loss``; BRT applies it).
         y_axis_gliding_joint_specification: Gliding joint along y (idem).
     """
 
@@ -371,7 +371,7 @@ def default_gliding_joint_specification(
         stiffness=1,
         damping=1,
         friction_loss=0.3,
-        armature=0.045,
+        armature=0.0,
         range=PLATE_GLIDING_JOINT_RANGE / 2,
     )
 

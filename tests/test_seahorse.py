@@ -102,6 +102,9 @@ def test_original_model_values():
     np.testing.assert_allclose(pitch.range, [-14 / 180 * np.pi, 14 / 180 * np.pi])
     assert model.dof_armature[pitch.dofadr[0]] == pytest.approx(0.01)
     assert model.dof_frictionloss[pitch.dofadr[0]] == pytest.approx(0.0015)
+    gliding = model.joint("segment_1_plate_0_x_axis")
+    assert model.dof_frictionloss[gliding.dofadr[0]] == pytest.approx(0.3)
+    assert model.dof_armature[gliding.dofadr[0]] == 0
     glide = model.joint("segment_1_plate_0_x_axis")
     np.testing.assert_allclose(glide.range, [-0.005, 0.0])
     np.testing.assert_allclose(glide.solimp, [0.9, 0.9999, 0.001, 0.1, 6])
@@ -186,9 +189,11 @@ def test_ventral_bending():
 
 
 def test_contraction_force_to_torque_rollout():
-    """A force ramp on the 2-segment model reproduces the original simulation (MuJoCo 3.2.2) at its last step."""
+    """A force ramp on the 2-segment model reproduces the original simulation (MuJoCo 3.2.2, without gravity) at its
+    last step."""
     env = make_tail_env(
-        morphology_specification=contraction_force_to_torque_specification()
+        morphology_specification=contraction_force_to_torque_specification(),
+        enable_gravity=False,
     )
     state = env.reset(0)
     for step in range(125):
@@ -227,7 +232,8 @@ def test_contacts_and_gravity_options():
     assert not env.mj_model.opt.disableflags & mujoco.mjtDisableBit.mjDSBL_GRAVITY
     assert np.all(env.mj_model.geom_contype == 1)
     env = make_tail_env(
-        morphology_specification=contraction_force_to_torque_specification()
+        morphology_specification=contraction_force_to_torque_specification(),
+        enable_gravity=False,
     )
     assert env.mj_model.opt.disableflags & mujoco.mjtDisableBit.mjDSBL_CONTACT
     assert env.mj_model.opt.disableflags & mujoco.mjtDisableBit.mjDSBL_GRAVITY
@@ -262,12 +268,13 @@ def test_mjx_matches_mjc():
         action = ramp_action(env_mjc, i, 10)
         state_mjc = env_mjc.step(state_mjc, action)
         state_mjx = step(state_mjx, jax.numpy.asarray(action))
+    # The gliding joints' dry friction (stick-slip) amplifies float32 round-off: joint angles differ by ~3e-3 rad.
     for name in state_mjc.observations:
         np.testing.assert_allclose(
             state_mjx.observations[name],
             state_mjc.observations[name],
             rtol=1e-2,
-            atol=1e-3,
+            atol=5e-3,
             err_msg=name,
         )
     assert float(state_mjx.reward) == 0.0

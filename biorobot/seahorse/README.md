@@ -85,7 +85,8 @@ plate weighs ~10 g, a vertebra 4.5 g and its ball bearing 2.1 g.
 - **Vertebral joints**: every vertebra but the first (which is fixed to the world) has three hinges centred on the
   ball bearing between it and the previous vertebra: pitch (ventral bending, ±14°), roll (lateral bending, ±14°) and
   yaw (torsion, ±5°).
-- **Gliding joints**: every plate except those of the first segment has two slide joints (5 mm travel). Joint equality
+- **Gliding joints**: every plate except those of the first segment has two slide joints (5 mm travel, stiffness 1 N/m,
+  damping 1 N s/m, friction loss 0.3 N). Joint equality
   constraints make neighbouring plates of a segment, and the corresponding plates of neighbouring segments, glide
   together.
 - **Vertebral struts**: four elastic spatial tendons per segment connect the vertebra to its plates (3.043 N/m).
@@ -173,12 +174,13 @@ env = biorobot.make("seahorse/tail", morphology_specification=specification)
 
   Observations of absent beams are left out.
 
-Configuration (`SeahorseTailEnvConfig`), with the original model's defaults:
+Configuration (`SeahorseTailEnvConfig`):
 
 - `simulation_time` (5 s), `physics_timestep` (4 ms), `num_physics_steps_per_control_step` (10, i.e. 25 Hz control)
 - `enable_contacts` (False): as in the original model, the convex hulls of the nested parts already overlap at rest (121
   geom pairs), so enabling contacts adds internal contact forces.
-- `enable_gravity` (False)
+- `enable_gravity` (True): gravity pulls along the hanging tail, so it straightens again when its muscles relax (the
+  original model had gravity off)
 - `camera_ids`: 0 = `side_camera` (default), 1 = `corner`, 2 = `ventral`, 3 = `top-down`, 4 = `ventral-closeup`
 
 **Stability**: position-controlled HM beams are stiff (1000 N/m, up to 1000 N). At the default 4 ms timestep they
@@ -192,7 +194,7 @@ Warp generates more contacts between the overlapping parts than MuJoCo C (~330 v
 drift apart (~0.05 rad within 1 s).
 
 - **MJX**: on an M1 Max CPU, MJX compiles the default tail in ~20 s and runs ~600 physics steps per second for a single
-  environment (2.4× real time). Its float32 results match MuJoCo C to ~1e-3.
+  environment (2.4× real time). Its float32 joint angles match MuJoCo C to ~3e-3 rad (the gliding joints' dry friction amplifies round-off).
 - **MuJoCo Warp**: also works. On a CPU it takes ~74 ms per control step and matches MuJoCo C to ~1e-6.
 
 ### Examples
@@ -207,7 +209,7 @@ python -m biorobot.seahorse.examples.muscle_architectures --backend mjc --render
   `biorobot.seahorse.examples.open_loop.open_loop_action(env, t)`.
 - `muscle_architectures` builds three other architectures and contracts each with the same ramp: a dorsal HM pair at
   the tip, a single lateral HM beam and an MVM-only tail. Once the dorsal pair has bent the tip to its pitch limits,
-  the rising tension also rolls the tip sideways (~15 deg), because the dextral and sinistral attachment points of the
+  the rising tension also rolls the tip sideways (~5 deg), because the dextral and sinistral attachment points of the
   original model differ by up to ~1 mm.
 
 The experiments of the paper (force-to-torque measurements, HM spans, lateral bending, MVM recruitment and grasping a
@@ -229,9 +231,12 @@ cameras and lights are identical, with these exceptions:
   sense;
 - the original `segment_torque` observation is left out: the original model has no torque sensors, so it was always
   empty;
-- the attachment frame is not a body.
+- the attachment frame is not a body;
+- the gliding joints apply their specified friction loss (0.3 N), which the original model ignored, and have no
+  armature;
+- gravity is enabled by default (the original disabled it).
 
-Over 5 s, the open-loop ramps of the paper's experiment scripts give vertebral angles within 5e-5 rad of the original
+With the original's settings (no gliding-joint friction, no gravity), over 5 s the open-loop ramps of the paper's experiment scripts give vertebral angles within 5e-5 rad of the original
 (MuJoCo 3.17 vs 3.2.2), except for the position-controlled HM beams of span 10 (with or without MVM beams), whose ramp
 diverges after ~2.1 s in both versions. With contacts enabled, the trajectories differ by up to 0.2 rad, because MuJoCo 3.17 generates
 more contacts between the overlapping mesh parts (300 vs 121 at rest).

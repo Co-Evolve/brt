@@ -4,9 +4,9 @@ Three tails, each contracted with the same 3 s ramp of all its beams:
 
 * ``dorsal_tip``: a pair of position-controlled dorsal HM beams that only span the three most distal segments (the
   tip bends dorsally, i.e. negative pitch); position control needs a 1 ms timestep (see ``SeahorseTailEnvConfig``).
-  Once the tip reaches its pitch limits, the rising beam tension buckles it sideways (~15 deg of roll): as in the
+  Once the tip reaches its pitch limits, the rising beam tension buckles it sideways (~5 deg of roll): as in the
   original model, the dextral and sinistral attachment points differ by up to ~1 mm, and which way and how far the tip
-  rolls is sensitive to this asymmetry and to numerical precision (MJX's float32 gives a few degrees less).
+  rolls is sensitive to this asymmetry and to numerical precision.
 * ``sinistral``: a single force-controlled ventral-sinistral HM beam over the 6 most distal segments, routed along the
   most lateral attachment points (the tail bends ventrally and to the sinistral side, i.e. negative roll).
 * ``mvm_only``: no HM beams, MVM beams that may contract to half their rest length (``mvm_strain=0.5``) on a 7-segment

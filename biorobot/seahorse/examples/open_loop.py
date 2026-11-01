@@ -3,9 +3,8 @@ HM beams.
 
 The default tail has 11 segments, a pair of force-controlled ventral HM beams that span the whole tail and 20
 position-controlled MVM beams (two between every pair of neighbouring segments). From 0 to 2 s, the MVM beams of the
-four most distal segment pairs contract gradually, which curls the tip (without gravity, the reaction of the curling tip
-also makes the nearly stiffness-free proximal joints drift to their limits; with ``enable_gravity=True`` they stay
-straight); from 2.5 to 4.5 s, the HM beams contract, which bends the whole tail ventrally (positive pitch).
+four most distal segment pairs contract gradually, which curls the tip (with ``enable_gravity=False``, the reaction of the
+curling tip also makes the nearly stiffness-free proximal joints drift to their limits); from 2.5 to 4.5 s, the HM beams contract, which bends the whole tail ventrally (positive pitch).
 
     python -m biorobot.seahorse.examples.open_loop --backend mjc --render human
 """
