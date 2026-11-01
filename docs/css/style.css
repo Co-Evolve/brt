@@ -198,13 +198,6 @@ h3 {
   padding-top: 2.5rem;
 }
 
-.hero img {
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  margin-top: 1.75rem;
-  background: var(--surface-2);
-}
-
 .button-row {
   display: flex;
   flex-wrap: wrap;
