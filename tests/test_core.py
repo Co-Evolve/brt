@@ -10,6 +10,7 @@ from biorobot.core import (
     EnvConfig,
     Morphology,
     Observable,
+    float32_bounds,
     make_config,
     sensor_observable,
 )
@@ -175,6 +176,19 @@ def test_mjx_reset_accepts_numpy_seed():
     env = make_env("mjx")
     state = env.reset(np.int64(3))
     assert np.isfinite(state.observations["height"]).all()
+
+
+def test_float32_bounds_lie_within_float64_bounds():
+    low, high = np.array([-0.24434609527920614, 0.0]), np.array(
+        [0.24434609527920614, 1.0]
+    )
+    clip_low, clip_high = float32_bounds(low, high)
+    assert clip_low.dtype == clip_high.dtype == np.float32
+    assert np.all(clip_low >= low) and np.all(clip_high <= high)
+    np.testing.assert_allclose(clip_low, low, atol=1e-7)
+    np.testing.assert_allclose(clip_high, high, atol=1e-7)
+    clipped = np.clip(np.float32([1.0, 2.0]), clip_low, clip_high)
+    assert np.all((clipped >= low) & (clipped <= high))
 
 
 def test_quat_to_euler():

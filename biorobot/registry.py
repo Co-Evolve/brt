@@ -8,7 +8,7 @@ from typing import Callable, Dict, List
 from biorobot.core.env import BRTEnv
 
 _REGISTRY: Dict[str, Callable[..., BRTEnv]] = {}
-_ANIMAL_PACKAGES = ("brittle_star", "jumping_spider")
+_ANIMAL_PACKAGES = ("brittle_star", "jumping_spider", "seahorse")
 
 
 def register(name: str) -> Callable[[Callable[..., BRTEnv]], Callable[..., BRTEnv]]:

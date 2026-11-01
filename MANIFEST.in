@@ -2,4 +2,5 @@ include LICENSE README.md
 recursive-include tests *.py
 prune docs
 prune biorobot/*/assets
+graft biorobot/seahorse/assets/meshes
 global-exclude *.py[cod] .DS_Store MUJOCO_LOG.TXT

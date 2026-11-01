@@ -56,5 +56,9 @@ version = { attr = "biorobot.__version__" }
 [tool.setuptools.packages.find]
 include = ["biorobot*"]
 
+[tool.setuptools.package-data]
+# The seahorse tail's meshes (STL exports of the 3D-printed prototype) and the measured inertias of its parts.
+biorobot = ["seahorse/assets/meshes/*.stl", "seahorse/assets/meshes/*.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

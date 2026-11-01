@@ -12,7 +12,11 @@ from biorobot.core.backend import Array
 from biorobot.core.builder import Arena, compose
 from biorobot.core.env import BRTEnv, EnvConfig, EnvState, Observable
 from biorobot.core.math import quat_to_euler
-from biorobot.core.observables import find_sensors, sensordata_indices
+from biorobot.core.observables import (
+    find_sensors,
+    float32_bounds,
+    sensordata_indices,
+)
 from biorobot.jumping_spider import colors
 from biorobot.jumping_spider.arenas import JumpingSpiderArena
 from biorobot.jumping_spider.morphology import (
@@ -208,6 +212,7 @@ class JumpingSpiderEnv(BRTEnv):
             mujoco.mjtSensor.mjSENS_ACTUATORFRC, f"/{part}"
         )
         force_ranges = model.actuator_forcerange[model.sensor_objid[frc_ids]]
+        clip_low, clip_high = float32_bounds(low, high)
         inf = np.full(len(vel_indices), np.inf)
         return [
             # Joint limits are soft constraints that can be exceeded by a fraction of a degree; clip to the bounds.
@@ -215,7 +220,9 @@ class JumpingSpiderEnv(BRTEnv):
                 f"{part}_joint_position",
                 low,
                 high,
-                lambda data, info: xp.clip(data.sensordata[pos_indices], low, high),
+                lambda data, info: xp.clip(
+                    data.sensordata[pos_indices], clip_low, clip_high
+                ),
             ),
             Observable(
                 f"{part}_joint_velocity",

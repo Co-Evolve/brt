@@ -13,6 +13,7 @@ from biorobot.core.env import (
 from biorobot.core.observables import (
     concatenate_observables,
     find_sensors,
+    float32_bounds,
     sensor_observable,
     sensordata_indices,
 )
@@ -33,6 +34,7 @@ __all__ = [
     "tile_frames",
     "concatenate_observables",
     "find_sensors",
+    "float32_bounds",
     "sensor_observable",
     "sensordata_indices",
 ]
