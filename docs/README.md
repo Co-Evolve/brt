@@ -9,8 +9,6 @@ step. Each animal has a demo page that runs its MuJoCo model in the browser.
 - `js/viewer.js`: the generic MuJoCo viewer.
 - `js/controllers/<animal>.js`: open-loop controllers that drive the demos.
 - `models/<animal>.xml`: self-contained MJCF files loaded by the demos.
-- `assets/`: images. `banner.jpg` is a 1600 px copy of the repository banner (`assets/banner.png`), shown on the page
-  and used as the social preview (`og:image`, an absolute URL because crawlers ignore relative ones).
 
 The site is deployed by `.github/workflows/pages.yml` on every push to `main` that touches `docs/`, and can also be run
 by hand from the Actions tab. In the repository settings, under Pages, set the source to "GitHub Actions".

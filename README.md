@@ -1,6 +1,4 @@
-<h1>
-  <a href="https://co-evolve.github.io/brt/"><img alt="Bio-Inspired Robotics Testbed (BRT) banner" src="https://github.com/Co-Evolve/brt/blob/main/assets/banner.png?raw=true" width="100%"/></a>
-</h1>
+# Bio-Inspired Robotics Testbed (BRT)
 
 The **Bio-Inspired Robotics Testbed (BRT)** is a collection of MuJoCo simulation environments of animals. It serves
 two communities:
