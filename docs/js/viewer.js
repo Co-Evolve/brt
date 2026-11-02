@@ -25,7 +25,7 @@
  *     action; without it, the controller runs before every mj_step.
  *   export function init(model, data, actuatorNames) -> void   (optional; called after load and every reset)
  *
- * Rendered: geoms of groups 0-2 (all primitive types and meshes, with MuJoCo's mesh normals) and spatial tendons of
+ * Rendered: geoms of groups 0-2 (all primitive types and meshes, with crease-angle normals) and spatial tendons of
  * groups 0-2. Tendons driven by an actuator are tinted from their rgba towards ACTIVE_TENDON_COLOR by the square root of
  * the actuator force relative to the largest force the actuator can produce.
  *
@@ -33,6 +33,7 @@
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
 
 /** The MuJoCo module is ~11 MB of WASM, so it is loaded once and shared by every viewer on the page. */
 let mujocoPromise = null;
@@ -58,6 +59,8 @@ const TRN_TENDON = 3; // mjtTrn
 const BIAS_NONE = 0; // mjtBias
 const WRAP_PULLEY = -2; // wrap_obj value that separates the branches of a tendon with pulleys.
 const ACTIVE_TENDON_COLOR = [0.9, 0.16, 0.12]; // sRGB colour of a tendon pulling with its actuator's maximum force.
+/** Faces of a mesh that meet at a smaller angle are shaded smoothly (see buildMeshGeometry). */
+const MESH_CREASE_ANGLE = Math.PI / 6;
 const FLOOR_SHADOW_EXTENT = 2.5; // m; half-size of the shadow frustum around the orbit target in models with a floor.
 /** Model elements whose `file` attribute names an asset, and the compiler attribute that sets their directory. */
 const ASSET_DIRECTORIES = { mesh: "meshdir", skin: "meshdir", hfield: "meshdir", texture: "texturedir" };
@@ -401,28 +404,24 @@ export class MuJoCoViewer {
   }
 
   /**
-   * Mesh vertices are stored in the geom frame after compilation, so no extra transform is needed. Every face corner
-   * gets MuJoCo's normal for it (`mesh_facenormal`), so meshes are shaded as in MuJoCo's own viewer: smooth, with
-   * sharp edges kept sharp. Geometries are shared by all geoms of a mesh.
+   * Mesh vertices are stored in the geom frame after compilation, so no extra transform is needed. Normals are
+   * recomputed with a crease angle: MuJoCo stores one normal per vertex, which on CAD meshes (long thin triangles that
+   * meet at sharp edges) smears dark streaks over flat faces. Faces that meet at less than MESH_CREASE_ANGLE are
+   * shaded smoothly, sharper edges stay sharp. Geometries are shared by all geoms of a mesh.
    */
   buildMeshGeometry(meshId) {
     const m = this.model;
     const vert = m.mesh_vert.subarray(3 * m.mesh_vertadr[meshId], 3 * (m.mesh_vertadr[meshId] + m.mesh_vertnum[meshId]));
-    const normal = m.mesh_normal.subarray(3 * m.mesh_normaladr[meshId], 3 * (m.mesh_normaladr[meshId] + m.mesh_normalnum[meshId]));
     const faceStart = 3 * m.mesh_faceadr[meshId];
     const numCorners = 3 * m.mesh_facenum[meshId];
     const face = m.mesh_face.subarray(faceStart, faceStart + numCorners);
-    const faceNormal = m.mesh_facenormal.subarray(faceStart, faceStart + numCorners);
     const positions = new Float32Array(3 * numCorners);
-    const normals = new Float32Array(3 * numCorners);
     for (let c = 0; c < numCorners; c++) {
       positions.set(vert.subarray(3 * face[c], 3 * face[c] + 3), 3 * c);
-      normals.set(normal.subarray(3 * faceNormal[c], 3 * faceNormal[c] + 3), 3 * c);
     }
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
-    return geometry;
+    return toCreasedNormals(geometry, MESH_CREASE_ANGLE);
   }
 
   /** One instanced cylinder per straight tendon segment; poses and colours are set in syncTendons. */

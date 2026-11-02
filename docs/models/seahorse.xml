@@ -223,8 +223,8 @@
           </body>
           <body name="SeahorseMorphology/segment_1" pos="0 0 0.032">
             <body name="SeahorseMorphology/segment_1_vertebrae">
-              <joint name="SeahorseMorphology/segment_1_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
-              <joint name="SeahorseMorphology/segment_1_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
+              <joint name="SeahorseMorphology/segment_1_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
+              <joint name="SeahorseMorphology/segment_1_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
               <joint name="SeahorseMorphology/segment_1_vertebrae_vertebrae_joint_yaw" stiffness="0.5" range="-0.0872665 0.0872665" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" limited="true"/>
               <site name="SeahorseMorphology/segment_1_vertebrae_s_tap_ventral" size="0.001" pos="0.015 0 0" rgba="0.717647 0.337255 0.34902 1"/>
               <site name="SeahorseMorphology/segment_1_vertebrae_s_tap_sinistral" size="0.001" pos="0 0.015 0" rgba="0.717647 0.337255 0.34902 1"/>
@@ -408,8 +408,8 @@
               </body>
               <body name="SeahorseMorphology/segment_2" pos="0 0 0.032">
                 <body name="SeahorseMorphology/segment_2_vertebrae">
-                  <joint name="SeahorseMorphology/segment_2_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
-                  <joint name="SeahorseMorphology/segment_2_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
+                  <joint name="SeahorseMorphology/segment_2_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
+                  <joint name="SeahorseMorphology/segment_2_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
                   <joint name="SeahorseMorphology/segment_2_vertebrae_vertebrae_joint_yaw" stiffness="0.5" range="-0.0872665 0.0872665" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" limited="true"/>
                   <site name="SeahorseMorphology/segment_2_vertebrae_s_tap_ventral" size="0.001" pos="0.015 0 0" rgba="0.717647 0.337255 0.34902 1"/>
                   <site name="SeahorseMorphology/segment_2_vertebrae_s_tap_sinistral" size="0.001" pos="0 0.015 0" rgba="0.717647 0.337255 0.34902 1"/>
@@ -593,8 +593,8 @@
                   </body>
                   <body name="SeahorseMorphology/segment_3" pos="0 0 0.032">
                     <body name="SeahorseMorphology/segment_3_vertebrae">
-                      <joint name="SeahorseMorphology/segment_3_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
-                      <joint name="SeahorseMorphology/segment_3_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
+                      <joint name="SeahorseMorphology/segment_3_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
+                      <joint name="SeahorseMorphology/segment_3_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
                       <joint name="SeahorseMorphology/segment_3_vertebrae_vertebrae_joint_yaw" stiffness="0.5" range="-0.0872665 0.0872665" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" limited="true"/>
                       <site name="SeahorseMorphology/segment_3_vertebrae_s_tap_ventral" size="0.001" pos="0.015 0 0" rgba="0.717647 0.337255 0.34902 1"/>
                       <site name="SeahorseMorphology/segment_3_vertebrae_s_tap_sinistral" size="0.001" pos="0 0.015 0" rgba="0.717647 0.337255 0.34902 1"/>
@@ -778,8 +778,8 @@
                       </body>
                       <body name="SeahorseMorphology/segment_4" pos="0 0 0.032">
                         <body name="SeahorseMorphology/segment_4_vertebrae">
-                          <joint name="SeahorseMorphology/segment_4_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
-                          <joint name="SeahorseMorphology/segment_4_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
+                          <joint name="SeahorseMorphology/segment_4_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
+                          <joint name="SeahorseMorphology/segment_4_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
                           <joint name="SeahorseMorphology/segment_4_vertebrae_vertebrae_joint_yaw" stiffness="0.5" range="-0.0872665 0.0872665" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" limited="true"/>
                           <site name="SeahorseMorphology/segment_4_vertebrae_s_tap_ventral" size="0.001" pos="0.015 0 0" rgba="0.717647 0.337255 0.34902 1"/>
                           <site name="SeahorseMorphology/segment_4_vertebrae_s_tap_sinistral" size="0.001" pos="0 0.015 0" rgba="0.717647 0.337255 0.34902 1"/>
@@ -963,8 +963,8 @@
                           </body>
                           <body name="SeahorseMorphology/segment_5" pos="0 0 0.032">
                             <body name="SeahorseMorphology/segment_5_vertebrae">
-                              <joint name="SeahorseMorphology/segment_5_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
-                              <joint name="SeahorseMorphology/segment_5_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
+                              <joint name="SeahorseMorphology/segment_5_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
+                              <joint name="SeahorseMorphology/segment_5_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
                               <joint name="SeahorseMorphology/segment_5_vertebrae_vertebrae_joint_yaw" stiffness="0.5" range="-0.0872665 0.0872665" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" limited="true"/>
                               <site name="SeahorseMorphology/segment_5_vertebrae_s_tap_ventral" size="0.001" pos="0.015 0 0" rgba="0.717647 0.337255 0.34902 1"/>
                               <site name="SeahorseMorphology/segment_5_vertebrae_s_tap_sinistral" size="0.001" pos="0 0.015 0" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1148,8 +1148,8 @@
                               </body>
                               <body name="SeahorseMorphology/segment_6" pos="0 0 0.032">
                                 <body name="SeahorseMorphology/segment_6_vertebrae">
-                                  <joint name="SeahorseMorphology/segment_6_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
-                                  <joint name="SeahorseMorphology/segment_6_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
+                                  <joint name="SeahorseMorphology/segment_6_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
+                                  <joint name="SeahorseMorphology/segment_6_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
                                   <joint name="SeahorseMorphology/segment_6_vertebrae_vertebrae_joint_yaw" stiffness="0.5" range="-0.0872665 0.0872665" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" limited="true"/>
                                   <site name="SeahorseMorphology/segment_6_vertebrae_s_tap_ventral" size="0.001" pos="0.015 0 0" rgba="0.717647 0.337255 0.34902 1"/>
                                   <site name="SeahorseMorphology/segment_6_vertebrae_s_tap_sinistral" size="0.001" pos="0 0.015 0" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1333,8 +1333,8 @@
                                   </body>
                                   <body name="SeahorseMorphology/segment_7" pos="0 0 0.032">
                                     <body name="SeahorseMorphology/segment_7_vertebrae">
-                                      <joint name="SeahorseMorphology/segment_7_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
-                                      <joint name="SeahorseMorphology/segment_7_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
+                                      <joint name="SeahorseMorphology/segment_7_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
+                                      <joint name="SeahorseMorphology/segment_7_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
                                       <joint name="SeahorseMorphology/segment_7_vertebrae_vertebrae_joint_yaw" stiffness="0.5" range="-0.0872665 0.0872665" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" limited="true"/>
                                       <site name="SeahorseMorphology/segment_7_vertebrae_s_tap_ventral" size="0.001" pos="0.015 0 0" rgba="0.717647 0.337255 0.34902 1"/>
                                       <site name="SeahorseMorphology/segment_7_vertebrae_s_tap_sinistral" size="0.001" pos="0 0.015 0" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1518,8 +1518,8 @@
                                       </body>
                                       <body name="SeahorseMorphology/segment_8" pos="0 0 0.032">
                                         <body name="SeahorseMorphology/segment_8_vertebrae">
-                                          <joint name="SeahorseMorphology/segment_8_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
-                                          <joint name="SeahorseMorphology/segment_8_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
+                                          <joint name="SeahorseMorphology/segment_8_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
+                                          <joint name="SeahorseMorphology/segment_8_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
                                           <joint name="SeahorseMorphology/segment_8_vertebrae_vertebrae_joint_yaw" stiffness="0.5" range="-0.0872665 0.0872665" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" limited="true"/>
                                           <site name="SeahorseMorphology/segment_8_vertebrae_s_tap_ventral" size="0.001" pos="0.015 0 0" rgba="0.717647 0.337255 0.34902 1"/>
                                           <site name="SeahorseMorphology/segment_8_vertebrae_s_tap_sinistral" size="0.001" pos="0 0.015 0" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1703,8 +1703,8 @@
                                           </body>
                                           <body name="SeahorseMorphology/segment_9" pos="0 0 0.032">
                                             <body name="SeahorseMorphology/segment_9_vertebrae">
-                                              <joint name="SeahorseMorphology/segment_9_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
-                                              <joint name="SeahorseMorphology/segment_9_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
+                                              <joint name="SeahorseMorphology/segment_9_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
+                                              <joint name="SeahorseMorphology/segment_9_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
                                               <joint name="SeahorseMorphology/segment_9_vertebrae_vertebrae_joint_yaw" stiffness="0.5" range="-0.0872665 0.0872665" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" limited="true"/>
                                               <site name="SeahorseMorphology/segment_9_vertebrae_s_tap_ventral" size="0.001" pos="0.015 0 0" rgba="0.717647 0.337255 0.34902 1"/>
                                               <site name="SeahorseMorphology/segment_9_vertebrae_s_tap_sinistral" size="0.001" pos="0 0.015 0" rgba="0.717647 0.337255 0.34902 1"/>
@@ -1888,8 +1888,8 @@
                                               </body>
                                               <body name="SeahorseMorphology/segment_10" pos="0 0 0.032">
                                                 <body name="SeahorseMorphology/segment_10_vertebrae">
-                                                  <joint name="SeahorseMorphology/segment_10_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
-                                                  <joint name="SeahorseMorphology/segment_10_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="1e-05" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
+                                                  <joint name="SeahorseMorphology/segment_10_vertebrae_vertebrae_joint_pitch" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="0 1 0" limited="true"/>
+                                                  <joint name="SeahorseMorphology/segment_10_vertebrae_vertebrae_joint_roll" stiffness="0.0001" range="-0.244346 0.244346" armature="0.01" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" axis="1 0 0" limited="true"/>
                                                   <joint name="SeahorseMorphology/segment_10_vertebrae_vertebrae_joint_yaw" stiffness="0.5" range="-0.0872665 0.0872665" damping="0.1" frictionloss="0.0015" pos="0 0 -0.016" limited="true"/>
                                                   <site name="SeahorseMorphology/segment_10_vertebrae_s_tap_ventral" size="0.001" pos="0.015 0 0" rgba="0.717647 0.337255 0.34902 1"/>
                                                   <site name="SeahorseMorphology/segment_10_vertebrae_s_tap_sinistral" size="0.001" pos="0 0.015 0" rgba="0.717647 0.337255 0.34902 1"/>

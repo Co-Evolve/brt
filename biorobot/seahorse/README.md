@@ -86,9 +86,8 @@ plate weighs ~10 g, a vertebra 4.5 g and its ball bearing 2.1 g.
   ball bearing between it and the previous vertebra: pitch (ventral bending, ±14°), roll (lateral bending, ±14°) and
   yaw (torsion, ±5°).
 - **Gliding joints**: every plate except those of the first segment has two slide joints (5 mm travel, stiffness 1 N/m,
-  damping 1 N s/m, friction loss 0.3 N). Joint equality
-  constraints make neighbouring plates of a segment, and the corresponding plates of neighbouring segments, glide
-  together.
+  damping 1 N s/m, friction loss 0.3 N). Joint equality constraints make neighbouring plates of a segment, and the
+  corresponding plates of neighbouring segments, glide together.
 - **Vertebral struts**: four elastic spatial tendons per segment connect the vertebra to its plates (3.043 N/m).
 - **HM beams**: spatial tendons through attachment points (holes) on the plates. A beam starts at the "ghost"
   attachment points of its start segment. In every segment in between, it passes one of ten intermediate attachment
@@ -155,8 +154,9 @@ print(state.observations["vertebrae_pitch_joint_pos"])  # rad, base to tip
 
 The default tail (`default_tail_morphology_specification()`) has 11 segments, a pair of force-controlled ventral HM
 beams that span the whole tail, and 20 MVM beams. Its plates are fixed to their vertebrae: the gliding joints are
-disabled by default (`default_tail_morphology_specification(gliding_joints=True)` enables them). Pass
-`morphology_specification=...` for another architecture, e.g. the one built above:
+disabled by default (`default_tail_morphology_specification(gliding_joints=True)` enables them), and its pitch and roll
+joints are damped with 0.1 N m s/rad, like the yaw joints (the original 1e-5 lets the tail swing while a contraction is
+held). Pass `morphology_specification=...` for another architecture, e.g. the one built above:
 
 ```python
 env = biorobot.make("seahorse/tail", morphology_specification=specification)
