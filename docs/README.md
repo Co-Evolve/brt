@@ -163,6 +163,8 @@ Requirements for an exported model:
 1. Add the animal's demo environment to `DEMOS` in `scripts/export_web_models.py` and run it.
 2. Write `docs/js/controllers/<animal>.js` with the controller interface above.
 3. Copy `brittle-star.html` to `<animal-name>.html`. Update the title, the text, the `data-*` attributes and the nav
-   links, and keep the import map.
+   links, and keep the import map. The import map must come before anything that loads `viewer.js` (no
+   `<link rel="modulepreload">` above it): otherwise a cached `viewer.js` can be resolved before the map, and
+   `import "three"` fails.
 4. Add a card under "Environments" in `index.html`, and the new page to the nav of the other demo pages.
 5. Preview locally and check the browser console for errors.
