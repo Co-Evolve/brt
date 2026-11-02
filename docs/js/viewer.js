@@ -33,10 +33,10 @@
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
 
 /** The MuJoCo module is ~11 MB of WASM, so it is loaded once and shared by every viewer on the page. */
 let mujocoPromise = null;
+let viewerCount = 0; // gives every viewer its own folder in the MuJoCo filesystem
 function loadMujoco() {
   if (!mujocoPromise) {
     mujocoPromise = import("@mujoco/mujoco").then((module) => module.default());
@@ -74,6 +74,60 @@ function parseVector(text, fallback) {
 /** MuJoCo colours are authored in sRGB; three.js works in linear space. */
 function srgbColor(r, g, b) {
   return new THREE.Color().setRGB(r, g, b, THREE.SRGBColorSpace);
+}
+
+/**
+ * Per-corner normals of an indexed triangle mesh: every corner averages the (area-weighted) normals of the faces around
+ * its vertex that deviate less than `creaseAngle` from its own face, so smooth surfaces are shaded smoothly and sharp
+ * edges stay sharp. Works on MuJoCo's vertex indices with typed arrays (three.js's toCreasedNormals hashes positions
+ * and takes tens of seconds on large CAD meshes).
+ */
+function creasedNormals(vert, face, creaseAngle) {
+  const numFaces = face.length / 3;
+  const numVerts = vert.length / 3;
+  // Area-weighted face normals (cross products) and their unit versions.
+  const weighted = new Float32Array(3 * numFaces);
+  const unit = new Float32Array(3 * numFaces);
+  for (let f = 0; f < numFaces; f++) {
+    const a = 3 * face[3 * f], b = 3 * face[3 * f + 1], c = 3 * face[3 * f + 2];
+    const ux = vert[b] - vert[a], uy = vert[b + 1] - vert[a + 1], uz = vert[b + 2] - vert[a + 2];
+    const vx = vert[c] - vert[a], vy = vert[c + 1] - vert[a + 1], vz = vert[c + 2] - vert[a + 2];
+    const nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
+    const length = Math.hypot(nx, ny, nz) || 1;
+    weighted[3 * f] = nx;
+    weighted[3 * f + 1] = ny;
+    weighted[3 * f + 2] = nz;
+    unit[3 * f] = nx / length;
+    unit[3 * f + 1] = ny / length;
+    unit[3 * f + 2] = nz / length;
+  }
+  // Faces around every vertex (compressed sparse rows).
+  const start = new Int32Array(numVerts + 1);
+  for (let c = 0; c < face.length; c++) start[face[c] + 1]++;
+  for (let v = 0; v < numVerts; v++) start[v + 1] += start[v];
+  const fill = start.slice(0, numVerts);
+  const faces = new Int32Array(face.length);
+  for (let c = 0; c < face.length; c++) faces[fill[face[c]]++] = (c / 3) | 0;
+  // Every corner sums the normals of its vertex's faces within the crease angle (always including its own face).
+  const cosCrease = Math.cos(creaseAngle);
+  const normals = new Float32Array(3 * face.length);
+  for (let c = 0; c < face.length; c++) {
+    const f = (c / 3) | 0;
+    const v = face[c];
+    let x = 0, y = 0, z = 0;
+    for (let i = start[v]; i < start[v + 1]; i++) {
+      const g = faces[i];
+      if (g !== f && unit[3 * f] * unit[3 * g] + unit[3 * f + 1] * unit[3 * g + 1] + unit[3 * f + 2] * unit[3 * g + 2] < cosCrease) continue;
+      x += weighted[3 * g];
+      y += weighted[3 * g + 1];
+      z += weighted[3 * g + 2];
+    }
+    const length = Math.hypot(x, y, z) || 1;
+    normals[3 * c] = x / length;
+    normals[3 * c + 1] = y / length;
+    normals[3 * c + 2] = z / length;
+  }
+  return normals;
 }
 
 export class MuJoCoViewer {
@@ -236,17 +290,36 @@ export class MuJoCoViewer {
     return new Map(entries);
   }
 
-  /** Compiles the XML in MuJoCo's virtual filesystem, next to its asset files. */
+  /**
+   * Compiles the XML next to its asset files in the MuJoCo module's in-memory filesystem (Emscripten MEMFS), in a
+   * folder of its own. MjVFS.addBuffer is avoided on purpose: it copies the bytes one element at a time and takes
+   * seconds for a few MB of meshes, while FS.writeFile is a memcpy.
+   */
   loadModel(xmlBytes, assets) {
     const mj = this.mujoco;
-    const fileName = this.modelUrl.split("/").pop();
-    const vfs = new mj.MjVFS();
+    const FS = mj.FS;
+    const dir = `/brt_viewer_${++viewerCount}`;
+    const files = [[this.modelUrl.split("/").pop(), xmlBytes], ...assets];
+    const write = (path, bytes) => {
+      const parts = `${dir}/${path}`.split("/").filter(Boolean);
+      for (let i = 1; i < parts.length; i++) {
+        const folder = "/" + parts.slice(0, i).join("/");
+        if (!FS.analyzePath(folder).exists) FS.mkdir(folder);
+      }
+      FS.writeFile(`${dir}/${path}`, bytes);
+    };
     try {
-      vfs.addBuffer(fileName, xmlBytes);
-      for (const [path, bytes] of assets) vfs.addBuffer(path, bytes);
-      this.model = mj.MjModel.from_xml_path(fileName, vfs);
+      for (const [path, bytes] of files) write(path, bytes);
+      this.model = mj.MjModel.from_xml_path(`${dir}/${files[0][0]}`);
     } finally {
-      vfs.delete();
+      // The compiled model holds its own copy of everything; free the files.
+      for (const [path] of files) {
+        try {
+          FS.unlink(`${dir}/${path}`);
+        } catch {
+          // never written
+        }
+      }
     }
     this.data = new mj.MjData(this.model);
     const objActuator = mj.mjtObj.mjOBJ_ACTUATOR.value;
@@ -421,7 +494,8 @@ export class MuJoCoViewer {
     }
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    return toCreasedNormals(geometry, MESH_CREASE_ANGLE);
+    geometry.setAttribute("normal", new THREE.BufferAttribute(creasedNormals(vert, face, MESH_CREASE_ANGLE), 3));
+    return geometry;
   }
 
   /** One instanced cylinder per straight tendon segment; poses and colours are set in syncTendons. */
