@@ -43,7 +43,7 @@ The viewer (`js/viewer.js`) mounts on every element that has a `data-mujoco-view
 
 | Attribute         | Meaning                                                                                      |
 |-------------------|----------------------------------------------------------------------------------------------|
-| `data-model`      | Required. MJCF file, written into MuJoCo's virtual filesystem with the files it references and compiled there. |
+| `data-model`      | Required. MJCF file, written into MuJoCo's in-memory filesystem with the files it references and compiled there. |
 | `data-controller` | Optional. ES module that drives the actuators (see below). Without it, all controls stay 0.  |
 | `data-track-body` | Optional. Body the camera follows horizontally. Defaults to the first body with a free joint. |
 | `data-camera`     | Optional. Initial camera offset from the orbit target, in metres (`x,y,z`, MuJoCo is z-up).   |
@@ -58,7 +58,8 @@ the achieved real-time factor.
 
 Before compiling, the viewer reads the XML for the `file` attributes of `<mesh>`, `<skin>`, `<hfield>` and `<texture>`
 assets, resolves them as MuJoCo does (relative to the XML, under the compiler's `meshdir`, `texturedir` or `assetdir`),
-fetches them next to the XML and adds them to the virtual filesystem under the same relative paths.
+fetches them next to the XML and writes them to the in-memory filesystem under the same relative paths (with
+`FS.writeFile`; `MjVFS.addBuffer` copies byte by byte and takes seconds for a few MB of meshes).
 
 It renders the geom types plane, sphere, capsule, ellipsoid, cylinder, box and mesh from geom groups 0 to 2. Meshes use
 the compiled `mesh_vert`/`mesh_face` with normals recomputed at a 30° crease angle (MuJoCo's one normal per vertex
