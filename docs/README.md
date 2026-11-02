@@ -61,8 +61,8 @@ assets, resolves them as MuJoCo does (relative to the XML, under the compiler's 
 fetches them next to the XML and adds them to the virtual filesystem under the same relative paths.
 
 It renders the geom types plane, sphere, capsule, ellipsoid, cylinder, box and mesh from geom groups 0 to 2. Meshes use
-the compiled `mesh_vert`/`mesh_face` and MuJoCo's own normals (`mesh_normal`, `mesh_facenormal`), so they are shaded
-as in MuJoCo's viewer, and all geoms of a mesh share one GPU geometry. Colours come from `geom_rgba`, or from the
+the compiled `mesh_vert`/`mesh_face` with normals recomputed at a 30° crease angle (MuJoCo's one normal per vertex
+smears dark streaks over the flat faces of CAD meshes), and all geoms of a mesh share one GPU geometry. Colours come from `geom_rgba`, or from the
 material when the geom keeps the default rgba. 2D textures are drawn on planes only, for example the checkerboard
 floors. Everything else uses its flat colour. Spatial tendons of groups 0 to 2 are drawn as cylinders of radius
 `tendon_width` between consecutive wrap points (`wrap_xpos`), in one instanced mesh. A tendon driven by an actuator is

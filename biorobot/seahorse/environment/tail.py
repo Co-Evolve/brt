@@ -208,6 +208,10 @@ class SeahorseTailEnv(BRTEnv):
         return 0.0
 
 
+#: Damping (N m s/rad) of the default tail's pitch and roll joints, the same as the yaw joints'.
+VERTEBRAL_JOINT_DAMPING = 0.1
+
+
 def default_tail_morphology_specification(
     p_control: bool = False, mvm_enabled: bool = True, gliding_joints: bool = False
 ) -> SeahorseMorphologySpecification:
@@ -215,7 +219,9 @@ def default_tail_morphology_specification(
     paper's HM experiment), force-controlled unless ``p_control``, plus MVM beams if ``mvm_enabled``.
 
     Without ``gliding_joints`` (the default), the plates are fixed to their vertebra: the gliding joints and their
-    equality constraints are left out (a joint range of 0 removes a joint).
+    equality constraints are left out (a joint range of 0 removes a joint). The pitch and roll joints get a damping of
+    ``VERTEBRAL_JOINT_DAMPING`` (the original model's 1e-5 N m s/rad lets the tail swing by ~10 degrees while a
+    contraction is held).
     """
     specification = default_seahorse_morphology_specification(
         num_segments=11,
@@ -226,6 +232,10 @@ def default_tail_morphology_specification(
     specification.beam_actuation_specification.hm_beam_actuation_specification.routing_specifications = [
         default_hm_routing_specification(num_segments=11, segment_span=10)
     ]
+    for segment in specification.segment_specifications:
+        vertebrae = segment.vertebrae_specification
+        vertebrae.pitch_joint_specification.damping = VERTEBRAL_JOINT_DAMPING
+        vertebrae.roll_joint_specification.damping = VERTEBRAL_JOINT_DAMPING
     if not gliding_joints:
         for segment in specification.segment_specifications:
             for plate in segment.plate_specifications:
