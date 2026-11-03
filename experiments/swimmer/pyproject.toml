@@ -1,0 +1,34 @@
+[project]
+name = "swimmer"
+version = "1.0.0"
+description = "Capsule-chain swimmer, Van der Pol CPG and two MAP-Elites searches: the worked example 'Illuminating a swimmer's behaviour space'"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+# Direct dependencies, exact. requirements.txt pins the full environment.
+dependencies = [
+    "mujoco==3.8.1",
+    "numpy==2.4.4",
+    "pandas==3.0.3",
+    "pyarrow==24.0.0",
+    "pyyaml==6.0.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.2.0", "black==26.10.1"]
+figure = ["playwright==1.64.1", "pillow==12.2.0"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["swimmer"]
+
+[tool.black]
+target-version = ["py311"]
+# shared figure tooling, kept byte-identical to the house copies
+extend-exclude = "scripts/(house|render|cvd)\\.py"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

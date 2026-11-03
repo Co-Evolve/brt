@@ -1,0 +1,36 @@
+# Exact versions. Runtime pins are copied from the MuJoCo-demo .venv (Python 3.12.2,
+# macOS arm64). MuJoCo 3.8.1 is also what the May 2026 simulation records state.
+# Install: uv pip install -r requirements.txt
+
+# --- runtime (simulation, search) ---
+absl-py==2.4.0
+etils==1.14.0
+fsspec==2026.4.0
+glfw==2.10.0
+mujoco==3.8.1
+numpy==2.4.4
+pandas==3.0.3
+pyarrow==24.0.0
+pyopengl==3.1.10
+python-dateutil==2.9.0.post0
+pyyaml==6.0.3
+six==1.17.0
+typing-extensions==4.15.0
+zipp==3.23.1
+
+# --- tests, formatting, figure rendering and CVD check ---
+black==26.10.1
+click==8.5.0
+greenlet==3.5.6
+iniconfig==2.3.1
+mypy-extensions==1.1.0
+packaging==26.3
+pathspec==1.1.1
+pillow==12.2.0
+platformdirs==4.14.3
+playwright==1.64.1
+pluggy==1.7.0
+pyee==14.0.0
+pygments==2.21.0
+pytest==9.2.0
+pytokens==0.4.1

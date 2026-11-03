@@ -1,0 +1,7 @@
+# Analysis of search b (read-only): per energy row, the joint excursion of the
+# fastest elite and the Spearman correlation between excursion and speed.
+run: excursion_by_energy
+search: search_b           # output/<search>/ is read, never written
+min_cells: 5               # rows with fewer filled cells are skipped
+n_permutations: 20000      # permutation test for Spearman rho (two-sided)
+seed: 0                    # RNG for the permutations

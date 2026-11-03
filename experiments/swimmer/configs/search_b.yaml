@@ -1,0 +1,56 @@
+# MAP-Elites search (b): descriptors joint excursion x log10 energy.
+# Source: MuJoCo-demo results/mapelites_gait_cost_2026-05-15_133456/config.yaml
+run: search_b
+seed_population: sweep     # output/<seed_population>/data.parquet
+master_seed: 42
+n_iterations: 5000
+print_every: 50
+grid_n: 20                 # 20 x 20 cells
+
+descriptors:
+  kind: excursion_x_log_energy
+  # Bounds kept as run: the 5th-95th percentiles (rounded) of the preliminary
+  # sweep of 15 May 2026 (results/sweep_vdp_amptaper_2026-05-15_122723: 10 s
+  # episodes, no settling, unsigned speed), not of configs/sweep.yaml.
+  d1_min: 0.47                           # joint excursion, rad (linear)
+  d1_max: 2.06
+  d2_min_log: 1.0386201619497029     # log10(10.93 J)
+  d2_max_log: 2.6172310643303502     # log10(414.22 J)
+
+quality: speed             # signed head-first speed (m/s): + towards the head segment seg0
+
+# Parameter bounds: kept as run; they are the bounds of the preliminary sweep of
+# 15 May 2026 (MuJoCo-demo results/sweep_vdp_amptaper_2026-05-15_122723, same
+# master seed, hence the same 100 parameter vectors).
+bounds:                    # [min, max]; offspring are clipped into these
+  N_choices: [4, 6, 8, 10, 12]
+  taper: [0.5, 1.5]
+  stiffness: [0.001, 0.1]
+  mu: [0.5, 3.0]
+  omega: [3.0, 15.0]
+  w_fwd: [0.5, 5.0]
+  w_bwd: [0.0, 3.0]
+  amplitude_scale: [0.2, 0.8]
+  amp_taper: [-0.6, 0.6]
+
+mutation:                  # Gaussian additive; stiffness mutated in log10 space
+  sigma_taper: 0.1
+  sigma_log_stiffness: 0.15
+  sigma_mu: 0.25
+  sigma_omega: 1.0
+  sigma_w_fwd: 0.4
+  sigma_w_bwd: 0.3
+  sigma_amplitude_scale: 0.08
+  sigma_amp_taper: 0.15
+  p_N_resample: 0.2        # probability of redrawing N uniformly from N_choices
+
+episode:
+  timestep_s: 0.002        # 500 Hz physics
+  # Post-erratum rule (MuJoCo-demo src/v4/v4_model.py), cycle period = 2 pi / omega:
+  warmup:                  # CPG integrated alone before MuJoCo starts
+    min_s: 5.0             # warm-up = max(5 s, 40 cycles)
+    cycles: 40.0
+  settle:                  # MuJoCo time excluded from descriptors
+    min_s: 2.0             # settling = max(2 s, 2 cycles)
+    cycles: 2.0
+  window_s: 5.0            # measurement window; episode = settling + 5 s

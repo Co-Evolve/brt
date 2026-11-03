@@ -1,0 +1,37 @@
+# Parameter sweep: 100 simulations over the search's parameter bounds; the
+# 100-simulation seed population of both searches.
+# Source: MuJoCo-demo results/sweep_vdp_amptaper_2026-05-15_125319/config.yaml
+run: sweep
+master_seed: 42            # draws one per-cell seed for each of the 100 cells
+
+# 10 x 10 grid over (omega, w_fwd), evenly spaced, endpoints included.
+# The other seven parameters are drawn per cell (uniform; stiffness
+# log-uniform) from an RNG seeded with that cell's seed.
+grid:
+  omega_n: 10
+  w_fwd_n: 10
+
+# Parameter bounds: kept as run; they are the bounds of the preliminary sweep of
+# 15 May 2026 (MuJoCo-demo results/sweep_vdp_amptaper_2026-05-15_122723, same
+# master seed, hence the same 100 parameter vectors).
+bounds:                    # [min, max]
+  N_choices: [4, 6, 8, 10, 12]
+  taper: [0.5, 1.5]
+  stiffness: [0.001, 0.1]  # Nm/rad, sampled log-uniform
+  mu: [0.5, 3.0]
+  omega: [3.0, 15.0]       # rad/s
+  w_fwd: [0.5, 5.0]
+  w_bwd: [0.0, 3.0]
+  amplitude_scale: [0.2, 0.8]
+  amp_taper: [-0.6, 0.6]
+
+episode:
+  timestep_s: 0.002        # 500 Hz physics
+  # Post-erratum rule (MuJoCo-demo src/v4/v4_model.py), cycle period = 2 pi / omega:
+  warmup:                  # CPG integrated alone before MuJoCo starts
+    min_s: 5.0             # warm-up = max(5 s, 40 cycles)
+    cycles: 40.0
+  settle:                  # MuJoCo time excluded from descriptors
+    min_s: 2.0             # settling = max(2 s, 2 cycles)
+    cycles: 2.0
+  window_s: 5.0            # measurement window; episode = settling + 5 s
