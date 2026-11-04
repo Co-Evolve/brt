@@ -4,7 +4,7 @@ This folder is the BRT project site, served by GitHub Pages. It is plain static 
 step. Each animal has a demo page that runs its MuJoCo model in the browser.
 
 - `index.html`: landing page (goals, environments, quickstart, contributing).
-- `brittle-star.html`, `jumping-spider.html`, `seahorse.html`: one demo page per animal.
+- `brittle-star.html`, `jumping-spider.html`, `seahorse.html`, `swimmer.html`: one demo page per animal.
 - `css/style.css`: all styles. Colours are CSS variables, with a dark palette under `prefers-color-scheme: dark`.
 - `js/viewer.js`: the generic MuJoCo viewer.
 - `js/controllers/<animal>.js`: open-loop controllers that drive the demos.
@@ -107,6 +107,11 @@ controllers are open loop:
   As `contraction` in `biorobot/seahorse/examples/common.py`, a level in [0, 1] maps each actuator from the upper end
   of its `ctrlrange` (relaxed) to the lower end (fully contracted). It matches `/hm_beam_...(dextral|sinistral)` and
   `/mvm_beam_` names.
+- `swimmer.js`: a port of `biorobot/swimmer/examples/van_der_pol_cpg.py`, a chain of Van der Pol oscillators that it
+  warms up for 40 cycles after every reset and integrates with RK2 at the 2 ms control timestep. It matches
+  `segment_<i>_joint` names: joint i follows oscillator i. Like `seahorse.js`, it exports a `settings` object (CPG
+  frequency, servo amplitude, reversed wave) that `swimmer.html` updates from its sliders. With the defaults it moves
+  the head 1.45 m head first in 10 s.
 
 Because the viewer uses the environment's control timestep and the exported models are the environments' own, the
 demos reproduce the Python rollouts (`mjc` backend): the brittle star ends within about 1 cm of it after 10 s, the
@@ -139,6 +144,7 @@ that the files reproduce the compiled meshes, `env.reset` and 50 random-action `
 | `brittle_star.xml`   | `brittle_star/undirected_locomotion` |                       |
 | `jumping_spider.xml` | `jumping_spider/long_jump`           |                       |
 | `seahorse.xml`       | `seahorse/tail`                      |                       |
+| `swimmer.xml`        | `swimmer/head_first_swimming`        |                       |
 
 ```sh
 python scripts/export_web_models.py          # regenerate docs/models/
@@ -156,8 +162,8 @@ Requirements for an exported model:
   as it is.
 - The animal starts at its reset pose in the default `qpos0` (the free-joint body's `pos` and `quat`).
 - Actuator names keep the substrings the controller matches on.
-- Keep it small: the files are fetched on every page view (now 87 KB, 116 KB, and 428 KB plus 3.4 MB of seahorse
-  meshes).
+- Keep it small: the files are fetched on every page view (now 87 KB, 116 KB, 428 KB plus 3.4 MB of seahorse
+  meshes, and 9 KB).
 
 ## Adding an animal
 

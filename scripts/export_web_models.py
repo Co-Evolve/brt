@@ -38,10 +38,16 @@ DEMOS: Dict[str, Tuple[str, Dict[str, Any]]] = {
     "brittle_star.xml": ("brittle_star/undirected_locomotion", {}),
     "jumping_spider.xml": ("jumping_spider/long_jump", {}),
     "seahorse.xml": ("seahorse/tail", {}),
+    "swimmer.xml": ("swimmer/head_first_swimming", {}),
 }
 CONTROL_TIMESTEP_NUMERIC = "brt_control_timestep"
 #: Control steps compared between the environment and the exported XML, with random actions.
 NUM_VALIDATION_STEPS = 50
+_INSTABILITY_WARNINGS = (
+    mujoco.mjtWarning.mjWARN_BADQPOS,
+    mujoco.mjtWarning.mjWARN_BADQVEL,
+    mujoco.mjtWarning.mjWARN_BADQACC,
+)
 
 
 @contextlib.contextmanager
@@ -147,7 +153,8 @@ def export_model(
 
 def _validate(env: BRTEnv, xml: str, assets: Dict[str, bytes]) -> None:
     """The files must reproduce the compiled meshes, ``env.reset`` and ``env.step`` (up to the precision of the XML's
-    printed numbers)."""
+    printed numbers), in a rollout without instabilities (after which MuJoCo resets the state, so that both rollouts
+    would agree trivially)."""
     model = mujoco.MjModel.from_xml_string(xml, assets)
     np.testing.assert_array_equal(model.mesh_vert, env.mj_model.mesh_vert)
     np.testing.assert_array_equal(model.mesh_face, env.mj_model.mesh_face)
@@ -163,6 +170,9 @@ def _validate(env: BRTEnv, xml: str, assets: Dict[str, bytes]) -> None:
         data.ctrl[:] = action
         mujoco.mj_step(model, data, nstep=env.config.num_physics_steps_per_control_step)
     np.testing.assert_allclose(data.xpos, state.data.xpos, atol=1e-4)
+    for name, mj_data in (("environment", state.data), ("exported XML", data)):
+        if any(mj_data.warning[int(w)].number for w in _INSTABILITY_WARNINGS):
+            raise ValueError(f"The validation rollout of the {name} became unstable.")
 
 
 def main() -> None:
