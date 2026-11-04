@@ -161,3 +161,4 @@ cython_debug/
 
 # MuJoCo error log
 MUJOCO_LOG.TXT
+.jax-cache/

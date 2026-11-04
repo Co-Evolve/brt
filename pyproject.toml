@@ -42,7 +42,7 @@ dependencies = [
 # MJX's Warp implementation (backend="warp") ships inside mujoco-mjx and needs NVIDIA Warp.
 warp = ["mujoco-mjx[warp]>=3.17"]
 cuda = ["jax[cuda12]"]
-dev = ["pytest", "black==26.10.1"]
+dev = ["pytest", "pytest-xdist", "black==26.10.1"]
 
 [project.urls]
 Homepage = "https://co-evolve.github.io/brt/"

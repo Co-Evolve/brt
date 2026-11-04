@@ -200,7 +200,7 @@ The Jupyter notebooks of the [SEL3 course](https://github.com/Co-Evolve/SEL3-202
 ## Contributing
 
 Interested in having a model developed? Please fill in this [form](https://forms.gle/h1xgnZA39h2qhX8k9). Bug reports
-and pull requests are welcome on [GitHub](https://github.com/Co-Evolve/brt). Run `pytest -m "not slow"` and
+and pull requests are welcome on [GitHub](https://github.com/Co-Evolve/brt). Run `pytest -m "not slow" -n auto` (in parallel, with `pytest-xdist` from the `dev` extra) and
 `black biorobot tests scripts` before opening a pull request.
 
 ## Publications
