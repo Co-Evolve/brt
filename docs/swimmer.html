@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Swimmer Demo</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <meta name="description" content="Interactive MuJoCo simulation of the BRT swimmer: drive its body wave with a Van der Pol CPG in your browser." />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/",
+          "@mujoco/mujoco": "https://cdn.jsdelivr.net/npm/@mujoco/mujoco@3.17.0/mujoco.js"
+        }
+      }
+    </script>
+    <script type="module" src="js/viewer.js"></script>
+    <script type="module">
+      import { settings } from "./js/controllers/swimmer.js";
+
+      const formats = {
+        omega: (value) => `${(value / (2 * Math.PI)).toFixed(2)} Hz`,
+        amplitude: (value) => value.toFixed(2),
+      };
+      for (const input of document.querySelectorAll("[data-setting]")) {
+        const key = input.dataset.setting;
+        const output = document.querySelector(`output[for="${input.id}"]`);
+        const show = () => {
+          if (output) output.textContent = formats[key](Number(input.value));
+        };
+        if (input.type === "checkbox") input.checked = settings[key];
+        else input.value = settings[key];
+        show();
+        input.addEventListener("input", () => {
+          settings[key] = input.type === "checkbox" ? input.checked : Number(input.value);
+          show();
+        });
+      }
+
+      // Head-first distance: the head starts at the origin and head first is -x.
+      const viewer = document.getElementById("swimmer-viewer");
+      const distance = document.getElementById("head-first-distance");
+      setInterval(() => {
+        const data = viewer.viewer?.data;
+        if (!data) return;
+        const metres = -data.qpos[0];
+        distance.textContent = `${metres >= 0 ? "+" : "−"}${Math.abs(metres).toFixed(2)} m in ${data.time.toFixed(1)} s`;
+      }, 250);
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="./">BRT <span>Bio-Inspired Robotics Testbed</span></a>
+        <nav class="site-nav" aria-label="Main">
+          <a href="./#environments">Environments</a>
+          <a href="brittle-star.html">Brittle star</a>
+          <a href="jumping-spider.html">Jumping spider</a>
+          <a href="seahorse.html">Seahorse</a>
+          <a href="swimmer.html" aria-current="page">Swimmer</a>
+          <a href="https://github.com/Co-Evolve/brt">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero container" aria-labelledby="title">
+        <h1 id="title">Swimmer</h1>
+        <p class="lead">
+          An abstract anguilliform swimmer: a chain of capsules in a viscous fluid that swims by sending a wave along its
+          body. It is the toy swimmer of the review on physics-based simulation of biological locomotion
+          (<em>Physics of Life Reviews</em>), where it shows how body length, taper, joint stiffness and the shape of
+          the body wave trade speed against energy.
+        </p>
+        <div
+          id="swimmer-viewer"
+          data-mujoco-viewer
+          data-model="models/swimmer.xml"
+          data-controller="js/controllers/swimmer.js"
+          data-track-body="SwimmerMorphology/segment_4"
+          data-camera="0.25,-0.75,0.65" data-loop="30"
+        ></div>
+        <form class="muscle-controls" aria-label="Central pattern generator" onsubmit="return false">
+          <div class="muscle-control">
+            <label for="omega">CPG frequency</label>
+            <input id="omega" type="range" min="3" max="15" step="0.1" data-setting="omega" />
+            <output for="omega"></output>
+          </div>
+          <div class="muscle-control">
+            <label for="amplitude">Servo amplitude (rad)</label>
+            <input id="amplitude" type="range" min="0.1" max="0.8" step="0.01" data-setting="amplitude" />
+            <output for="amplitude"></output>
+          </div>
+          <label class="muscle-toggle">
+            <input id="reverse" type="checkbox" data-setting="reverse" />
+            Reverse the body wave (tail to head)
+          </label>
+          <div class="muscle-control">
+            <span>Head-first distance</span>
+            <output id="head-first-distance" aria-live="off">&ndash;</output>
+          </div>
+        </form>
+        <p class="viewer-hint">
+          The sliders change the CPG while it runs; the simulation restarts every 30&nbsp;s. Drag to orbit, right-drag
+          or shift-drag to pan, scroll to zoom. Physics runs in your browser with the official MuJoCo WebAssembly build.
+        </p>
+      </section>
+
+      <section class="container" aria-labelledby="about">
+        <div class="grid">
+          <article class="card">
+            <h2 id="about">What you are seeing</h2>
+            <p>
+              The default 8-segment swimmer of <code>swimmer/head_first_swimming</code>, driven by a chain of coupled
+              Van der Pol oscillators (the review's CPG), one per segment. Each joint's servo follows its oscillator.
+              The forward coupling is stronger than the backward one, so the body wave runs from head to tail and the
+              swimmer moves head first, about 1.5&nbsp;m in 10&nbsp;s. Reverse the wave and it swims tail first.
+            </p>
+            <p>
+              The fluid is MuJoCo's ellipsoid fluid model: drag, added mass and lift on every capsule, without a flow
+              field, in a medium about 100 times as viscous as water. There is no gravity; the floor is only there to
+              show the motion.
+            </p>
+          </article>
+          <article class="card">
+            <h2>In Python</h2>
+            <p>
+              The morphology specification sets the number of segments, their taper, radius and density, and each
+              joint's stiffness, damping and range. The task rewards the head's displacement in the head-first
+              direction and reports the work the servos did. The ellipsoid fluid model runs on the <code>mjc</code>
+              and <code>warp</code> backends; MJX's JAX implementation does not support it.
+            </p>
+            <p>
+              Read the <a href="https://github.com/Co-Evolve/brt/tree/main/biorobot/swimmer">swimmer README</a> for the
+              model, the task and how to reproduce the review's runs.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>Bio-Inspired Robotics Testbed &middot; MIT License</span>
+        <a href="https://github.com/Co-Evolve/brt">github.com/Co-Evolve/brt</a>
+      </div>
+    </footer>
+  </body>
+</html>

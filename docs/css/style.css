@@ -447,7 +447,7 @@ th {
   margin-top: 0.6rem;
 }
 
-/* Open-loop control panel under a viewer (seahorse demo). */
+/* Open-loop control panel under a viewer (seahorse and swimmer demos). */
 .muscle-controls {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
