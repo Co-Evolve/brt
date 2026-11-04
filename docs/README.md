@@ -45,7 +45,7 @@ The viewer (`js/viewer.js`) mounts on every element that has a `data-mujoco-view
 |-------------------|----------------------------------------------------------------------------------------------|
 | `data-model`      | Required. MJCF file, written into MuJoCo's in-memory filesystem with the files it references and compiled there. |
 | `data-controller` | Optional. ES module that drives the actuators (see below). Without it, all controls stay 0.  |
-| `data-track-body` | Optional. Body the camera follows horizontally. Defaults to the first body with a free joint. |
+| `data-track-body` | Optional. Body the camera follows horizontally, low-pass filtered (1 s time constant) so gait oscillations do not shake the view. Defaults to the first body with a free joint. |
 | `data-camera`     | Optional. Initial camera offset from the orbit target, in metres (`x,y,z`, MuJoCo is z-up).   |
 | `data-target`     | Optional. Fixed orbit target in world coordinates (metres). Without it, the camera follows the tracked body. |
 | `data-loop`       | Optional. Reset the simulation every N simulated seconds.                                    |
