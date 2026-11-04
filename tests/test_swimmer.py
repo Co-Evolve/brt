@@ -1,4 +1,4 @@
-"""Tests of the swimmer: against the review's original MJCF model, its head-first swimming task and its backends."""
+"""Tests of the swimmer: against the MJCF model it was ported from, its head-first swimming task and its backends."""
 
 import mujoco
 import numpy as np
@@ -6,7 +6,6 @@ import pytest
 
 import biorobot
 from biorobot.swimmer import (
-    REVIEW_JOINT_RANGE,
     SwimmerMorphology,
     default_swimmer_morphology_specification,
     segment_lengths,
@@ -17,7 +16,7 @@ PREFIX = "SwimmerMorphology/"
 
 
 def original_swimmer_xml(num_segments: int, taper: float, stiffness: float) -> str:
-    """The review's swimmer as it was written (MuJoCo-demo ``src/swimmer.py``, commit f7ad026), without its visuals.
+    """The MJCF model the swimmer was ported from, without its visuals.
 
     Note that ``range="-1.5 1.5"`` is in degrees: the model has no ``<compiler angle="radian"/>``.
     """
@@ -113,7 +112,7 @@ def test_specification_validation():
     "num_segments, taper, stiffness", [(8, 1.0, 0.01), (6, 0.7, 0.002)]
 )
 def test_matches_original_model(num_segments, taper, stiffness):
-    """With the review's (degree) joint range, the BRT swimmer simulates exactly like the original MJCF model."""
+    """With the original's joint range (1.5 degrees), the BRT swimmer simulates exactly like the original MJCF model."""
     original = mujoco.MjModel.from_xml_string(
         original_swimmer_xml(num_segments, taper, stiffness)
     )
@@ -125,7 +124,7 @@ def test_matches_original_model(num_segments, taper, stiffness):
             num_segments=num_segments,
             taper=taper,
             stiffness=stiffness,
-            joint_range=REVIEW_JOINT_RANGE,
+            joint_range=np.deg2rad(1.5),
         ),
     )
     for field in ("body_mass", "body_inertia", "geom_fluid", "jnt_range"):

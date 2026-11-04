@@ -16,7 +16,7 @@ class FluidArenaConfiguration:
 
     Args:
         name: Arena name (also the MjSpec model name).
-        viscosity: Dynamic viscosity of the medium (Pa s). The review's 0.1 Pa s is ~100 times that of water.
+        viscosity: Dynamic viscosity of the medium (Pa s). The default 0.1 Pa s is ~100 times that of water.
         density: Density of the medium (kg/m^3).
         floor_depth: Depth (m) of the visual floor below the swimming plane; it has no collisions.
         floor_size: Half-extent (m) of the visual floor.

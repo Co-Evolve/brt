@@ -1,4 +1,4 @@
-"""Open-loop swimming with a chain of coupled Van der Pol oscillators, the CPG of the review's swimmer.
+"""Open-loop swimming with a central pattern generator (CPG): a chain of coupled Van der Pol oscillators.
 
 Every joint ``i`` (head to tail) follows oscillator ``i + 1`` of a chain of ``num_segments`` oscillators,
 

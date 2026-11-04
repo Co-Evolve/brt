@@ -36,7 +36,7 @@ PREFIX = f"{MORPHOLOGY_NAME}/"
 class HeadFirstSwimmingEnvConfig(EnvConfig):
     """Configuration of the head-first swimming task.
 
-    The defaults are the review's: a 2 ms timestep (Euler integration) and a new action every physics step, which is
+    The defaults are a 2 ms timestep (Euler integration) and a new action every physics step, which is
     what a CPG integrated alongside the simulation needs. With ``num_physics_steps_per_control_step > 1``, every
     action is held for that many physics steps and ``actuator_work`` becomes an estimate (see
     :class:`HeadFirstSwimmingEnv`).
@@ -56,7 +56,7 @@ class HeadFirstSwimmingEnv(BRTEnv):
     * Info: ``time``; ``head_first_distance``, the head's total displacement (m) along -x since the reset; and
       ``actuator_work`` (J), the work the servos did, with negative work counted as cost too: the sum over control
       steps of ``sum_joints |torque * joint velocity| * control_timestep``, both read after the step. With one physics
-      step per control step (the default), this is the review's energy.
+      step per control step (the default), it integrates over every physics step.
     * Observations:
 
       * ``joint_position`` (num_joints,): joint angles (rad), clipped to the joint ranges.
@@ -172,7 +172,7 @@ def make_head_first_swimming_env(
     arena_configuration: Optional[FluidArenaConfiguration] = None,
     **config_overrides: Any,
 ) -> HeadFirstSwimmingEnv:
-    """Head-first swimming with the default 8-segment swimmer in the review's fluid.
+    """Head-first swimming with the default 8-segment swimmer in the default fluid.
 
     The default swimmer uses the ellipsoid fluid model, which ``backend="mjx"`` does not support; use ``"mjc"`` or
     ``"warp"``, or a specification with ``fluid_model="inertia"``.
