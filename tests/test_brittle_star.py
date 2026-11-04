@@ -20,6 +20,10 @@ TASKS = (
     "brittle_star/directed_locomotion",
     "brittle_star/light_escape",
 )
+#: The task whose MJX rollout is compared with MuJoCo C on every run. The tasks share the morphology and its physics,
+#: and compiling MJX takes ~12 s per task, so the other tasks' comparisons only run with the slow tests. This one has
+#: the most task code (the light map).
+MJX_TASK = "brittle_star/light_escape"
 
 
 def small_specification(**kwargs):
@@ -176,7 +180,13 @@ def test_light_escape_light_map():
         )
 
 
-@pytest.mark.parametrize("task", TASKS)
+@pytest.mark.parametrize(
+    "task",
+    [
+        pytest.param(task, marks=() if task == MJX_TASK else pytest.mark.slow)
+        for task in TASKS
+    ],
+)
 def test_mjx_matches_mjc(task):
     jax = pytest.importorskip("jax")
     # A converged solver, so that differences between the MuJoCo C and MJX solvers do not dominate.

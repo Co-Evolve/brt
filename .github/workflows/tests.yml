@@ -13,6 +13,10 @@ jobs:
     env:
       # Headless OpenGL for the rgb_array render tests (Mesa's EGL, no GPU needed).
       MUJOCO_GL: egl
+      # Most of the test time is JAX compiling MJX steps. Keep the compiled programs between runs (also the quick
+      # ones, which JAX skips by default); entries of other JAX versions or changed models are simply not hit.
+      JAX_COMPILATION_CACHE_DIR: ${{ github.workspace }}/.jax-cache
+      JAX_PERSISTENT_CACHE_MIN_COMPILE_TIME_SECS: 0
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -25,7 +29,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+      # Caches are immutable, so every run saves a new one and restores the latest (from this branch or main).
+      - name: Restore the JAX compilation cache
+        uses: actions/cache@v6
+        with:
+          path: .jax-cache
+          key: jax-cache-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}-${{ github.run_id }}
+          restore-keys: jax-cache-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}-
       - name: Run tests
-        run: pytest -m "not slow" -v
+        # In parallel, one worker per CPU (4 on GitHub's Linux runners).
+        run: pytest -m "not slow" -n auto -v
       - name: Check that the demo site's models match the environments
         run: python scripts/export_web_models.py --check
