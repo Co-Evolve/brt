@@ -13,7 +13,8 @@
  *        data-track-body="BrittleStarMorphology/central_disk" optional; default: first free-floating body
  *        data-camera="0.8,-0.8,0.6"                       optional camera offset from the orbit target (metres)
  *        data-target="0.25,0,0.08"                         optional fixed orbit target (world, metres); default: follow
- *                                                          the tracked body horizontally
+ *                                                          the tracked body horizontally, low-pass filtered so it
+ *                                                          ignores gait oscillations such as a swimmer's body wave
  *        data-loop="6"                                    optional: reset every N simulated seconds
  *   ></div>
  *
@@ -44,6 +45,7 @@ function loadMujoco() {
   return mujocoPromise;
 }
 
+const FOLLOW_TIME_CONSTANT = 1.0; // s (simulated): low-pass filter of the tracked body's position the camera follows.
 // mjtGeom values; hfield (1) and primitives beyond mesh are not rendered.
 const GEOM = { PLANE: 0, SPHERE: 2, CAPSULE: 3, ELLIPSOID: 4, CYLINDER: 5, BOX: 6, MESH: 7 };
 const VISIBLE_GROUPS = 3; // MuJoCo's default viewer shows geom and tendon groups 0, 1 and 2.
@@ -139,6 +141,8 @@ export class MuJoCoViewer {
     this.cameraOffset = parseVector(container.dataset.camera, new THREE.Vector3(1.0, -1.0, 0.7));
     this.fixedTarget = parseVector(container.dataset.target, null);
     this.loopSeconds = Number(container.dataset.loop) || 0;
+    this.followPoint = new THREE.Vector3(); // The (smoothed) tracked position the camera follows.
+    this.numResets = 0;
 
     this.mujoco = null;
     this.model = null;
@@ -630,7 +634,9 @@ export class MuJoCoViewer {
       this.disableController(error);
     }
     this.syncBodies();
-    const target = this.fixedTarget ?? this.trackedPosition();
+    this.numResets += 1;
+    this.followPoint.copy(this.trackedPosition());
+    const target = this.fixedTarget ?? this.followPoint;
     this.controls.target.copy(target);
     this.camera.position.copy(target).add(this.cameraOffset);
     this.controls.update();
@@ -674,10 +680,11 @@ export class MuJoCoViewer {
     const dt = this.lastFrameTime === null ? 0 : Math.min((now - this.lastFrameTime) / 1000, MAX_FRAME_DT);
     this.lastFrameTime = now;
     if (!this.paused && dt > 0) {
-      const before = this.trackedPosition();
+      const [numResets, time] = [this.numResets, this.data.time];
       this.stepRealtime(dt);
       this.syncBodies();
-      if (!this.fixedTarget) this.followTrackedBody(before);
+      // After a reset (data-loop), reset() has already placed the camera.
+      if (!this.fixedTarget && this.numResets === numResets) this.followTrackedBody(this.data.time - time);
     }
     this.controls.update();
     this.render();
@@ -742,9 +749,13 @@ export class MuJoCoViewer {
     return this.bodyGroups[this.trackedBody]?.position.clone() ?? new THREE.Vector3();
   }
 
-  /** Pans camera and orbit target horizontally with the animal; vertical motion (jumps) stays visible. */
-  followTrackedBody(before) {
-    const delta = this.trackedPosition().sub(before);
+  /** Pans camera and orbit target horizontally with the animal, low-pass filtered (FOLLOW_TIME_CONSTANT) so gait
+   * oscillations do not shake the view; vertical motion (jumps) stays visible. */
+  followTrackedBody(simulatedDt) {
+    const before = this.followPoint.clone();
+    const tracked = this.trackedPosition();
+    this.followPoint.lerp(tracked, 1 - Math.exp(-simulatedDt / FOLLOW_TIME_CONSTANT));
+    const delta = this.followPoint.clone().sub(before);
     delta.z = 0;
     this.camera.position.add(delta);
     this.controls.target.add(delta);
