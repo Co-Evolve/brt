@@ -9,6 +9,11 @@ import mujoco
 from biorobot.core import Arena
 from biorobot.swimmer import colors
 
+INTEGRATORS = {
+    "euler": mujoco.mjtIntegrator.mjINT_EULER,
+    "implicitfast": mujoco.mjtIntegrator.mjINT_IMPLICITFAST,
+}
+
 
 @dataclass
 class FluidArenaConfiguration:
@@ -20,6 +25,9 @@ class FluidArenaConfiguration:
         density: Density of the medium (kg/m^3).
         floor_depth: Depth (m) of the visual floor below the swimming plane; it has no collisions.
         floor_size: Half-extent (m) of the visual floor.
+        integrator: ``"euler"`` (MuJoCo's default) or ``"implicitfast"``. ``"implicitfast"`` is more robust for light
+            or thin bodies and stiff servos, but MJX does not implement it with fluid forces, so it only works with the
+            ``"mjc"`` and ``"warp"`` backends.
     """
 
     name: str = "FluidArena"
@@ -27,6 +35,13 @@ class FluidArenaConfiguration:
     density: float = 1000.0
     floor_depth: float = 0.3
     floor_size: float = 10.0
+    integrator: str = "euler"
+
+    def __post_init__(self) -> None:
+        if self.integrator not in INTEGRATORS:
+            raise ValueError(
+                f"integrator must be one of {sorted(INTEGRATORS)}, got {self.integrator!r}."
+            )
 
 
 class FluidArena(Arena):
@@ -42,7 +57,7 @@ class FluidArena(Arena):
         option.gravity = [0, 0, 0]
         option.viscosity = self.configuration.viscosity
         option.density = self.configuration.density
-        option.integrator = mujoco.mjtIntegrator.mjINT_EULER
+        option.integrator = INTEGRATORS[self.configuration.integrator]
 
         visual = self.spec.visual
         visual.headlight.diffuse = [0.6, 0.6, 0.6]

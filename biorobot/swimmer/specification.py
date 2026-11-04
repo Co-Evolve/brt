@@ -18,6 +18,7 @@ JOINT_STIFFNESS = 0.01
 JOINT_DAMPING = 0.005
 JOINT_RANGE = 1.5
 P_CONTROL_KP = 2.0
+JOINT_ARMATURE = 1e-3
 
 FLUID_MODELS = ("ellipsoid", "inertia")
 
@@ -46,7 +47,7 @@ class SwimmerJointSpecification:
     stiffness: float
     damping: float
     range: float
-    armature: float = 0.0
+    armature: float = JOINT_ARMATURE
 
 
 @dataclass
@@ -121,6 +122,7 @@ def default_swimmer_morphology_specification(
     joint_range: float = JOINT_RANGE,
     kp: float = P_CONTROL_KP,
     fluid_model: str = "ellipsoid",
+    armature: float = JOINT_ARMATURE,
 ) -> SwimmerMorphologySpecification:
     """The default swimmer.
 
@@ -137,6 +139,7 @@ def default_swimmer_morphology_specification(
         joint_range: Symmetric joint limit (rad).
         kp: Servo gain (N m/rad).
         fluid_model: ``"ellipsoid"`` or ``"inertia"``, see :class:`SwimmerMorphologySpecification`.
+        armature: Rotor inertia (kg m^2) added to every joint.
     """
     return SwimmerMorphologySpecification(
         segment_specifications=[
@@ -145,7 +148,10 @@ def default_swimmer_morphology_specification(
         ],
         joint_specifications=[
             SwimmerJointSpecification(
-                stiffness=stiffness, damping=damping, range=joint_range
+                stiffness=stiffness,
+                damping=damping,
+                range=joint_range,
+                armature=armature,
             )
             for _ in range(num_segments - 1)
         ],

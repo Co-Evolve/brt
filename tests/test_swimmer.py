@@ -103,6 +103,23 @@ def test_mjc_episode():
     assert abs(state.observations["head_position"][2]) < 1e-9
 
 
+@pytest.mark.parametrize("integrator", ["euler", "implicitfast"])
+def test_random_actions_are_stable(integrator):
+    """Servo targets drawn uniformly from the action space every step must not blow up the default swimmer."""
+    from biorobot.swimmer.arena import FluidArenaConfiguration
+
+    env = biorobot.make(
+        TASK,
+        simulation_time=2.0,
+        arena_configuration=FluidArenaConfiguration(integrator=integrator),
+    )
+    rng = np.random.default_rng(0)
+    state = env.reset(0)
+    while not state.truncated:
+        state = env.step(state, rng.uniform(env.action_low, env.action_high))
+    assert state.data.warning[mujoco.mjtWarning.mjWARN_BADQACC].number == 0
+
+
 def test_wave_direction_sets_swimming_direction():
     """A head-to-tail body wave drives the swimmer head first, a tail-to-head wave tail first."""
     env = biorobot.make(TASK, simulation_time=3.0)

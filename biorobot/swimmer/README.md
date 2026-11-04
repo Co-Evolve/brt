@@ -15,7 +15,8 @@ All quantities are in SI units.
   segment lengths change linearly to `taper` × 0.1 m at the tail. The head carries the free joint; the swimmer starts
   straight along +x with its head at the origin, so **head first is -x**.
 - **Joints**: a hinge around the vertical axis between every two segments, with a passive torsional spring
-  (`stiffness`, default 0.01 N m/rad), damping 0.005 N m s/rad and a ±1.5 rad limit.
+  (`stiffness`, default 0.01 N m/rad), damping 0.005 N m s/rad, a ±1.5 rad limit and an armature (rotor inertia) of
+  1e-3 kg m².
 - **Actuation**: a position servo per joint with kp = 2 N m/rad, whose target is limited to the joint's range. MuJoCo
   clips targets outside it, so rescale your controller's output to the range (`env.action_low`, `env.action_high`)
   rather than relying on clipping; `examples/van_der_pol_cpg.py` shows this for a CPG.
@@ -86,14 +87,9 @@ drag, added mass and lift), so results are not comparable with the ellipsoid mod
 **MuJoCo C silently resets the simulation after an instability** (bad qpos, qvel or qacc) and keeps going. With
 `"mjc"`, check `state.data.warning` after an episode if you search over parameters that can blow up.
 
-**Servo targets that jump every step make the swimmer unstable.** The segments weigh ~51 g and the servos are stiff
-for that (kp = 2 N m/rad; the fastest servo mode is ~340 rad/s, a period of ~9 timesteps), so a target jump turns into
-joint speed within one 2 ms step: 0.1 rad gives ~15 rad/s, 1.5 rad ~230 rad/s. Uniform samples from `env.action_space`
-keep the joints at 50-200 rad/s. At those speeds the forces that grow with the velocity squared (centrifugal and
-Coriolis terms, fluid drag) dominate, the explicit Euler step overshoots, and MuJoCo resets the state after 12-34 steps
-(0.02-0.07 s). Smooth targets, such as a CPG's (~0.01 rad per step), are fine. For RL with random exploration, smooth
-or low-pass filter the actions, use a smaller timestep (`physics_timestep=0.0005`), or switch the arena's integrator to
-`implicitfast`; both of the latter were stable for 5 s of random actions.
+**Very thin or light bodies can still become unstable under servo targets that jump every step.** Raise `armature`,
+or use `FluidArenaConfiguration(integrator="implicitfast")` (`"mjc"` and `"warp"` only: MJX does not implement it with
+fluid forces).
 
 ## Examples
 
