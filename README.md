@@ -229,7 +229,7 @@ If you use BRT in your research, please cite this repository:
   author = {Marzougui, Dries},
   title = {{BRT}: The Bio-Inspired Robotics Testbed},
   url = {https://github.com/Co-Evolve/brt},
-  version = {1.0.0},
+  version = {1.1.0},
   year = {2026}
 }
 ```
