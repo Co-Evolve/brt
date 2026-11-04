@@ -1,6 +1,12 @@
 """The BRT core: MjSpec model building and a single environment API over MuJoCo, MJX and MuJoCo Warp."""
 
-from biorobot.core.backend import BACKENDS, Backend, make_backend
+from biorobot.core.backend import (
+    BACKENDS,
+    Backend,
+    check_backend_support,
+    make_backend,
+    unsupported_features,
+)
 from biorobot.core.builder import Arena, Morphology, compose, euler_to_quat
 from biorobot.core.env import (
     BRTEnv,
@@ -22,6 +28,8 @@ __all__ = [
     "BACKENDS",
     "Backend",
     "make_backend",
+    "check_backend_support",
+    "unsupported_features",
     "Arena",
     "Morphology",
     "compose",

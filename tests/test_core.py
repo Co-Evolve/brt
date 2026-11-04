@@ -10,9 +10,11 @@ from biorobot.core import (
     EnvConfig,
     Morphology,
     Observable,
+    check_backend_support,
     float32_bounds,
     make_config,
     sensor_observable,
+    unsupported_features,
 )
 from biorobot.core.math import quat_to_euler
 
@@ -219,3 +221,18 @@ def test_render_batched_state():
     np.testing.assert_array_equal(env.render(single)[0], frames[1])
     assert env._renderer is renderer
     env.close()
+
+
+def test_backend_support_check():
+    """MJX (JAX) silently replaces the ellipsoid fluid model by the inertia-based one, so it refuses such models."""
+    model = make_env("mjc").mj_model
+    for backend in ("mjc", "mjx", "warp"):
+        assert unsupported_features(model, backend) == []
+        check_backend_support(model, backend)
+
+    model.geom_fluid[1, 0] = 1.0  # fluidshape="ellipsoid" on the torso
+    assert unsupported_features(model, "mjc") == []
+    assert unsupported_features(model, "warp") == []
+    assert len(unsupported_features(model, "mjx")) == 1
+    with pytest.raises(NotImplementedError, match="backend='mjc' or 'warp'"):
+        check_backend_support(model, "mjx")
