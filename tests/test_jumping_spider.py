@@ -16,6 +16,10 @@ TASKS = [
     "jumping_spider/platform_jump",
     "jumping_spider/directed_jump",
 ]
+#: The task whose MJX rollout is compared with MuJoCo C on every run. The tasks share the morphology and its physics,
+#: and compiling MJX takes ~30-50 s per task, so the other tasks' comparisons only run with the slow tests. This one has
+#: the most task code (the target).
+MJX_TASK = "jumping_spider/directed_jump"
 #: Reset options that make the initial state deterministic, so that backends can be compared.
 FIXED_RESET_OPTIONS = {
     "jumping_spider/long_jump": {},
@@ -257,7 +261,13 @@ def test_render_rgb_array(task):
 # ----------------------------------------------------------------------------------------------------------------------
 # MJX
 # ----------------------------------------------------------------------------------------------------------------------
-@pytest.mark.parametrize("task", TASKS)
+@pytest.mark.parametrize(
+    "task",
+    [
+        pytest.param(task, marks=() if task == MJX_TASK else pytest.mark.slow)
+        for task in TASKS
+    ],
+)
 def test_mjx_matches_mjc(task):
     jax = pytest.importorskip("jax")
     options = FIXED_RESET_OPTIONS[task]
