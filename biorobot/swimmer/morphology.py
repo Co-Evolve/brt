@@ -100,7 +100,7 @@ class SwimmerMorphology(Morphology[SwimmerMorphologySpecification]):
             target=joint.name,
             trntype=mujoco.mjtTrn.mjTRN_JOINT,
             ctrllimited=_TRUE,
-            ctrlrange=[-actuation.control_range, actuation.control_range],
+            ctrlrange=joint.range,
         )
         actuator.set_to_position(kp=actuation.kp)
 

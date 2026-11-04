@@ -1,4 +1,4 @@
-"""Tests of the swimmer: against the review's original MJCF model, its head-first swimming task and its backends."""
+"""Tests of the swimmer: its morphology, its head-first swimming task and its backends."""
 
 import mujoco
 import numpy as np
@@ -6,50 +6,20 @@ import pytest
 
 import biorobot
 from biorobot.swimmer import (
-    REVIEW_JOINT_RANGE,
     SwimmerMorphology,
     default_swimmer_morphology_specification,
-    segment_lengths,
 )
 
 TASK = "swimmer/head_first_swimming"
 PREFIX = "SwimmerMorphology/"
 
 
-def original_swimmer_xml(num_segments: int, taper: float, stiffness: float) -> str:
-    """The review's swimmer as it was written (MuJoCo-demo ``src/swimmer.py``, commit f7ad026), without its visuals.
-
-    Note that ``range="-1.5 1.5"`` is in degrees: the model has no ``<compiler angle="radian"/>``.
-    """
-    lengths = segment_lengths(num_segments, taper)
-    bodies = ""
-    for i, length in enumerate(lengths):
-        if i == 0:
-            bodies += f'<body name="seg0" pos="0 0 0"><freejoint/><geom fromto="0 0 0 {length:.4f} 0 0"/>'
-        else:
-            bodies += (
-                f'<body name="seg{i}" pos="{lengths[i - 1]:.4f} 0 0">'
-                f'<joint name="j{i}" stiffness="{stiffness:.6f}"/><geom fromto="0 0 0 {length:.4f} 0 0"/>'
-            )
-    bodies += "</body>" * num_segments
-    actuators = "".join(
-        f'<position joint="j{i}" kp="2.0"/>' for i in range(1, num_segments)
-    )
-    return f"""<mujoco model="swimmer">
-      <option timestep="0.002" gravity="0 0 0" viscosity="0.1" density="1000" integrator="Euler"/>
-      <default>
-        <geom type="capsule" size="0.015" density="600" fluidshape="ellipsoid"/>
-        <joint type="hinge" axis="0 0 1" damping="0.005" limited="true" range="-1.5 1.5"/>
-      </default>
-      <worldbody>{bodies}</worldbody>
-      <actuator>{actuators}</actuator>
-    </mujoco>"""
-
-
-def travelling_wave(num_joints: int, t: float, head_to_tail: bool = True):
-    """Servo targets of a body wave with one wavelength along the body, at 1.5 Hz."""
+def travelling_wave(
+    num_joints: int, t: float, head_to_tail: bool = True, amplitude: float = 0.6
+):
+    """Servo targets (rad) of a body wave with one wavelength along the body, at 1.5 Hz."""
     phase = 2 * np.pi * np.arange(num_joints) / num_joints
-    return 0.6 * np.sin(2 * np.pi * 1.5 * t - (phase if head_to_tail else -phase))
+    return amplitude * np.sin(2 * np.pi * 1.5 * t - (phase if head_to_tail else -phase))
 
 
 def run_episode(env, head_to_tail=True):
@@ -109,41 +79,6 @@ def test_specification_validation():
     assert np.all(SwimmerMorphology(inertia).compile().geom_fluid[:, 0] == 0)
 
 
-@pytest.mark.parametrize(
-    "num_segments, taper, stiffness", [(8, 1.0, 0.01), (6, 0.7, 0.002)]
-)
-def test_matches_original_model(num_segments, taper, stiffness):
-    """With the review's (degree) joint range, the BRT swimmer simulates exactly like the original MJCF model."""
-    original = mujoco.MjModel.from_xml_string(
-        original_swimmer_xml(num_segments, taper, stiffness)
-    )
-    original_data = mujoco.MjData(original)
-    env = biorobot.make(
-        TASK,
-        simulation_time=2.0,
-        morphology_specification=default_swimmer_morphology_specification(
-            num_segments=num_segments,
-            taper=taper,
-            stiffness=stiffness,
-            joint_range=REVIEW_JOINT_RANGE,
-        ),
-    )
-    for field in ("body_mass", "body_inertia", "geom_fluid", "jnt_range"):
-        brt, reference = getattr(env.mj_model, field), getattr(original, field)
-        if field.startswith("geom"):
-            brt = brt[1:]  # without the arena's (collision-free) floor
-        np.testing.assert_allclose(brt, reference, rtol=1e-12, atol=1e-15)
-
-    state = env.reset(0)
-    while not state.truncated:
-        action = travelling_wave(env.mj_model.nu, float(state.info["time"]))
-        original_data.ctrl[:] = action
-        mujoco.mj_step(original, original_data)
-        state = env.step(state, action)
-    np.testing.assert_allclose(state.data.qpos, original_data.qpos, atol=1e-10)
-    np.testing.assert_allclose(state.data.qvel, original_data.qvel, atol=1e-8)
-
-
 # ----------------------------------------------------------------------------------------------------------------------
 # MJC
 # ----------------------------------------------------------------------------------------------------------------------
@@ -166,6 +101,23 @@ def test_mjc_episode():
     )
     # The swimmer stays in the horizontal plane.
     assert abs(state.observations["head_position"][2]) < 1e-9
+
+
+@pytest.mark.parametrize("integrator", ["euler", "implicitfast"])
+def test_random_actions_are_stable(integrator):
+    """Servo targets drawn uniformly from the action space every step must not blow up the default swimmer."""
+    from biorobot.swimmer.arena import FluidArenaConfiguration
+
+    env = biorobot.make(
+        TASK,
+        simulation_time=2.0,
+        arena_configuration=FluidArenaConfiguration(integrator=integrator),
+    )
+    rng = np.random.default_rng(0)
+    state = env.reset(0)
+    while not state.truncated:
+        state = env.step(state, rng.uniform(env.action_low, env.action_high))
+    assert state.data.warning[mujoco.mjtWarning.mjWARN_BADQACC].number == 0
 
 
 def test_wave_direction_sets_swimming_direction():

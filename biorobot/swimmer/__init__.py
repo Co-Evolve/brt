@@ -12,7 +12,6 @@ from biorobot.swimmer.environment import (
 )
 from biorobot.swimmer.morphology import SwimmerMorphology
 from biorobot.swimmer.specification import (
-    REVIEW_JOINT_RANGE,
     SwimmerActuationSpecification,
     SwimmerJointSpecification,
     SwimmerMorphologySpecification,
@@ -22,7 +21,6 @@ from biorobot.swimmer.specification import (
 )
 
 __all__ = [
-    "REVIEW_JOINT_RANGE",
     "FluidArena",
     "FluidArenaConfiguration",
     "HeadFirstSwimmingEnv",

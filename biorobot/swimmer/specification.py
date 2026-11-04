@@ -1,9 +1,7 @@
 """Swimmer morphology specification: plain dataclasses and the default (parameterised) swimmer.
 
 The swimmer is an abstract anguilliform body: a chain of capsules in the horizontal plane, connected by hinges with
-passive torsional springs and driven by position servos. It is the toy swimmer of the review on physics-based
-simulation of biological locomotion (*Physics of Life Reviews*), which uses it to show how the choice of
-behavioural descriptors shapes a quality-diversity search. The defaults are the constants of that model.
+passive torsional springs and driven by position servos.
 
 Units are SI (metres, kilograms per cubic metre, radians, newton metres).
 """
@@ -13,23 +11,14 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List
 
-import numpy as np
-
 HEAD_SEGMENT_LENGTH = 0.1
 SEGMENT_RADIUS = 0.015
 SEGMENT_DENSITY = 600
 JOINT_STIFFNESS = 0.01
 JOINT_DAMPING = 0.005
 JOINT_RANGE = 1.5
-#: The joint range the review's runs actually used: their MJCF gave ``range="-1.5 1.5"`` without
-#: ``<compiler angle="radian"/>``, so MuJoCo read it in degrees. The servos push the joints far beyond these limits
-#: (joint angles still reach ~1.8 rad), so bending is then resisted mainly by the soft limit constraint. Pass
-#: ``joint_range=REVIEW_JOINT_RANGE`` to reproduce those runs.
-REVIEW_JOINT_RANGE = float(np.deg2rad(1.5))
 P_CONTROL_KP = 2.0
-#: Wide enough for the servo targets of the review's Van der Pol CPGs (up to ~4.9 rad), which go far beyond the joint
-#: limits: with kp = 2 N m/rad, the servos then act as soft torque sources and must not be clipped.
-P_CONTROL_RANGE = 2 * np.pi
+JOINT_ARMATURE = 1e-3
 
 FLUID_MODELS = ("ellipsoid", "inertia")
 
@@ -58,16 +47,14 @@ class SwimmerJointSpecification:
     stiffness: float
     damping: float
     range: float
-    armature: float = 0.0
+    armature: float = JOINT_ARMATURE
 
 
 @dataclass
 class SwimmerActuationSpecification:
-    """A position servo on every joint: torque = ``kp`` * (target - angle), with targets in
-    ``[-control_range, control_range]`` radians."""
+    """A position servo on every joint: torque = ``kp`` * (target - angle), with targets within the joint's range."""
 
     kp: float = P_CONTROL_KP
-    control_range: float = P_CONTROL_RANGE
 
 
 @dataclass
@@ -79,7 +66,7 @@ class SwimmerMorphologySpecification:
         joint_specifications: One per joint; joint ``i`` connects segment ``i`` to segment ``i + 1``.
         actuation_specification: The joint servos.
         fluid_model: MuJoCo's fluid model for the segments: ``"ellipsoid"`` (``fluidshape="ellipsoid"``: drag,
-            added mass and lift per capsule, as in the review) or ``"inertia"`` (MuJoCo's default model, based on
+            added mass and lift per capsule) or ``"inertia"`` (MuJoCo's default model, based on
             each body's equivalent inertia box; the only one MJX's JAX implementation supports).
     """
 
@@ -134,26 +121,25 @@ def default_swimmer_morphology_specification(
     damping: float = JOINT_DAMPING,
     joint_range: float = JOINT_RANGE,
     kp: float = P_CONTROL_KP,
-    control_range: float = P_CONTROL_RANGE,
     fluid_model: str = "ellipsoid",
+    armature: float = JOINT_ARMATURE,
 ) -> SwimmerMorphologySpecification:
-    """The review's swimmer, parameterised like its search space.
+    """The default swimmer.
 
     Args:
-        num_segments: Number of capsules (the review searches over 4, 6, 8, 10 and 12). Since the head segment's
+        num_segments: Number of capsules. Since the head segment's
             length is fixed, this also sets the body length.
-        taper: Length of the tail segment relative to the head segment (the review searches over [0.5, 1.5]);
+        taper: Length of the tail segment relative to the head segment;
             segment lengths change linearly in between.
-        stiffness: Passive torsional stiffness (N m/rad) of every joint (the review searches over [0.001, 0.1]).
+        stiffness: Passive torsional stiffness (N m/rad) of every joint.
         head_segment_length: Length (m) of the head segment.
         radius: Capsule radius (m), the same for all segments.
         density: Capsule density (kg/m^3), the same for all segments.
         damping: Joint damping (N m s/rad).
-        joint_range: Symmetric joint limit (rad). Use ``REVIEW_JOINT_RANGE`` (1.5 degrees) to reproduce the review's
-            runs.
+        joint_range: Symmetric joint limit (rad).
         kp: Servo gain (N m/rad).
-        control_range: Symmetric range of the servo targets (rad).
         fluid_model: ``"ellipsoid"`` or ``"inertia"``, see :class:`SwimmerMorphologySpecification`.
+        armature: Rotor inertia (kg m^2) added to every joint.
     """
     return SwimmerMorphologySpecification(
         segment_specifications=[
@@ -162,12 +148,13 @@ def default_swimmer_morphology_specification(
         ],
         joint_specifications=[
             SwimmerJointSpecification(
-                stiffness=stiffness, damping=damping, range=joint_range
+                stiffness=stiffness,
+                damping=damping,
+                range=joint_range,
+                armature=armature,
             )
             for _ in range(num_segments - 1)
         ],
-        actuation_specification=SwimmerActuationSpecification(
-            kp=kp, control_range=control_range
-        ),
+        actuation_specification=SwimmerActuationSpecification(kp=kp),
         fluid_model=fluid_model,
     )

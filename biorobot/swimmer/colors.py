@@ -1,4 +1,4 @@
-"""RGBA colours of the swimmer and its arena (those of the review's model)."""
+"""RGBA colours of the swimmer and its arena."""
 
 import numpy as np
 
