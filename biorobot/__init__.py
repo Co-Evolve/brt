@@ -1,6 +1,6 @@
 """The Bio-inspired Robotics Testbed (BRT): MuJoCo environments of animals for robotics and biology."""
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 from biorobot.registry import available, make, register
 
