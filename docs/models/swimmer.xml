@@ -28,25 +28,25 @@
       <geom name="SwimmerMorphology/segment_0_capsule" size="0.015 0.05" pos="0.05 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0.55 0.65 0.9 1" fluidshape="ellipsoid" density="600"/>
       <camera name="SwimmerMorphology/tracking_camera" pos="0 0 2.5" mode="trackcom" fovy="60"/>
       <body name="SwimmerMorphology/segment_1" pos="0.1 0 0">
-        <joint name="SwimmerMorphology/segment_1_joint" stiffness="0.01" range="-1.5 1.5" damping="0.005" limited="true"/>
+        <joint name="SwimmerMorphology/segment_1_joint" stiffness="0.01" range="-1.5 1.5" armature="0.001" damping="0.005" limited="true"/>
         <geom name="SwimmerMorphology/segment_1_capsule" size="0.015 0.05" pos="0.05 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0.55 0.65 0.9 1" fluidshape="ellipsoid" density="600"/>
         <body name="SwimmerMorphology/segment_2" pos="0.1 0 0">
-          <joint name="SwimmerMorphology/segment_2_joint" stiffness="0.01" range="-1.5 1.5" damping="0.005" limited="true"/>
+          <joint name="SwimmerMorphology/segment_2_joint" stiffness="0.01" range="-1.5 1.5" armature="0.001" damping="0.005" limited="true"/>
           <geom name="SwimmerMorphology/segment_2_capsule" size="0.015 0.05" pos="0.05 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0.55 0.65 0.9 1" fluidshape="ellipsoid" density="600"/>
           <body name="SwimmerMorphology/segment_3" pos="0.1 0 0">
-            <joint name="SwimmerMorphology/segment_3_joint" stiffness="0.01" range="-1.5 1.5" damping="0.005" limited="true"/>
+            <joint name="SwimmerMorphology/segment_3_joint" stiffness="0.01" range="-1.5 1.5" armature="0.001" damping="0.005" limited="true"/>
             <geom name="SwimmerMorphology/segment_3_capsule" size="0.015 0.05" pos="0.05 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0.55 0.65 0.9 1" fluidshape="ellipsoid" density="600"/>
             <body name="SwimmerMorphology/segment_4" pos="0.1 0 0">
-              <joint name="SwimmerMorphology/segment_4_joint" stiffness="0.01" range="-1.5 1.5" damping="0.005" limited="true"/>
+              <joint name="SwimmerMorphology/segment_4_joint" stiffness="0.01" range="-1.5 1.5" armature="0.001" damping="0.005" limited="true"/>
               <geom name="SwimmerMorphology/segment_4_capsule" size="0.015 0.05" pos="0.05 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0.55 0.65 0.9 1" fluidshape="ellipsoid" density="600"/>
               <body name="SwimmerMorphology/segment_5" pos="0.1 0 0">
-                <joint name="SwimmerMorphology/segment_5_joint" stiffness="0.01" range="-1.5 1.5" damping="0.005" limited="true"/>
+                <joint name="SwimmerMorphology/segment_5_joint" stiffness="0.01" range="-1.5 1.5" armature="0.001" damping="0.005" limited="true"/>
                 <geom name="SwimmerMorphology/segment_5_capsule" size="0.015 0.05" pos="0.05 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0.55 0.65 0.9 1" fluidshape="ellipsoid" density="600"/>
                 <body name="SwimmerMorphology/segment_6" pos="0.1 0 0">
-                  <joint name="SwimmerMorphology/segment_6_joint" stiffness="0.01" range="-1.5 1.5" damping="0.005" limited="true"/>
+                  <joint name="SwimmerMorphology/segment_6_joint" stiffness="0.01" range="-1.5 1.5" armature="0.001" damping="0.005" limited="true"/>
                   <geom name="SwimmerMorphology/segment_6_capsule" size="0.015 0.05" pos="0.05 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0.55 0.65 0.9 1" fluidshape="ellipsoid" density="600"/>
                   <body name="SwimmerMorphology/segment_7" pos="0.1 0 0">
-                    <joint name="SwimmerMorphology/segment_7_joint" stiffness="0.01" range="-1.5 1.5" damping="0.005" limited="true"/>
+                    <joint name="SwimmerMorphology/segment_7_joint" stiffness="0.01" range="-1.5 1.5" armature="0.001" damping="0.005" limited="true"/>
                     <geom name="SwimmerMorphology/segment_7_capsule" size="0.015 0.05" pos="0.05 0 0" quat="0.707107 0 -0.707107 0" type="capsule" rgba="0.55 0.65 0.9 1" fluidshape="ellipsoid" density="600"/>
                   </body>
                 </body>
@@ -59,13 +59,13 @@
   </worldbody>
 
   <actuator>
-    <general name="SwimmerMorphology/segment_1_joint_p_control" joint="SwimmerMorphology/segment_1_joint" ctrlrange="-6.28319 6.28319" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
-    <general name="SwimmerMorphology/segment_2_joint_p_control" joint="SwimmerMorphology/segment_2_joint" ctrlrange="-6.28319 6.28319" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
-    <general name="SwimmerMorphology/segment_3_joint_p_control" joint="SwimmerMorphology/segment_3_joint" ctrlrange="-6.28319 6.28319" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
-    <general name="SwimmerMorphology/segment_4_joint_p_control" joint="SwimmerMorphology/segment_4_joint" ctrlrange="-6.28319 6.28319" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
-    <general name="SwimmerMorphology/segment_5_joint_p_control" joint="SwimmerMorphology/segment_5_joint" ctrlrange="-6.28319 6.28319" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
-    <general name="SwimmerMorphology/segment_6_joint_p_control" joint="SwimmerMorphology/segment_6_joint" ctrlrange="-6.28319 6.28319" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
-    <general name="SwimmerMorphology/segment_7_joint_p_control" joint="SwimmerMorphology/segment_7_joint" ctrlrange="-6.28319 6.28319" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
+    <general name="SwimmerMorphology/segment_1_joint_p_control" joint="SwimmerMorphology/segment_1_joint" ctrlrange="-1.5 1.5" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
+    <general name="SwimmerMorphology/segment_2_joint_p_control" joint="SwimmerMorphology/segment_2_joint" ctrlrange="-1.5 1.5" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
+    <general name="SwimmerMorphology/segment_3_joint_p_control" joint="SwimmerMorphology/segment_3_joint" ctrlrange="-1.5 1.5" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
+    <general name="SwimmerMorphology/segment_4_joint_p_control" joint="SwimmerMorphology/segment_4_joint" ctrlrange="-1.5 1.5" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
+    <general name="SwimmerMorphology/segment_5_joint_p_control" joint="SwimmerMorphology/segment_5_joint" ctrlrange="-1.5 1.5" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
+    <general name="SwimmerMorphology/segment_6_joint_p_control" joint="SwimmerMorphology/segment_6_joint" ctrlrange="-1.5 1.5" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
+    <general name="SwimmerMorphology/segment_7_joint_p_control" joint="SwimmerMorphology/segment_7_joint" ctrlrange="-1.5 1.5" ctrllimited="true" input="pos" biastype="affine" gainprm="2" biasprm="0 -2"/>
   </actuator>
 
   <sensor>

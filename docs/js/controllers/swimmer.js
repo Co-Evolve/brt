@@ -6,13 +6,15 @@
  *
  *   x_i'' = mu (1 - x_i^2) x_i' - omega^2 x_i + w_fwd (x_{i-1} - x_i) + w_bwd (x_{i+1} - x_i),   x_0 = x_{N+1} = 0,
  *
- * integrated with RK2 at the model's 2 ms control timestep, and scaled by `settings.amplitude` (rad). After every reset,
+ * integrated with RK2 at the model's 2 ms control timestep. As in `cpg_to_action`, the oscillators (~[-2, 2]) are
+ * mapped to each servo's ctrlrange (the joint range): `settings.amplitude` is the fraction of the range used, and the
+ * targets are clipped to the range. After every reset,
  * the chain first runs on its own for 40 cycles (at least 5 s), so the swimmer starts on the CPG's limit cycle.
  * Swapping the couplings alone does not reverse the wave of a chain that is already on its limit cycle (it keeps
  * swimming head first for at least 10 s), so toggling `settings.reverse` restarts the chain and warms it up again with
  * the new coupling, while the body keeps moving.
  *
- * With the default settings, `swimmer/head_first_swimming` (Python, mjc) moves the head 1.49 m head first in 10 s.
+ * With the default settings, `swimmer/head_first_swimming` (Python, mjc) moves the head 1.45 m head first in 10 s.
  * `settings.reverse` swaps the forward and backward coupling, so the body wave runs from tail to head and the swimmer
  * swims tail first. `swimmer.html` imports `settings` from this module and updates it from its sliders.
  */
@@ -21,8 +23,9 @@ const STRONG_COUPLING = 2.0;
 const WEAK_COUPLING = 0.5;
 const DT = 0.002; // s, the environment's control timestep (one physics step).
 const NAME_PATTERN = /segment_(\d+)_joint/;
+const VAN_DER_POL_AMPLITUDE = 2.0; // Of the oscillators' limit cycle.
 
-export const settings = { omega: 8.0, amplitude: 0.4, reverse: false };
+export const settings = { omega: 8.0, amplitude: 0.5, reverse: false };
 
 let joints = null; // Oscillator index per actuator (or -1).
 let x = null;
@@ -88,8 +91,12 @@ export function control(t, model, data, actuatorNames) {
   }
   lastTime = t;
   const u = new Float64Array(model.nu);
+  const range = model.actuator_ctrlrange;
   joints.forEach((oscillator, i) => {
-    if (oscillator >= 0) u[i] = settings.amplitude * x[oscillator];
+    if (oscillator < 0) return;
+    const [low, high] = [range[2 * i], range[2 * i + 1]];
+    const target = (low + high) / 2 + (settings.amplitude * (high - low) * x[oscillator]) / (2 * VAN_DER_POL_AMPLITUDE);
+    u[i] = Math.min(high, Math.max(low, target));
   });
   return u;
 }

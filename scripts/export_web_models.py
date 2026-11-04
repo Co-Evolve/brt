@@ -43,10 +43,6 @@ DEMOS: Dict[str, Tuple[str, Dict[str, Any]]] = {
 CONTROL_TIMESTEP_NUMERIC = "brt_control_timestep"
 #: Control steps compared between the environment and the exported XML, with random actions.
 NUM_VALIDATION_STEPS = 50
-#: Validation actions are uniform within this fraction of the action range (default 1) around its centre. The swimmer
-#: integrates explicitly (Euler) with light, free-floating segments: a new random servo target in its +-2 pi range
-#: every 2 ms makes it unstable within a few steps (smooth targets, as from its CPG, are fine).
-VALIDATION_ACTION_SCALES: Dict[str, float] = {"swimmer.xml": 0.1}
 _INSTABILITY_WARNINGS = (
     mujoco.mjtWarning.mjWARN_BADQPOS,
     mujoco.mjtWarning.mjWARN_BADQVEL,
@@ -151,13 +147,11 @@ def export_model(
     )
     spec.compile()
     xml = spec.to_xml()
-    _validate(env, xml, assets, VALIDATION_ACTION_SCALES.get(file_name, 1.0))
+    _validate(env, xml, assets)
     return xml, assets
 
 
-def _validate(
-    env: BRTEnv, xml: str, assets: Dict[str, bytes], action_scale: float
-) -> None:
+def _validate(env: BRTEnv, xml: str, assets: Dict[str, bytes]) -> None:
     """The files must reproduce the compiled meshes, ``env.reset`` and ``env.step`` (up to the precision of the XML's
     printed numbers), in a rollout without instabilities (after which MuJoCo resets the state, so that both rollouts
     would agree trivially)."""
@@ -170,19 +164,15 @@ def _validate(
     state = env.reset(0)
     np.testing.assert_allclose(data.qpos, state.data.qpos, atol=1e-6)
     rng = np.random.default_rng(0)
-    centre = (env.action_low + env.action_high) / 2
-    half_range = action_scale * (env.action_high - env.action_low) / 2
     for _ in range(NUM_VALIDATION_STEPS):
-        action = rng.uniform(centre - half_range, centre + half_range)
+        action = rng.uniform(env.action_low, env.action_high)
         state = env.step(state, action)
         data.ctrl[:] = action
         mujoco.mj_step(model, data, nstep=env.config.num_physics_steps_per_control_step)
     np.testing.assert_allclose(data.xpos, state.data.xpos, atol=1e-4)
     for name, mj_data in (("environment", state.data), ("exported XML", data)):
         if any(mj_data.warning[int(w)].number for w in _INSTABILITY_WARNINGS):
-            raise ValueError(
-                f"The validation rollout of the {name} became unstable; lower its VALIDATION_ACTION_SCALES entry."
-            )
+            raise ValueError(f"The validation rollout of the {name} became unstable.")
 
 
 def main() -> None:

@@ -24,7 +24,7 @@
 
       const formats = {
         omega: (value) => `${(value / (2 * Math.PI)).toFixed(2)} Hz`,
-        amplitude: (value) => value.toFixed(2),
+        amplitude: (value) => `${Math.round(100 * value)}%`,
       };
       for (const input of document.querySelectorAll("[data-setting]")) {
         const key = input.dataset.setting;
@@ -91,8 +91,8 @@
             <output for="omega"></output>
           </div>
           <div class="muscle-control">
-            <label for="amplitude">Servo amplitude (rad)</label>
-            <input id="amplitude" type="range" min="0.1" max="0.8" step="0.01" data-setting="amplitude" />
+            <label for="amplitude">Servo amplitude (of the joint range)</label>
+            <input id="amplitude" type="range" min="0.1" max="1" step="0.05" data-setting="amplitude" />
             <output for="amplitude"></output>
           </div>
           <label class="muscle-toggle">
@@ -118,7 +118,7 @@
               The default 8-segment swimmer of <code>swimmer/head_first_swimming</code>, driven by a chain of coupled
               Van der Pol oscillators (a central pattern generator), one per segment. Each joint's servo follows its oscillator.
               The forward coupling is stronger than the backward one, so the body wave runs from head to tail and the
-              swimmer moves head first, about 1.5&nbsp;m in 10&nbsp;s. Reverse the wave and it swims tail first.
+              swimmer moves head first, about 1.45&nbsp;m in 10&nbsp;s. Reverse the wave and it swims tail first.
             </p>
             <p>
               The fluid is MuJoCo's ellipsoid fluid model: drag, added mass and lift on every capsule, without a flow

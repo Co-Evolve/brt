@@ -111,7 +111,7 @@ controllers are open loop:
   warms up for 40 cycles after every reset and integrates with RK2 at the 2 ms control timestep. It matches
   `segment_<i>_joint` names: joint i follows oscillator i. Like `seahorse.js`, it exports a `settings` object (CPG
   frequency, servo amplitude, reversed wave) that `swimmer.html` updates from its sliders. With the defaults it moves
-  the head 1.49 m head first in 10 s.
+  the head 1.45 m head first in 10 s.
 
 Because the viewer uses the environment's control timestep and the exported models are the environments' own, the
 demos reproduce the Python rollouts (`mjc` backend): the brittle star ends within about 1 cm of it after 10 s, the
