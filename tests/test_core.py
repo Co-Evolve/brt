@@ -156,6 +156,17 @@ def test_truncation_after_total_num_control_steps(backend, simulation_time):
     assert num_steps == env.config.total_num_control_steps
 
 
+def test_truncation_survives_a_rewound_clock():
+    """MuJoCo C rewinds data.time to 0 when it resets an unstable simulation; the episode must still end."""
+    env = make_env("mjc", simulation_time=0.5, physics_timestep=0.002)
+    state, num_steps = env.reset(0), 0
+    while not state.truncated and num_steps <= env.config.total_num_control_steps:
+        state = env.step(state, np.zeros(1))
+        state.data.time = 0.0
+        num_steps += 1
+    assert num_steps == env.config.total_num_control_steps
+
+
 def test_make_config():
     config = EnvConfig(simulation_time=3.0)
     copy = make_config(EnvConfig, config, simulation_time=1.0)

@@ -112,6 +112,9 @@ class EnvState:
     truncated: Array
     info: Dict[str, Array]
     rng: Any
+    #: Control steps since the reset. Truncation counts these rather than reading ``data.time``, which MuJoCo C rewinds
+    #: to 0 when it resets an unstable simulation (an episode would then never end).
+    num_steps: Any = 0
 
     def replace(self, **changes: Any) -> "EnvState":
         return dataclasses.replace(self, **changes)
@@ -252,6 +255,7 @@ class BRTEnv(abc.ABC):
             truncated=xp.asarray(False),
             info=info,
             rng=rng,
+            num_steps=xp.asarray(0),
         )
         state = state.replace(observations=self._get_observations(state))
         state = state.replace(info=self._get_info(state=state, previous_state=None))
@@ -261,7 +265,7 @@ class BRTEnv(abc.ABC):
         data = self.backend.step(
             state.data, action, self.config.num_physics_steps_per_control_step
         )
-        next_state = state.replace(data=data)
+        next_state = state.replace(data=data, num_steps=state.num_steps + 1)
         next_state = next_state.replace(observations=self._get_observations(next_state))
         next_state = next_state.replace(
             info=self._get_info(state=next_state, previous_state=state)
@@ -313,13 +317,9 @@ class BRTEnv(abc.ABC):
         return False
 
     def _get_truncated(self, state: EnvState) -> Array:
-        # Truncate after exactly total_num_control_steps steps. data.time accumulates round-off (differently in float64
-        # and float32), so comparing it with simulation_time itself can take one step more or less per backend.
-        config = self.config
-        return (
-            state.data.time
-            >= (config.total_num_control_steps - 0.5) * config.control_timestep
-        )
+        # Truncate after exactly total_num_control_steps steps. Counting steps, not reading data.time, avoids round-off
+        # in data.time (which differs between float64 and float32) and MuJoCo C rewinding it after an instability.
+        return state.num_steps >= self.config.total_num_control_steps
 
     # ------------------------------------------------------------------------------------------------------------------
     # Rendering
