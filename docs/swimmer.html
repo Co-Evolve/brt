@@ -73,9 +73,8 @@
         <h1 id="title">Swimmer</h1>
         <p class="lead">
           An abstract anguilliform swimmer: a chain of capsules in a viscous fluid that swims by sending a wave along its
-          body. It is the toy swimmer of the review on physics-based simulation of biological locomotion
-          (<em>Physics of Life Reviews</em>), where it shows how body length, taper, joint stiffness and the shape of
-          the body wave trade speed against energy.
+          body. It is the simplest body that swims this way, which makes it a good first model for asking how body
+          length, taper, joint stiffness and the shape of the body wave trade speed against energy.
         </p>
         <div
           id="swimmer-viewer"
@@ -117,7 +116,7 @@
             <h2 id="about">What you are seeing</h2>
             <p>
               The default 8-segment swimmer of <code>swimmer/head_first_swimming</code>, driven by a chain of coupled
-              Van der Pol oscillators (the review's CPG), one per segment. Each joint's servo follows its oscillator.
+              Van der Pol oscillators (a central pattern generator), one per segment. Each joint's servo follows its oscillator.
               The forward coupling is stronger than the backward one, so the body wave runs from head to tail and the
               swimmer moves head first, about 1.5&nbsp;m in 10&nbsp;s. Reverse the wave and it swims tail first.
             </p>
@@ -137,7 +136,7 @@
             </p>
             <p>
               Read the <a href="https://github.com/Co-Evolve/brt/tree/main/biorobot/swimmer">swimmer README</a> for the
-              model, the task and how to reproduce the review's runs.
+              model, the task and the backends.
             </p>
           </article>
         </div>

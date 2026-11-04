@@ -1,5 +1,5 @@
 /**
- * Swimmer demo controller: a chain of coupled Van der Pol oscillators, the CPG of the review's swimmer.
+ * Swimmer demo controller: a central pattern generator (CPG) of coupled Van der Pol oscillators.
  *
  * This is a port of `biorobot/swimmer/examples/van_der_pol_cpg.py`. Joint i (head to tail) follows oscillator i + 1
  * of a chain of N = num_joints + 1 oscillators,
