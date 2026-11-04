@@ -50,7 +50,8 @@ class HeadFirstSwimmingEnvConfig(EnvConfig):
 class HeadFirstSwimmingEnv(BRTEnv):
     """The swimmer starts straight along +x with its head at the origin and should swim head first, i.e. along -x.
 
-    * Actions: one target angle (rad) per joint servo, head to tail (``env.actuator_names``).
+    * Actions: one target angle (rad) per joint servo, head to tail (``env.actuator_names``), within the joint's
+      range.
     * Reward: the head's displacement (m) along -x during the step, so tail-first swimming is penalised. Never
       terminates; truncated after ``simulation_time``.
     * Info: ``time``; ``head_first_distance``, the head's total displacement (m) along -x since the reset; and

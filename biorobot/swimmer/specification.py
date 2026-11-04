@@ -11,8 +11,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List
 
-import numpy as np
-
 HEAD_SEGMENT_LENGTH = 0.1
 SEGMENT_RADIUS = 0.015
 SEGMENT_DENSITY = 600
@@ -20,9 +18,6 @@ JOINT_STIFFNESS = 0.01
 JOINT_DAMPING = 0.005
 JOINT_RANGE = 1.5
 P_CONTROL_KP = 2.0
-#: Wide enough for the servo targets of Van der Pol CPGs (up to ~4.9 rad, see ``examples/van_der_pol_cpg.py``), which go
-#: far beyond the joint limits: with kp = 2 N m/rad, the servos then act as soft torque sources and must not be clipped.
-P_CONTROL_RANGE = 2 * np.pi
 
 FLUID_MODELS = ("ellipsoid", "inertia")
 
@@ -56,11 +51,9 @@ class SwimmerJointSpecification:
 
 @dataclass
 class SwimmerActuationSpecification:
-    """A position servo on every joint: torque = ``kp`` * (target - angle), with targets in
-    ``[-control_range, control_range]`` radians."""
+    """A position servo on every joint: torque = ``kp`` * (target - angle), with targets within the joint's range."""
 
     kp: float = P_CONTROL_KP
-    control_range: float = P_CONTROL_RANGE
 
 
 @dataclass
@@ -127,7 +120,6 @@ def default_swimmer_morphology_specification(
     damping: float = JOINT_DAMPING,
     joint_range: float = JOINT_RANGE,
     kp: float = P_CONTROL_KP,
-    control_range: float = P_CONTROL_RANGE,
     fluid_model: str = "ellipsoid",
 ) -> SwimmerMorphologySpecification:
     """The default swimmer.
@@ -144,7 +136,6 @@ def default_swimmer_morphology_specification(
         damping: Joint damping (N m s/rad).
         joint_range: Symmetric joint limit (rad).
         kp: Servo gain (N m/rad).
-        control_range: Symmetric range of the servo targets (rad).
         fluid_model: ``"ellipsoid"`` or ``"inertia"``, see :class:`SwimmerMorphologySpecification`.
     """
     return SwimmerMorphologySpecification(
@@ -158,8 +149,6 @@ def default_swimmer_morphology_specification(
             )
             for _ in range(num_segments - 1)
         ],
-        actuation_specification=SwimmerActuationSpecification(
-            kp=kp, control_range=control_range
-        ),
+        actuation_specification=SwimmerActuationSpecification(kp=kp),
         fluid_model=fluid_model,
     )

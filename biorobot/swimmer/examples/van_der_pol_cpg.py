@@ -4,8 +4,12 @@ Every joint ``i`` (head to tail) follows oscillator ``i + 1`` of a chain of ``nu
 
     x_i'' = mu (1 - x_i^2) x_i' - omega^2 x_i + w_fwd (x_{i-1} - x_i) + w_bwd (x_{i+1} - x_i),   x_0 = x_{N+1} = 0,
 
-integrated with RK2 at the physics timestep and scaled by a linear amplitude envelope along the body. The chain first
-runs on its own for 40 cycles, so the swimmer is driven by a CPG on its limit cycle from the start.
+integrated with RK2 at the physics timestep. The chain first runs on its own for 40 cycles, so the swimmer is driven by
+a CPG on its limit cycle from the start.
+
+The oscillators' outputs are not joint angles: on its limit cycle a Van der Pol oscillator swings between about -2 and
+2, whatever the joint range. ``cpg_to_action`` therefore rescales them to the servos' range (the joint range), as a
+fraction ``amplitude`` of it per joint.
 
     python -m biorobot.swimmer.examples.van_der_pol_cpg --backend mjc --render human
 """
@@ -59,14 +63,30 @@ class VanDerPolChain:
             self.step(dt)
 
 
+#: Amplitude of a Van der Pol oscillator's limit cycle (2 for weak nonlinearity, and close to it for mu <= 3).
+VAN_DER_POL_AMPLITUDE = 2.0
+
+
 def amplitude_envelope(
-    num_segments: int, amplitude_scale: float, amp_taper: float
+    num_segments: int, amplitude: float, amp_taper: float
 ) -> np.ndarray:
-    """Servo amplitude per joint, changing linearly along the body (``amp_taper > 0``: larger towards the tail)."""
+    """Servo amplitude per joint as a fraction of the joint range, changing linearly along the body (``amp_taper > 0``:
+    larger towards the tail)."""
     segment = np.arange(2, num_segments + 1, dtype=float)
-    return amplitude_scale * (
+    return amplitude * (
         1 + amp_taper * (segment - (num_segments + 1) / 2) / (num_segments / 2)
     )
+
+
+def cpg_to_action(
+    oscillators: np.ndarray, amplitude: np.ndarray, low: np.ndarray, high: np.ndarray
+) -> np.ndarray:
+    """Map the outputs of the joints' oscillators (~[-2, 2]) to servo targets in ``[low, high]``: ``amplitude`` (per
+    joint, in [0, 1]) is the fraction of the range used. The coupled chain can overshoot the limit cycle's amplitude a
+    little, so the targets are clipped to the range as well."""
+    centre, half_range = (low + high) / 2, (high - low) / 2
+    normalised = oscillators / VAN_DER_POL_AMPLITUDE
+    return np.clip(centre + amplitude * half_range * normalised, low, high)
 
 
 def main() -> None:
@@ -94,7 +114,7 @@ def main() -> None:
     cpg = VanDerPolChain(num_segments, mu=1.5, omega=8.0, w_fwd=2.0, w_bwd=0.5)
     dt = env.mj_model.opt.timestep
     cpg.warm_up(dt)
-    amplitude = amplitude_envelope(num_segments, amplitude_scale=0.4, amp_taper=0.0)
+    amplitude = amplitude_envelope(num_segments, amplitude=0.5, amp_taper=0.0)
 
     if env.backend.name == "mjc":
         state, step = env.reset(0), env.step
@@ -103,7 +123,8 @@ def main() -> None:
 
         state, step = jax.jit(env.reset)(jax.random.PRNGKey(0)), jax.jit(env.step)
     while not bool(state.truncated):
-        state = step(state, amplitude * cpg.x[1:])
+        action = cpg_to_action(cpg.x[1:], amplitude, env.action_low, env.action_high)
+        state = step(state, action)
         for _ in range(env.config.num_physics_steps_per_control_step):
             cpg.step(dt)
         if env.config.render_mode is not None:

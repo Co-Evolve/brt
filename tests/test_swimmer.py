@@ -45,10 +45,12 @@ def original_swimmer_xml(num_segments: int, taper: float, stiffness: float) -> s
     </mujoco>"""
 
 
-def travelling_wave(num_joints: int, t: float, head_to_tail: bool = True):
-    """Servo targets of a body wave with one wavelength along the body, at 1.5 Hz."""
+def travelling_wave(
+    num_joints: int, t: float, head_to_tail: bool = True, amplitude: float = 0.6
+):
+    """Servo targets (rad) of a body wave with one wavelength along the body, at 1.5 Hz."""
     phase = 2 * np.pi * np.arange(num_joints) / num_joints
-    return 0.6 * np.sin(2 * np.pi * 1.5 * t - (phase if head_to_tail else -phase))
+    return amplitude * np.sin(2 * np.pi * 1.5 * t - (phase if head_to_tail else -phase))
 
 
 def run_episode(env, head_to_tail=True):
@@ -112,7 +114,11 @@ def test_specification_validation():
     "num_segments, taper, stiffness", [(8, 1.0, 0.01), (6, 0.7, 0.002)]
 )
 def test_matches_original_model(num_segments, taper, stiffness):
-    """With the original's joint range (1.5 degrees), the BRT swimmer simulates exactly like the original MJCF model."""
+    """With the original's joint range (1.5 degrees), the BRT swimmer simulates exactly like the original MJCF model.
+
+    The original's servo targets are unlimited and BRT's are limited to the joint range, so the wave stays within it.
+    """
+    joint_range = np.deg2rad(1.5)
     original = mujoco.MjModel.from_xml_string(
         original_swimmer_xml(num_segments, taper, stiffness)
     )
@@ -124,7 +130,7 @@ def test_matches_original_model(num_segments, taper, stiffness):
             num_segments=num_segments,
             taper=taper,
             stiffness=stiffness,
-            joint_range=np.deg2rad(1.5),
+            joint_range=joint_range,
         ),
     )
     for field in ("body_mass", "body_inertia", "geom_fluid", "jnt_range"):
@@ -135,7 +141,9 @@ def test_matches_original_model(num_segments, taper, stiffness):
 
     state = env.reset(0)
     while not state.truncated:
-        action = travelling_wave(env.mj_model.nu, float(state.info["time"]))
+        action = travelling_wave(
+            env.mj_model.nu, float(state.info["time"]), amplitude=0.9 * joint_range
+        )
         original_data.ctrl[:] = action
         mujoco.mj_step(original, original_data)
         state = env.step(state, action)
