@@ -18,6 +18,7 @@ two communities:
 | Brittle star | `brittle_star/undirected_locomotion`, `brittle_star/directed_locomotion`, `brittle_star/light_escape` | [README](https://github.com/Co-Evolve/brt/blob/main/biorobot/brittle_star/README.md) |
 | Jumping spider | `jumping_spider/long_jump`, `jumping_spider/platform_jump`, `jumping_spider/directed_jump` | [README](https://github.com/Co-Evolve/brt/blob/main/biorobot/jumping_spider/README.md) |
 | Seahorse tail | `seahorse/tail` (no task: a muscle-architecture playground for open-loop control) | [README](https://github.com/Co-Evolve/brt/blob/main/biorobot/seahorse/README.md) |
+| Swimmer | `swimmer/head_first_swimming` (`"mjc"` and `"warp"` only, see below) | [README](https://github.com/Co-Evolve/brt/blob/main/biorobot/swimmer/README.md) |
 
 Each animal's README covers its biology, the in-silico morphology, the observations, rewards and configuration of
 each task, and runnable examples. The seahorse tail (Marzougui et al., [2025](https://doi.org/10.1098/rsif.2024.0876))
@@ -71,6 +72,12 @@ The same task implementation runs on three simulation backends; pick one with `b
 | `"mjc"` | MuJoCo (C), numpy, CPU | Debugging, visualisation, single environments, evolutionary/morphology search on many CPU cores, Gymnasium-based RL libraries. |
 | `"mjx"` | MJX with its JAX implementation | Thousands of parallel environments on a GPU/TPU with `jax.jit` and `jax.vmap`; end-to-end JAX training loops. |
 | `"warp"` | MJX with the MuJoCo Warp implementation | Same JAX interface as `"mjx"`, but faster on NVIDIA GPUs, especially for contact-rich models. Needs `biorobot[warp]`; pass `num_envs` (see below). |
+
+**A backend that would silently simulate a model wrongly refuses it.** Creating the environment then raises
+`NotImplementedError` and names the backends that do work. Today this only concerns the ellipsoid fluid model
+(`fluidshape="ellipsoid"`, used by the swimmer), which MJX's JAX implementation replaces by the inertia-based fluid model
+without a warning; MuJoCo Warp supports it. `biorobot.core.unsupported_features(mj_model, backend)` lists what a
+backend lacks for a model.
 
 With `"mjx"` and `"warp"`, the state is a JAX pytree, so `reset` and `step` can be jitted and vmapped. MuJoCo Warp
 allocates a single contact buffer for all vmapped environments, so with `"warp"` pass the largest batch size you will
@@ -154,6 +161,8 @@ print(env.mj_model.nu)  # 48 actuators: 3 arms x 8 segments x 2 joints
 3. Two rules keep a task correct on every backend: write it with `self.xp` and without Python branching on simulated
    values (use `xp.where`), and compute rewards from `previous_state.observations` or `previous_state.info`, never from
    `previous_state.data` (with `"mjc"` the data is updated in place).
+   If your model needs a feature that a backend gets silently wrong, add it to `unsupported_features` in
+   `biorobot/core/backend.py`, so that backend refuses the model instead of simulating different physics.
 4. Add `tests/test_<animal>.py` (an `"mjc"` episode, MJX matching `"mjc"`, a render smoke test), an `examples/`
    folder and a README.
 
@@ -182,6 +191,7 @@ Every animal has runnable examples, e.g.
 python -m biorobot.brittle_star.examples.light_escape --backend mjx --render human
 python -m biorobot.jumping_spider.examples.scripted_jump
 python -m biorobot.seahorse.examples.open_loop
+python -m biorobot.swimmer.examples.van_der_pol_cpg
 ```
 
 The Jupyter notebooks of the [SEL3 course](https://github.com/Co-Evolve/SEL3-2024) use BRT 0.4.x

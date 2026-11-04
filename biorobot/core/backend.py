@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import abc
 import warnings
-from typing import Any, Sequence, Tuple, Union
+from typing import Any, List, Sequence, Tuple, Union
 
 import mujoco
 import numpy as np
@@ -115,6 +115,7 @@ class MJXBackend(Backend):
         self, mj_model: mujoco.MjModel, impl: str = "jax", num_envs: int = 1
     ) -> None:
         super().__init__(mj_model)
+        check_backend_support(mj_model, "mjx" if impl == "jax" else impl)
         import jax
         import jax.numpy as jnp
         from mujoco import mjx
@@ -186,6 +187,35 @@ class MJXBackend(Backend):
 
 
 BACKENDS = ("mjc", "mjx", "warp")
+
+
+def unsupported_features(mj_model: mujoco.MjModel, backend: str) -> List[str]:
+    """Descriptions of the model features that ``backend`` cannot simulate correctly (empty if it supports them all).
+
+    Only features that a backend gets *silently* wrong are listed here; MJX and MuJoCo Warp already raise for the
+    features they reject themselves.
+    """
+    features = []
+    if backend == "mjx" and np.any(mj_model.geom_fluid[:, 0] > 0):
+        # MJX's JAX implementation ignores fluidshape="ellipsoid" and applies the inertia-based fluid model to those
+        # geoms instead (tested with MuJoCo 3.17: the fluid forces differ by ~13% for a capsule chain).
+        features.append(
+            "the ellipsoid fluid model (geoms with fluidshape='ellipsoid'), which MJX's JAX implementation replaces by "
+            "the inertia-based fluid model without notice"
+        )
+    return features
+
+
+def check_backend_support(mj_model: mujoco.MjModel, backend: str) -> None:
+    """Raise ``NotImplementedError`` if ``backend`` cannot simulate ``mj_model`` correctly (see
+    :func:`unsupported_features`)."""
+    features = unsupported_features(mj_model, backend)
+    if features:
+        supported = [b for b in BACKENDS if not unsupported_features(mj_model, b)]
+        raise NotImplementedError(
+            f"backend='{backend}' does not support {'; '.join(features)}. Use backend={' or '.join(map(repr, supported))}"
+            f", or change the model."
+        )
 
 
 def make_backend(name: str, mj_model: mujoco.MjModel, num_envs: int = 1) -> Backend:
